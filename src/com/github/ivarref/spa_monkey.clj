@@ -49,6 +49,16 @@
                     "ERROR"]
                    args)))))
 
+(defn add-uncaught-exception-handler! []
+  (Thread/setDefaultUncaughtExceptionHandler
+    (reify Thread$UncaughtExceptionHandler
+      (uncaughtException [_ thread ex]
+        (.print (System/err) "Uncaught exception on ")
+        (.println (System/err) (.getName ^Thread thread))
+        (.printStackTrace ^Throwable ex)
+        (error "Uncaught exception on" (.getName ^Thread thread))
+        nil))))
+
 (defn add-socket [sock state]
   (update state :sockets (fnil conj #{}) sock))
 
@@ -165,7 +175,7 @@
         (close sock))
       (Thread/sleep 100))))
 
-(defn run-server! [state]
+(defn start! [state]
   (stop! state)
   (swap! state (fn [old-state] (assoc old-state :dropped-bytes 0 :unhandled-exceptions #{} :running? true)))
   (let [{:keys [bind port]
@@ -178,19 +188,8 @@
         (.setReuseAddress true)
         (.bind (InetSocketAddress. ^String bind ^int port)))
       (fn [^ServerSocket server]
-        (info "Started server")
+        ;(info "Started server")
         (while (running? state)
           (when-let [sock (accept state server)]
             (new-thread state sock (fn [sock] (handle-connection! state sock)))))
         #_(info "Server exiting")))))
-
-(defn add-uncaught-exception-handler! []
-  (Thread/setDefaultUncaughtExceptionHandler
-    (reify Thread$UncaughtExceptionHandler
-      (uncaughtException [_ thread ex]
-        (.print (System/err) "Uncaught exception on ")
-        (.println (System/err) (.getName ^Thread thread))
-        (.printStackTrace ^Throwable ex)
-        (error "Uncaught exception on" (.getName ^Thread thread))
-        nil))))
-
