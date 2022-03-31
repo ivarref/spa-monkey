@@ -2,7 +2,7 @@
   (:import (java.time ZonedDateTime)
            (java.time.format DateTimeFormatter)
            (java.net ServerSocket InetSocketAddress Socket SocketTimeoutException)
-           (java.io IOException BufferedInputStream Closeable BufferedOutputStream))
+           (java.io IOException BufferedInputStream Closeable BufferedOutputStream OutputStream InputStream))
   (:gen-class))
 
 (def ^DateTimeFormatter pattern (DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss z"))
@@ -105,8 +105,33 @@
 (defn drop-remote! [state]
   (swap! state update :drop-remote (fnil inc 0)))
 
+(defn block-remote! [state ms]
+  (swap! state update :block-remote (fnil conj []) ms))
 
-(defn pump-byte! [state id from inp out]
+(defn block-incoming! [state ms]
+  (swap! state update :block-incoming (fnil conj []) ms))
+
+(defn forward-byte! [state ^OutputStream out rd]
+  (let [w (try
+            (.write out ^int rd)
+            (.flush out)
+            1
+            (catch Exception e
+              (when (running? state)
+                (warn "Exception while writing to socket:" (ex-message e)))
+              -1))]
+    (if (= 1 w)
+      true
+      nil)))
+
+(defn block-incoming? [state-atom from]
+  (when (= :incoming from)
+    (->> (swap-vals! state-atom update :block-incoming (comp vec (fnil rest [])))
+         (first)
+         (:block-incoming)
+         (first))))
+
+(defn pump-byte! [state id from ^InputStream inp out]
   (let [rd (try
              (.read inp)
              (catch Exception e
@@ -115,21 +140,18 @@
                -1))]
     (if (= -1 rd)
       nil
-      (if (drop-forward-byte? state id from)
+      (cond
+        (drop-forward-byte? state id from)
         (do
           (swap! state update :dropped-bytes (fnil inc 0))
           true)
-        (let [w (try
-                  (.write out ^int rd)
-                  (.flush out)
-                  1
-                  (catch Exception e
-                    (when (running? state)
-                      (warn "Exception while writing to socket:" (ex-message e)))
-                    -1))]
-          (if (= 1 w)
-            true
-            nil))))))
+
+        :else
+        (do
+          (when-let [ms (block-incoming? state from)]
+            (warn "Blocking incoming for" ms "ms")
+            (Thread/sleep ms))
+          (forward-byte! state out rd))))))
 
 
 (defn pump! [state from ^Socket src ^Socket dst]
@@ -141,6 +163,10 @@
           (when (and (running? state) (not (.isClosed src)) (not (.isClosed dst)))
             (when (pump-byte! state id from inp out)
               (recur)))))
+      (catch Exception e
+        (if (running? state)
+          (throw e)
+          nil))
       (finally
         (swap! state update :drop (fnil disj #{}) id)))))
 
@@ -159,7 +185,7 @@
     (new-thread state remote (fn [_] (pump! state :incoming incoming remote)))
     (pump! state :remote remote incoming)))
 
-(defn accept [state server]
+(defn accept [state ^ServerSocket server]
   (try
     (.accept server)
     (catch Exception e
@@ -168,16 +194,20 @@
       nil)))
 
 (defn stop! [state]
-  (when (running? state)
-    (swap! state (fn [old-state] (assoc old-state :running? false)))
-    (while (not-empty (:threads @state))
-      (doseq [sock (:sockets @state)]
-        (close sock))
-      (Thread/sleep 100))))
+  (swap! state assoc :running? false)
+  (while (not-empty (:threads @state))
+    (doseq [sock (:sockets @state)]
+      (close sock))
+    (Thread/sleep 100)))
 
 (defn start! [state]
   (stop! state)
-  (swap! state (fn [old-state] (assoc old-state :dropped-bytes 0 :unhandled-exceptions #{} :running? true)))
+  (swap! state assoc
+         :dropped-bytes 0
+         :unhandled-exceptions #{}
+         :running? true
+         :block-incoming []
+         :drop-remote 0)
   (let [{:keys [bind port]
          :or   {bind "127.0.0.1"
                 port 20009}} @state]
