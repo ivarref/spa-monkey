@@ -1,4 +1,6 @@
 {:paths ["src"]
  :deps  {org.clojure/clojure           {:mvn/version "1.11.0"}
          org.postgresql/postgresql     {:mvn/version "42.3.3"}
-         org.apache.tomcat/tomcat-jdbc {:mvn/version "7.0.109"}}}
+         org.apache.tomcat/tomcat-jdbc {:mvn/version "7.0.109"}
+         com.taoensso/tufte            {:mvn/version "2.2.0"}
+         com.taoensso/encore           {:mvn/version "3.21.0"}}}
