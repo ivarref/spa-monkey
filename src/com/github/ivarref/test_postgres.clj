@@ -57,13 +57,15 @@
   (let [ds (create-datasource! uri)
         n 100]
     (try
-      (let [[res stats] (tufte/profiled
-                          {}
-                          (into (sorted-map)
-                                (frequencies (loop [res []]
-                                               (if (= (count res) n)
-                                                 res
-                                                 (recur (conj res (get-conn ds))))))))]
+      (let [[res stats]
+            (tufte/profiled
+              {}
+              (into (sorted-map)
+                    (frequencies
+                      (loop [res []]
+                        (if (= (count res) n)
+                          res
+                          (recur (conj res (get-conn ds))))))))]
         (println (tufte/format-pstats @stats))
         res)
       (finally
