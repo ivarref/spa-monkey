@@ -8,11 +8,6 @@ services:
     environment:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
     user: postgres
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
   datomic:
     build:
       context: datomic
@@ -23,6 +18,8 @@ services:
     image: spa-monkey_datomic:latest
     restart: unless-stopped
     init: true
+    ports:
+      - "4334:4334"
     environment:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - DATOMIC_LICENSE_KEY=$DATOMIC_LICENSE_KEY

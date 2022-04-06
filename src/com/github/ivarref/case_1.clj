@@ -30,23 +30,24 @@
     @(promise)))
 
 
-(defonce st (atom {:remote-host "psql-stage-we.postgres.database.azure.com"
+(defonce st (atom {:remote-host "localhost"
                    :remote-port 5432}))
 
 (defn get-conn []
   (let [start-time (System/currentTimeMillis)]
     (monkey/start! st)
-    (let [url (str "datomic:sql://ire-test-1?"
+    (let [uri (str "datomic:sql://ire-test-1?"
                    "jdbc:postgresql://"
                    "localhost:20009"
-                   ;"psql-stage-we.postgres.database.azure.com:5432"
-                   "/datomic?user=datomic@psql-stage-we&password="
-                   (System/getenv "DATOMIC_STAGE_PASSWORD")
-                   "&sslmode=require")
-          conn (d/connect url)
+                   "/postgres?user=postgres&password="
+                   (System/getenv "POSTGRES_PASSWORD"))
+          conn (do
+                 (d/create-database uri)
+                 (d/connect uri))
           spent-time (- (System/currentTimeMillis) start-time)]
       (log/info "Got datomic connection in" spent-time "milliseconds")
       conn)))
+
 
 (defn read-segment [conn val-key]
   (let [cluster (.get-cluster conn)]

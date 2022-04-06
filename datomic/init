@@ -67,6 +67,8 @@ until PGPASSWORD=$POSTGRES_PASSWORD psql -h $PG_HOST -U $PG_USER -c '\q'; do
   sleep 1
 done
 
+echo "Postgres is ready"
+
 PGSSLMODE=$PG_SSLMODE PGPASSWORD=$POSTGRES_PASSWORD psql -U $PG_USER -h $PG_HOST -p $PG_PORT -d $PG_DB -c "SELECT * from datomic_kvs LIMIT 1" > /dev/null 2>&1|| init-db
 
 write-transactor-properties /opt/datomic-pro/bin/transactor-template.properties | uniq > /opt/datomic-pro/config/transactor.properties
