@@ -4,7 +4,8 @@
             [clojure.tools.logging :as log]
             [babashka.process :refer [$ check]]
             [nrepl.server :as nrepl]
-            [datomic.cluster :as cluster]))
+            [datomic.cluster :as cluster])
+  (:import (java.time Duration)))
 
 (defonce init
          (Thread/setDefaultUncaughtExceptionHandler
@@ -83,6 +84,7 @@
   (if block?
     @(promise)
     (do
+      (Thread/sleep (.toMillis (Duration/ofMinutes 3)))
       (shutdown-agents)
       (System/exit (if (= @read-status :done)
                      0
