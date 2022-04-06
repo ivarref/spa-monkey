@@ -13,6 +13,6 @@
  :aliases   {:nrepl {:exec-fn   com.github.ivarref.case-1/start-nrepl-server!
                      :exec-args {:block? true}}
              :case1 {:exec-fn   com.github.ivarref.case-1/do-test!
-                     :exec-args {:block? true}}}
+                     :exec-args {:block? false}}}
  :mvn/repos {"my.datomic.com" {:url "https://my.datomic.com/repo"}}}
 
