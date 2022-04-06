@@ -75,9 +75,18 @@
                 "milliseconds")
       (catch Throwable t
         (log/error t "Error during read:" (ex-message t))
+        (log/info "Error after" (- (System/currentTimeMillis)
+                                   start-time)
+                  "milliseconds")
         (reset! read-status [:error t]))))
-  (when block?
-    @(promise)))
+  (Thread/sleep 3000)
+  (if block?
+    @(promise)
+    (do
+      (shutdown-agents)
+      (System/exit (if (= @read-status :done)
+                     0
+                     1)))))
 
 
 
