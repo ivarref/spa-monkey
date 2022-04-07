@@ -159,8 +159,8 @@
 
 (defn do-test! [{:keys [block?] :as args}]
   (try
-    (accept!)
     (init-logging! args)
+    (accept!)
     (do-test-inner args)
     (finally
       (accept!)))
