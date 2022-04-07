@@ -4,8 +4,14 @@
             [clojure.tools.logging :as log]
             [babashka.process :refer [$ check]]
             [nrepl.server :as nrepl]
-            [datomic.cluster :as cluster])
-  (:import (java.time Duration)))
+            [datomic.cluster :as cluster]
+            [taoensso.timbre :as timbre]
+            [clojure.string :as str])
+  (:import (java.time Duration ZonedDateTime)
+           (org.slf4j.bridge SLF4JBridgeHandler)
+           (java.util.logging Logger Level)
+           (java.lang.management ManagementFactory)
+           (java.time.format DateTimeFormatter)))
 
 (defonce init
          (Thread/setDefaultUncaughtExceptionHandler
@@ -16,9 +22,75 @@
                (.printStackTrace ^Throwable ex)
                nil))))
 
+(defn jvm-uptime-ms []
+  (.getUptime (ManagementFactory/getRuntimeMXBean)))
+
+(defn ms->duration [ms]
+  (apply (partial format "%02d:%02d:%02d")
+         (let [duration (Duration/ofMillis ms)]
+           [(.toHours duration)
+            (.toMinutesPart duration)
+            (.toSecondsPart duration)])))
+
+(defn local-console-format-fn
+  [data]
+  (try
+    (let [{:keys [level ?err msg_ ?ns-str ?file hostname_
+                  timestamp_ ?line context]} data]
+      (let [maybe-stacktrace (when ?err
+                               (str "\n" (timbre/stacktrace ?err)))]
+        (str
+          (ms->duration (jvm-uptime-ms))
+          " "
+          (str/upper-case (name level))
+          " "
+          (last (str/split ?ns-str #"\."))
+          " "
+          (force msg_)
+          maybe-stacktrace)))
+    (catch Throwable t
+      (println "error in local-console-format-fn:" (ex-message t))
+      nil)))
+
+(defonce lock (atom nil))
+
+(defn atomic-println [log-file arg]
+  (locking lock
+    (when (some? log-file)
+      (spit log-file (str arg "\n") :append true))
+    (println arg)))
+
+(defn init-logging! [{:keys [log-file]}]
+  (let [log-file (when (some? log-file)
+                   (str log-file
+                        "_"
+                        (.format
+                          (DateTimeFormatter/ofPattern "yyyy-MM-dd_HH_mm_ss")
+                          (ZonedDateTime/now))
+                        ".log"))]
+    (when (some? log-file)
+      (spit log-file ""))
+    (SLF4JBridgeHandler/removeHandlersForRootLogger)
+    (SLF4JBridgeHandler/install)
+    (.setLevel (Logger/getLogger "") Level/FINEST)
+    (timbre/merge-config!
+      {:min-level [[#{"datomic.kv-cluster"} :debug]
+                   [#{"*"} :info]]
+       :output-fn (fn [data] (local-console-format-fn data))
+       :appenders {:println {:enabled?   true
+                             :async?     false
+                             :min-level  nil
+                             :rate-limit nil
+                             :output-fn  :inherit
+                             :fn         (fn [data]
+                                           (let [{:keys [output_]} data]
+                                             (atomic-println log-file (force output_))))}}})
+    (when (some? log-file)
+      (log/info "logging to file" log-file))))
+
 (defn accept! []
   (as-> ^{:out :string :err :string} ($ ./accept) v
-    (check v)))
+        (check v)))
 
 (defn drop! []
   (as-> ^{:out :string :err :string} ($ ./drop) v
@@ -57,7 +129,8 @@
 (defonce read-status (atom nil))
 (defonce conn-atom (atom nil))
 
-(defn do-test! [{:keys [block?]}]
+(defn do-test! [{:keys [block?] :as args}]
+  (init-logging! args)
   (log/info "Starting test ...")
   (accept!)
   (start-nrepl-server! nil)
@@ -76,11 +149,15 @@
                 "milliseconds")
       (catch Throwable t
         (log/error t "Error during read:" (ex-message t))
-        (log/info "Error after" (- (System/currentTimeMillis)
-                                   start-time)
-                  "milliseconds")
-        (reset! read-status [:error t]))))
+        (let [spent-time (- (System/currentTimeMillis) start-time)]
+          (log/info "Error after"
+                    (ms->duration spent-time)
+                    "aka"
+                    spent-time
+                    "milliseconds")
+          (reset! read-status [:error t])))))
   (Thread/sleep 3000)
+  (accept!)
   (if block?
     @(promise)
     (do
@@ -89,8 +166,6 @@
       (System/exit (if (= @read-status :done)
                      0
                      1)))))
-
-
 
 (comment
   (def conn (get-conn)))
