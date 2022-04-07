@@ -15,6 +15,9 @@
                      :exec-args {:block? true}}
              :case1 {:exec-fn   com.github.ivarref.case-1/do-test!
                      :exec-args {:block?   false
-                                 :log-file "case1"}}}
+                                 :log-file "case1"}}
+             :case2 {:exec-fn   com.github.ivarref.case-2/do-test!
+                     :exec-args {:block?   false
+                                 :log-file "case2"}}}
  :mvn/repos {"my.datomic.com" {:url "https://my.datomic.com/repo"}}}
 

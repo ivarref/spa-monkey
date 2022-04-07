@@ -60,8 +60,12 @@
                                           (-> old-state
                                               (update :drop-remote dec)
                                               (update :drop (fnil conj #{}) id))
-                                          old-state)))]
-      (not= old new))))
+                                          old-state)))
+          drop? (not= old new)]
+      (when drop?
+        (log/warn "Start dropping bytes. Id:" id))
+      drop?)))
+
 
 
 (defn drop-remote! [state]
@@ -173,6 +177,7 @@
   (let [{:keys [bind port]
          :or   {bind "127.0.0.1"
                 port 20009}} @state]
+    (log/info "Starting spa-monkey on" (str bind ":" port))
     (new-thread
       state
       (doto
