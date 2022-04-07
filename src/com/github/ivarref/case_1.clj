@@ -37,7 +37,7 @@
   (try
     (let [{:keys [level ?err msg_ ?ns-str]} data]
       (let [maybe-stacktrace (when ?err
-                               (str "\n" (timbre/stacktrace ?err)))]
+                               (str "\n" (timbre/stacktrace ?err {:stacktrace-fonts nil})))]
         (str
           (ms->duration (jvm-uptime-ms))
           " "
