@@ -35,8 +35,7 @@
 (defn local-console-format-fn
   [data]
   (try
-    (let [{:keys [level ?err msg_ ?ns-str ?file hostname_
-                  timestamp_ ?line context]} data]
+    (let [{:keys [level ?err msg_ ?ns-str]} data]
       (let [maybe-stacktrace (when ?err
                                (str "\n" (timbre/stacktrace ?err)))]
         (str
@@ -89,10 +88,12 @@
       (log/info "logging to file" log-file))))
 
 (defn accept! []
+  (log/info "Start accepting all packets")
   (as-> ^{:out :string :err :string} ($ ./accept) v
         (check v)))
 
 (defn drop! []
+  (log/info "Start dropping packets")
   (as-> ^{:out :string :err :string} ($ ./drop) v
         (check v)))
 
@@ -129,10 +130,8 @@
 (defonce read-status (atom nil))
 (defonce conn-atom (atom nil))
 
-(defn do-test! [{:keys [block?] :as args}]
-  (init-logging! args)
+(defn do-test-inner [_]
   (log/info "Starting test ...")
-  (accept!)
   (start-nrepl-server! nil)
   (let [conn (get-conn)
         start-time (System/currentTimeMillis)]
@@ -156,16 +155,20 @@
                     spent-time
                     "milliseconds")
           (reset! read-status [:error t])))))
-  (Thread/sleep 3000)
-  (accept!)
+  (Thread/sleep 1000))
+
+(defn do-test! [{:keys [block?] :as args}]
+  (try
+    (accept!)
+    (init-logging! args)
+    (do-test-inner args)
+    (finally
+      (accept!)))
   (if block?
     @(promise)
     (do
       (Thread/sleep (.toMillis (Duration/ofMinutes 3)))
-      (shutdown-agents)
-      (System/exit (if (= @read-status :done)
-                     0
-                     1)))))
+      (shutdown-agents))))
 
 (comment
   (def conn (get-conn)))
