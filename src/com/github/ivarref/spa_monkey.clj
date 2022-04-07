@@ -1,12 +1,8 @@
 (ns com.github.ivarref.spa-monkey
-  (:import (java.time ZonedDateTime)
-           (java.time.format DateTimeFormatter)
-           (java.net ServerSocket InetSocketAddress Socket SocketTimeoutException)
+  (:require [clojure.tools.logging :as log])
+  (:import (java.net ServerSocket InetSocketAddress Socket SocketTimeoutException)
            (java.io IOException BufferedInputStream Closeable BufferedOutputStream OutputStream InputStream))
   (:gen-class))
-
-(def ^DateTimeFormatter pattern (DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss z"))
-(defonce lock (Object.))
 
 (defn close [^Closeable s]
   (when s
@@ -15,49 +11,15 @@
       (catch IOException _
         nil))))
 
-(defn debug [& args]
-  (locking lock
-    (apply println
-           (into [(.format pattern (ZonedDateTime/now))
-                  (str "[" (.getName (Thread/currentThread)) "]")
-                  "DEBUG"]
-                 args))))
-
-
-(defn info [& args]
-  (locking lock
-    (apply println
-           (into [(.format pattern (ZonedDateTime/now))
-                  (str "[" (.getName (Thread/currentThread)) "]")
-                  "INFO"]
-                 args))))
-
-(defn warn [& args]
-  (locking lock
-    (apply println
-           (into [(.format pattern (ZonedDateTime/now))
-                  (str "[" (.getName (Thread/currentThread)) "]")
-                  "WARN"]
-                 args))))
-
-(defn error [& args]
-  (locking lock
-    (binding [*out* *err*]
-      (apply println
-             (into [(.format pattern (ZonedDateTime/now))
-                    (str "[" (.getName (Thread/currentThread)) "]")
-                    "ERROR"]
-                   args)))))
-
-(defn add-uncaught-exception-handler! []
-  (Thread/setDefaultUncaughtExceptionHandler
-    (reify Thread$UncaughtExceptionHandler
-      (uncaughtException [_ thread ex]
-        (.print (System/err) "Uncaught exception on ")
-        (.println (System/err) (.getName ^Thread thread))
-        (.printStackTrace ^Throwable ex)
-        (error "Uncaught exception on" (.getName ^Thread thread))
-        nil))))
+#_(defn add-uncaught-exception-handler! []
+    (Thread/setDefaultUncaughtExceptionHandler
+      (reify Thread$UncaughtExceptionHandler
+        (uncaughtException [_ thread ex]
+          (.print (System/err) "Uncaught exception on ")
+          (.println (System/err) (.getName ^Thread thread))
+          (.printStackTrace ^Throwable ex)
+          (error "Uncaught exception on" (.getName ^Thread thread))
+          nil))))
 
 (defn add-socket [sock state]
   (update state :sockets (fnil conj #{}) sock))
@@ -83,7 +45,7 @@
                (close sock#)
                (swap! state# (partial del-socket sock#)))))
          (catch Throwable t#
-           (error "Unhandled exception:" (ex-message t#))
+           (log/error "Unhandled exception:" (ex-message t#))
            (swap! state# (fn [old-state#] (update old-state# :unhandled-exceptions (fnil conj #{}) t#))))
          (finally
            (swap! state# (fn [old-state#] (update old-state# :threads (fnil disj #{}) (Thread/currentThread)))))))))
@@ -118,7 +80,7 @@
             1
             (catch Exception e
               (when (running? state)
-                (warn "Exception while writing to socket:" (ex-message e)))
+                (log/warn "Exception while writing to socket:" (ex-message e)))
               -1))]
     (if (= 1 w)
       true
@@ -136,7 +98,7 @@
              (.read inp)
              (catch Exception e
                (when (running? state)
-                 (warn "Exception while reading socket:" (ex-message e)))
+                 (log/warn "Exception while reading socket:" (ex-message e)))
                -1))]
     (if (= -1 rd)
       nil
@@ -149,7 +111,7 @@
         :else
         (do
           (when-let [ms (block-incoming? state from)]
-            (warn "Blocking incoming for" ms "ms")
+            (log/warn "Blocking incoming for" ms "ms")
             (Thread/sleep ms))
           (forward-byte! state out rd))))))
 
@@ -180,7 +142,7 @@
                  (doto (Socket.)
                    (.connect (InetSocketAddress. ^String remote-host ^int remote-port) connection-timeout))
                  (catch SocketTimeoutException ste
-                   (error "Timeout connection to" (str remote-host ":" remote-port))
+                   (log/error "Timeout connection to" (str remote-host ":" remote-port))
                    (throw ste)))]
     (new-thread state remote (fn [_] (pump! state :incoming incoming remote)))
     (pump! state :remote remote incoming)))
@@ -190,7 +152,7 @@
     (.accept server)
     (catch Exception e
       (when (running? state)
-        (error "Error during .accept:" (ex-message e)))
+        (log/error "Error during .accept:" (ex-message e)))
       nil)))
 
 (defn stop! [state]
