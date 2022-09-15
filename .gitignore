@@ -3,3 +3,4 @@
 *.iml
 .clj-kondo/
 .nrepl-port
+drop.txt
