@@ -140,7 +140,7 @@
 
 (defn drop-sock! [sock]
   (let [drop-txt (sock->drop sock)]
-    (log/info "Adding IP filter:" drop-txt)
+    (log/info "Adding TCP filter:" drop-txt)
     (drop-str! (str/join "\n"
                          ["flush ruleset"
                           "table ip filter {"
