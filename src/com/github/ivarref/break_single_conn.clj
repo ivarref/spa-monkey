@@ -154,29 +154,32 @@
 (defonce conn-pool (atom nil))
 
 (defn do-test! [{:keys [block?] :as opts}]
-  (init-logging! opts)
-  (accept!)
-  (hookd/install-return-consumer!
-    "org.apache.tomcat.jdbc.pool.ConnectionPool"
-    "::Constructor"
-    (partial reset! conn-pool))
-  (when block?
-    (log/info "Starting nREPL server ....")
-    (nrepl/start-server :bind "127.0.0.1" :port 7777))
-  (let [conn (get-conn)
-        drop-count (atom 0)]
+  (try
+    (init-logging! opts)
+    (accept!)
     (hookd/install-return-consumer!
       "org.apache.tomcat.jdbc.pool.ConnectionPool"
-      "getConnection"
-      (fn [^Connection conn]
-        (let [^Socket sock (conn->socket conn)]
-          (if (= 1 (swap! drop-count inc))
-            (drop-sock! sock)
-            (log/debug "Not dropping anything.")))))
-    (let [start-time (System/currentTimeMillis)]
-      (log/info "Starting read-segment on blocked connection ...")
-      (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
-      (let [stop-time (System/currentTimeMillis)]
-        (log/info "Reading on blocked connection ... Done in" (str (ms->duration (- stop-time start-time)) ".")))))
-  (when block?
-    @(promise)))
+      "::Constructor"
+      (partial reset! conn-pool))
+    (when block?
+      (log/info "Starting nREPL server ....")
+      (nrepl/start-server :bind "127.0.0.1" :port 7777))
+    (let [conn (get-conn)
+          drop-count (atom 0)]
+      (hookd/install-return-consumer!
+        "org.apache.tomcat.jdbc.pool.ConnectionPool"
+        "getConnection"
+        (fn [^Connection conn]
+          (let [^Socket sock (conn->socket conn)]
+            (if (= 1 (swap! drop-count inc))
+              (drop-sock! sock)
+              (log/debug "Not dropping anything.")))))
+      (let [start-time (System/currentTimeMillis)]
+        (log/info "Starting read-segment on blocked connection ...")
+        (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
+        (let [stop-time (System/currentTimeMillis)]
+          (log/info "Reading on blocked connection ... Done in" (str (ms->duration (- stop-time start-time)) ".")))))
+    (when block?
+      @(promise))
+    (finally
+      (accept!))))
