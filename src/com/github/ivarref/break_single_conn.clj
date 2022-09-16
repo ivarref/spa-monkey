@@ -1,4 +1,4 @@
-(ns com.github.ivarref.java-agent-demo
+(ns com.github.ivarref.break-single-conn
   (:require
     [babashka.process :refer [$ check]]
     [clojure.string :as str]
@@ -140,7 +140,7 @@
 
 (defn drop-sock! [sock]
   (let [drop-txt (sock->drop sock)]
-    (log/info "Add drop filter" drop-txt)
+    (log/info "Add IP filter:" drop-txt)
     (drop-str! (str/join "\n"
                          ["flush ruleset"
                           "table ip filter {"
@@ -153,8 +153,8 @@
 
 (defonce conn-pool (atom nil))
 
-(defn do-test! [{:keys [block?]}]
-  (init-logging! nil)
+(defn do-test! [{:keys [block?] :as opts}]
+  (init-logging! opts)
   (accept!)
   (hookd/install-return-consumer!
     "org.apache.tomcat.jdbc.pool.ConnectionPool"
@@ -172,11 +172,11 @@
         (let [^Socket sock (conn->socket conn)]
           (if (= 1 (swap! drop-count inc))
             (drop-sock! sock)
-            (log/info "Not dropping anything :-)")))))
+            (log/debug "Not dropping anything.")))))
     (let [start-time (System/currentTimeMillis)]
       (log/info "Starting read-segment on blocked connection ...")
       (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
       (let [stop-time (System/currentTimeMillis)]
-        (log/info "Starting read-segment on blocked connection ... Done in" (ms->duration (- stop-time start-time)) "."))))
+        (log/info "Starting read-segment on blocked connection ... Done in" (str (ms->duration (- stop-time start-time)) ".")))))
   (when block?
     @(promise)))

@@ -12,16 +12,17 @@
              org.slf4j/jul-to-slf4j     {:mvn/version "1.7.30"}
              org.slf4j/jcl-over-slf4j   {:mvn/version "1.7.30"}
              com.github.ivarref/hookd   {:mvn/version "0.1.11"}}
- :aliases   {:nrepl {:exec-fn   com.github.ivarref.case-1/start-nrepl-server!
-                     :exec-args {:block? true}}
-             :agent {:exec-fn   com.github.ivarref.java-agent-demo/do-test!
-                     :exec-args {:block? false}
-                     :jvm-opts  ["-Djdk.attach.allowAttachSelf=true" "-XX:-OmitStackTraceInFastThrow"]}
-             :case1 {:exec-fn   com.github.ivarref.case-1/do-test!
-                     :exec-args {:block?   false
-                                 :log-file "case1"}}
-             :case2 {:exec-fn   com.github.ivarref.case-2/do-test!
-                     :exec-args {:block?   false
-                                 :log-file "case2"}}}
+ :aliases   {:nrepl                   {:exec-fn   com.github.ivarref.case-1/start-nrepl-server!
+                                       :exec-args {:block? true}}
+             :break-single-connection {:exec-fn   com.github.ivarref.break-single-conn/do-test!
+                                       :exec-args {:block? false
+                                                   :log-file "break-single-connection"}
+                                       :jvm-opts  ["-Djdk.attach.allowAttachSelf=true" "-XX:-OmitStackTraceInFastThrow"]}
+             :case1                   {:exec-fn   com.github.ivarref.case-1/do-test!
+                                       :exec-args {:block?   false
+                                                   :log-file "case1"}}
+             :case2                   {:exec-fn   com.github.ivarref.case-2/do-test!
+                                       :exec-args {:block?   false
+                                                   :log-file "case2"}}}
  :mvn/repos {"my.datomic.com" {:url "https://my.datomic.com/repo"}}}
 
