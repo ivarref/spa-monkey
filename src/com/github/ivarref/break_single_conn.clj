@@ -173,12 +173,12 @@
           (let [^Socket sock (conn->socket conn)]
             (if (= 1 (swap! drop-count inc))
               (drop-sock! sock)
-              (log/debug "Not dropping anything.")))))
+              (log/info "Not dropping anything")))))
       (let [start-time (System/currentTimeMillis)]
         (log/info "Starting read-segment on blocked connection ...")
         (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
         (let [stop-time (System/currentTimeMillis)]
-          (log/info "Reading on blocked connection ... Done in" (str (ms->duration (- stop-time start-time)) ".")))))
+          (log/info "Reading on blocked connection ... Done in" (ms->duration (- stop-time start-time))))))
     (when block?
       @(promise))
     (finally
