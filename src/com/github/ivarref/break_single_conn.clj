@@ -4,110 +4,31 @@
     [clojure.string :as str]
     [clojure.tools.logging :as log]
     [com.github.ivarref.hookd :as hookd]
+    [com.github.ivarref.log-init :as log-init]
     [datomic.api :as d]
     [datomic.cluster :as cluster]
-    [nrepl.server :as nrepl]
-    [taoensso.timbre :as timbre])
-  (:import (java.lang.management ManagementFactory)
-           (java.net Socket)
-           (java.sql Connection)
-           (java.time Duration ZonedDateTime)
-           (java.time.format DateTimeFormatter)
-           (java.util.logging Level Logger)
-           (javax.sql PooledConnection)
-           (org.postgresql.core PGStream QueryExecutor QueryExecutorBase)
-           (org.postgresql.jdbc PgConnection)
-           (org.slf4j.bridge SLF4JBridgeHandler)))
-
-(defonce init
-         (Thread/setDefaultUncaughtExceptionHandler
-           (reify Thread$UncaughtExceptionHandler
-             (uncaughtException [_ thread ex]
-               (.print (System/err) "Uncaught exception on ")
-               (.println (System/err) (.getName ^Thread thread))
-               (.printStackTrace ^Throwable ex)
-               nil))))
-
-(defn jvm-uptime-ms []
-  (.getUptime (ManagementFactory/getRuntimeMXBean)))
-
-(defn ms->duration [ms]
-  (apply (partial format "%02d:%02d:%02d")
-         (let [duration (Duration/ofMillis ms)]
-           [(.toHours duration)
-            (.toMinutesPart duration)
-            (.toSecondsPart duration)])))
-
-(defn local-console-format-fn
-  [data]
-  (try
-    (let [{:keys [level ?err msg_ ?ns-str]} data]
-      (let [maybe-stacktrace (when ?err
-                               (str "\n" (timbre/stacktrace ?err {:stacktrace-fonts nil})))]
-        (str
-          (ms->duration (jvm-uptime-ms))
-          " "
-          (str/upper-case (name level))
-          " "
-          (last (str/split ?ns-str #"\."))
-          " "
-          (force msg_)
-          maybe-stacktrace)))
-    (catch Throwable t
-      (println "error in local-console-format-fn:" (ex-message t))
-      nil)))
-
-(defonce lock (atom nil))
-
-(defn atomic-println [log-file arg]
-  (locking lock
-    (when (some? log-file)
-      (spit log-file (str arg "\n") :append true))
-    (println arg)))
-
-(defn init-logging! [{:keys [log-file]}]
-  (let [log-file (when (some? log-file)
-                   (str log-file
-                        "_"
-                        (.format
-                          (DateTimeFormatter/ofPattern "yyyy-MM-dd_HH_mm_ss")
-                          (ZonedDateTime/now))
-                        ".log"))]
-    (when (some? log-file)
-      (spit log-file ""))
-    (SLF4JBridgeHandler/removeHandlersForRootLogger)
-    (SLF4JBridgeHandler/install)
-    (.setLevel (Logger/getLogger "") Level/FINEST)
-    (timbre/merge-config!
-      {:min-level [[#{"datomic.*"} :debug]
-                   ;[#{"com.github.ivarref.*"} :debug]
-                   [#{"*"} :info]]
-       :output-fn (fn [data] (local-console-format-fn data))
-       :appenders {:println {:enabled?   true
-                             :async?     false
-                             :min-level  nil
-                             :rate-limit nil
-                             :output-fn  :inherit
-                             :fn         (fn [data]
-                                           (let [{:keys [output_]} data]
-                                             (atomic-println log-file (force output_))))}}})
-    (when (some? log-file)
-      (log/info "logging to file" log-file))))
+    [nrepl.server :as nrepl])
+  (:import
+    (java.net Socket)
+    (java.sql Connection)
+    (javax.sql PooledConnection)
+    (org.postgresql.core PGStream QueryExecutor QueryExecutorBase)
+    (org.postgresql.jdbc PgConnection)))
 
 (defn get-conn []
-  (let [start-time (System/currentTimeMillis)]
-    (let [uri (str "datomic:sql://agent?"
-                   "jdbc:postgresql://"
-                   "localhost:5432"
-                   "/postgres?user=postgres&password="
-                   (System/getenv "POSTGRES_PASSWORD")
-                   (System/getenv "CONN_EXTRA"))
-          conn (do
-                 (d/create-database uri)
-                 (d/connect uri))
-          spent-time (- (System/currentTimeMillis) start-time)]
-      (log/info "Got datomic connection in" spent-time "milliseconds")
-      conn)))
+  (let [start-time (System/currentTimeMillis)
+        uri (str "datomic:sql://agent?"
+                 "jdbc:postgresql://"
+                 "localhost:5432"
+                 "/postgres?user=postgres&password="
+                 (System/getenv "POSTGRES_PASSWORD")
+                 (System/getenv "CONN_EXTRA"))
+        conn (do
+               (d/create-database uri)
+               (d/connect uri))
+        spent-time (- (System/currentTimeMillis) start-time)]
+    (log/info "Got datomic connection in" spent-time "milliseconds")
+    conn))
 
 (defn conn->socket [^PooledConnection conn]
   (when (instance? PooledConnection conn)
@@ -155,7 +76,10 @@
 
 (defn do-test! [{:keys [block?] :as opts}]
   (try
-    (init-logging! opts)
+    (log-init/init-logging! (merge opts
+                                   {:levels [[#{"datomic.*"} :warn]
+                                             [#{"com.github.ivarref.*"} :debug]
+                                             [#{"*"} :info]]}))
     (accept!)
     (hookd/install-return-consumer!
       "org.apache.tomcat.jdbc.pool.ConnectionPool"
@@ -172,13 +96,20 @@
         (fn [^Connection conn]
           (let [^Socket sock (conn->socket conn)]
             (if (= 1 (swap! drop-count inc))
-              (drop-sock! sock)
-              (log/info "Not dropping anything")))))
+              (do
+                (log/info "Dropping connection" conn)
+                (drop-sock! sock))
+              (log/info "Not dropping anything for" sock)))))
+      (hookd/install-pre-hook!
+        "org.apache.tomcat.jdbc.pool.ConnectionPool"
+        "returnConnection"
+        (fn [_ args]
+          (log/info "Enter returnConnection" (into [] args))))
       (let [start-time (System/currentTimeMillis)]
         (log/info "Starting read-segment on blocked connection ...")
         (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
         (let [stop-time (System/currentTimeMillis)]
-          (log/info "Reading on blocked connection ... Done in" (ms->duration (- stop-time start-time))))))
+          (log/info "Reading on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))))))
     (when block?
       @(promise))
     (finally
