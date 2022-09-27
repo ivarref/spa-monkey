@@ -61,7 +61,10 @@
 
 (defn drop-sock! [sock]
   (let [drop-txt (sock->drop sock)]
-    (log/info "Adding TCP filter:" drop-txt)
+    (log/info "Dropping TCP packets for"
+              (str "127.0.0.1:" (.getLocalPort sock))
+              "->"
+              (str "127.0.0.1:" (.getPort sock)))
     (drop-str! (str/join "\n"
                          ["flush ruleset"
                           "table ip filter {"
