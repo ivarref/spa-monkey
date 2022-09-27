@@ -1,4 +1,4 @@
-(ns com.github.ivarref.break-single-conn
+(ns com.github.ivarref.break-single-conn-once
   (:require
     [babashka.process :refer [$ check]]
     [clojure.string :as str]
@@ -77,8 +77,8 @@
 (defn do-test! [{:keys [block?] :as opts}]
   (try
     (log-init/init-logging! (merge opts
-                                   {:levels [[#{"datomic.*"} :warn]
-                                             [#{"com.github.ivarref.*"} :debug]
+                                   {:levels [[#{"datomic.*"} :debug]
+                                             [#{"com.github.ivarref.*"} :info]
                                              [#{"*"} :info]]}))
     (accept!)
     (hookd/install-return-consumer!
@@ -96,18 +96,25 @@
         (fn [^Connection conn]
           (let [^Socket sock (conn->socket conn)]
             (if (= 1 (swap! drop-count inc))
-              (do
-                (log/info "Dropping connection" conn)
-                (drop-sock! sock))
+              (drop-sock! sock)
               (log/info "Not dropping anything for" sock)))))
-      (hookd/install-pre-hook!
-        "org.apache.tomcat.jdbc.pool.ConnectionPool"
-        "returnConnection"
-        (fn [_ args]
-          (log/info "Enter returnConnection" (into [] args))))
-      (let [start-time (System/currentTimeMillis)]
+      (let [start-time (System/currentTimeMillis)
+            done-read? (promise)]
         (log/info "Starting read-segment on blocked connection ...")
+        (future
+          (loop [uptime (int (/ (log-init/jvm-uptime-ms) 60000))
+                 v 0]
+            (when-not (realized? done-read?)
+              (let [timeout? (true? (deref done-read? 1000 true))
+                    new-uptime (int (/ (log-init/jvm-uptime-ms) 60000))]
+                (when timeout?
+                  (if (not= uptime new-uptime)
+                    (do
+                      (log/info (if (even? v) "tick" "tack"))
+                      (recur new-uptime (inc v)))
+                    (recur uptime v)))))))
         (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
+        (deliver done-read? :done)
         (let [stop-time (System/currentTimeMillis)]
           (log/info "Reading on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))))))
     (when block?

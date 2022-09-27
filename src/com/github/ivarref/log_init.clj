@@ -39,7 +39,7 @@
         " "
         (str/upper-case (name level))
         " "
-        (last (str/split ?ns-str #"\."))
+        ?ns-str
         " "
         (force msg_)
         maybe-stacktrace))
@@ -60,7 +60,8 @@
                                      [#{"com.github.ivarref.*"} :debug]
                                      [#{"*"} :info]]}}]
   (let [log-file (when (some? log-file)
-                   (str log-file
+                   (str "logs/"
+                        log-file
                         "_"
                         (.format
                           (DateTimeFormatter/ofPattern "yyyy-MM-dd_HH_mm_ss")
