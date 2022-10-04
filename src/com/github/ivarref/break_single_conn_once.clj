@@ -5,7 +5,7 @@
     [clojure.tools.logging :as log]
     [com.github.ivarref.hookd :as hookd]
     [com.github.ivarref.log-init :as log-init]
-    [datomic.api :as d]
+    [com.github.ivarref.utils :as u]
     [datomic.cluster :as cluster]
     [nrepl.server :as nrepl])
   (:import
@@ -14,21 +14,6 @@
     (javax.sql PooledConnection)
     (org.postgresql.core PGStream QueryExecutor QueryExecutorBase)
     (org.postgresql.jdbc PgConnection)))
-
-(defn get-conn []
-  (let [start-time (System/currentTimeMillis)
-        uri (str "datomic:sql://agent?"
-                 "jdbc:postgresql://"
-                 "localhost:5432"
-                 "/postgres?user=postgres&password="
-                 (System/getenv "POSTGRES_PASSWORD")
-                 (System/getenv "CONN_EXTRA"))
-        conn (do
-               (d/create-database uri)
-               (d/connect uri))
-        spent-time (- (System/currentTimeMillis) start-time)]
-    (log/info "Got datomic connection in" spent-time "milliseconds")
-    conn))
 
 (defn conn->socket [^PooledConnection conn]
   (when (instance? PooledConnection conn)
@@ -91,7 +76,7 @@
     (when block?
       (log/info "Starting nREPL server ....")
       (nrepl/start-server :bind "127.0.0.1" :port 7777))
-    (let [conn (get-conn)
+    (let [conn (u/get-conn)
           drop-count (atom 0)]
       (hookd/install-return-consumer!
         "org.apache.tomcat.jdbc.pool.ConnectionPool"
