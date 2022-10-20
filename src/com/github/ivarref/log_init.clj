@@ -37,12 +37,14 @@
       (str
         (ms->duration (jvm-uptime-ms))
         " "
+        (.getName (Thread/currentThread))
+        " ["
         (str/upper-case (name level))
-        " "
+        "] "
         ?ns-str
         " "
         (force msg_)
-        maybe-stacktrace))
+        #_maybe-stacktrace))
     (catch Throwable t
       (println "error in local-console-format-fn:" (ex-message t))
       nil)))

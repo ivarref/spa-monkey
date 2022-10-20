@@ -21,17 +21,21 @@
           (error "Uncaught exception on" (.getName ^Thread thread))
           nil))))
 
-(defn add-socket [sock state]
-  (update state :sockets (fnil conj #{}) sock))
+(defn add-socket [sock typ state]
+  (-> state
+      #_(update :sockets (fnil conj #{}) sock)
+      (update-in [:socks typ] (fnil conj #{}) sock)))
 
-(defn del-socket [sock state]
-  (update state :sockets (fnil disj #{}) sock))
+(defn del-socket [sock typ state]
+  (-> state
+      #_(update :sockets (fnil disj #{}) sock)
+      (update-in [:socks typ] (fnil disj #{}) sock)))
 
 (defn running? [state]
   (when state
     (:running? @state)))
 
-(defmacro new-thread [state sock f]
+(defmacro new-thread [state typ sock f]
   `(let [state# ~state]
      (future
        (try
@@ -39,11 +43,11 @@
          (let [sock# ~sock
                f# ~f]
            (try
-             (swap! state# (partial add-socket sock#))
+             (swap! state# (partial add-socket sock# ~typ))
              (f# sock#)
              (finally
                (close sock#)
-               (swap! state# (partial del-socket sock#)))))
+               (swap! state# (partial del-socket sock# ~typ)))))
          (catch Throwable t#
            (log/error "Unhandled exception:" (ex-message t#))
            (swap! state# (fn [old-state#] (update old-state# :unhandled-exceptions (fnil conj #{}) t#))))
@@ -100,9 +104,9 @@
 (defn pump-byte! [state id from ^InputStream inp out]
   (let [rd (try
              (.read inp)
-             (catch Exception e
+             (catch Throwable e
                (when (running? state)
-                 (log/warn "Exception while reading socket:" (ex-message e)))
+                 (log/warn "Exception while reading socket:" (ex-message e) "of type" (.getClass e)))
                -1))]
     (if (= -1 rd)
       nil
@@ -115,10 +119,21 @@
         :else
         (do
           (when-let [ms (block-incoming? state from)]
-            (log/warn "Blocking incoming for" ms "ms")
-            (Thread/sleep ms))
+            (let [dest-ms (if (= ms 0)
+                            Long/MAX_VALUE
+                            (+ (System/currentTimeMillis) ms))]
+              (log/warn "Blocking incoming for" (if (= ms 0)
+                                                  Long/MAX_VALUE
+                                                  ms)
+                        "ms")
+              (loop []
+                (Thread/sleep 10)
+                (when (and (running? state) (> dest-ms (System/currentTimeMillis)))
+                  (recur)))
+              (if (running? state)
+                (log/info "Done sleeping")
+                (log/info "Aborted sleeping due to shutdown requested"))))
           (forward-byte! state out rd))))))
-
 
 (defn pump! [state from ^Socket src ^Socket dst]
   (let [id (random-uuid)]
@@ -137,7 +152,13 @@
         (swap! state update :drop (fnil disj #{}) id)))))
 
 
-(defn handle-connection! [state incoming]
+(defn handle-connection! [state ^Socket incoming]
+  (cond (instance? InetSocketAddress (.getRemoteSocketAddress incoming))
+        (let [^InetSocketAddress addr (.getRemoteSocketAddress incoming)]
+          (log/info "Handle new incoming connection from" (str (.getHostName addr) ":" (.getPort addr))))
+
+        :else
+        (log/info "Handle new incoming connection of unhandled type"))
   (let [{:keys [remote-host remote-port connection-timeout]
          :or   {remote-host        "127.0.0.1"
                 remote-port        3117
@@ -148,7 +169,7 @@
                  (catch SocketTimeoutException ste
                    (log/error "Timeout connection to" (str remote-host ":" remote-port))
                    (throw ste)))]
-    (new-thread state remote (fn [_] (pump! state :incoming incoming remote)))
+    (new-thread state :remote remote (fn [_] (pump! state :incoming incoming remote)))
     (pump! state :remote remote incoming)))
 
 (defn accept [state ^ServerSocket server]
@@ -162,7 +183,11 @@
 (defn stop! [state]
   (swap! state assoc :running? false)
   (while (not-empty (:threads @state))
-    (doseq [sock (:sockets @state)]
+    (doseq [sock (get-in @state [:socks :server])]
+      (close sock))
+    (doseq [sock (get-in @state [:socks :remote])]
+      (close sock))
+    (doseq [sock (get-in @state [:socks :incoming])]
       (close sock))
     (Thread/sleep 100)))
 
@@ -180,6 +205,7 @@
     (log/info "Starting spa-monkey on" (str bind ":" port))
     (new-thread
       state
+      :server
       (doto
         (ServerSocket.)
         (.setReuseAddress true)
@@ -188,5 +214,23 @@
         ;(info "Started server")
         (while (running? state)
           (when-let [sock (accept state server)]
-            (new-thread state sock (fn [sock] (handle-connection! state sock)))))
+            (new-thread state :incoming sock (fn [sock] (handle-connection! state sock)))))
         #_(info "Server exiting")))))
+
+(defn block-all-incoming-plus-one [state]
+  (assoc state :block-incoming (vec (repeat (inc (count (get-in state [:socks :incoming]))) 0))))
+
+(comment
+  (block-all-incoming-plus-one {:block-incoming [123123]
+                                :socks          {:incoming [1 2]}}))
+
+(defn block-all-incoming-plus-one! [state-atom]
+  (swap! state-atom block-all-incoming-plus-one))
+
+(comment
+  (def st (atom {:remote-host "localhost"
+                 :remote-port 5432
+                 :port        54321})))
+
+(comment
+  (start! st))
