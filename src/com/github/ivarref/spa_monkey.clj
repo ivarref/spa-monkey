@@ -11,6 +11,14 @@
       (catch IOException _
         nil))))
 
+(defn sock->remote-str [^Socket s]
+  (cond (instance? InetSocketAddress (.getRemoteSocketAddress s))
+        (let [addr (.getRemoteSocketAddress s)]
+          (str (.getHostName addr) ":" (.getPort addr)))
+
+        :else
+        (str "unhandled:" s " of type " (.getClass (.getRemoteSocketAddress s)))))
+
 #_(defn add-uncaught-exception-handler! []
     (Thread/setDefaultUncaughtExceptionHandler
       (reify Thread$UncaughtExceptionHandler
@@ -101,7 +109,7 @@
          (:block-incoming)
          (first))))
 
-(defn pump-byte! [state id from ^InputStream inp out]
+(defn pump-byte! [state id from ^InputStream inp out ^Socket src ^Socket dst]
   (let [rd (try
              (.read inp)
              (catch Throwable e
@@ -122,17 +130,35 @@
             (let [dest-ms (if (= ms 0)
                             Long/MAX_VALUE
                             (+ (System/currentTimeMillis) ms))]
-              (log/warn "Blocking incoming for" (if (= ms 0)
-                                                  Long/MAX_VALUE
-                                                  ms)
+              (log/warn "Blocking incoming"
+                        (sock->remote-str src)
+                        "for" (if (= ms 0)
+                                Long/MAX_VALUE
+                                ms)
                         "ms")
-              (loop []
-                (Thread/sleep 10)
-                (when (and (running? state) (> dest-ms (System/currentTimeMillis)))
-                  (recur)))
-              (if (running? state)
-                (log/info "Done sleeping")
-                (log/info "Aborted sleeping due to shutdown requested"))))
+              (try
+                (swap! state update :blocked-incoming-count (fnil inc 0))
+                (loop []
+                  (Thread/sleep 10)
+                  (when (and (running? state)
+                             (not (.isClosed src))
+                             (not (.isClosed dst))
+                             (> dest-ms (System/currentTimeMillis)))
+                    (recur)))
+                (finally
+                  (swap! state update :blocked-incoming-count (fnil dec 0))))
+              (cond
+                (not (running? state))
+                (log/info "Aborted sleeping due to shutdown requested")
+
+                (and (running? state) (.isClosed src))
+                (log/info "Aborted sleeping due to source closed connection")
+
+                (and (running? state) (.isClosed dst))
+                (log/info "Aborted sleeping due to destination closed connection")
+
+                :else
+                (log/info "Done sleeping, other state"))))
           (forward-byte! state out rd))))))
 
 (defn pump! [state from ^Socket src ^Socket dst]
@@ -142,7 +168,7 @@
                   out (BufferedOutputStream. (.getOutputStream dst))]
         (loop []
           (when (and (running? state) (not (.isClosed src)) (not (.isClosed dst)))
-            (when (pump-byte! state id from inp out)
+            (when (pump-byte! state id from inp out src dst)
               (recur)))))
       (catch Exception e
         (if (running? state)
@@ -151,14 +177,8 @@
       (finally
         (swap! state update :drop (fnil disj #{}) id)))))
 
-
 (defn handle-connection! [state ^Socket incoming]
-  (cond (instance? InetSocketAddress (.getRemoteSocketAddress incoming))
-        (let [^InetSocketAddress addr (.getRemoteSocketAddress incoming)]
-          (log/info "Handle new incoming connection from" (str (.getHostName addr) ":" (.getPort addr))))
-
-        :else
-        (log/info "Handle new incoming connection of unhandled type"))
+  (log/info "Handle new incoming connection from" (sock->remote-str incoming))
   (let [{:keys [remote-host remote-port connection-timeout]
          :or   {remote-host        "127.0.0.1"
                 remote-port        3117
@@ -219,10 +239,6 @@
 
 (defn block-all-incoming-plus-one [state]
   (assoc state :block-incoming (vec (repeat (inc (count (get-in state [:socks :incoming]))) 0))))
-
-(comment
-  (block-all-incoming-plus-one {:block-incoming [123123]
-                                :socks          {:incoming [1 2]}}))
 
 (defn block-all-incoming-plus-one! [state-atom]
   (swap! state-atom block-all-incoming-plus-one))
