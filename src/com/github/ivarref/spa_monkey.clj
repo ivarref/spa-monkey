@@ -109,6 +109,13 @@
          (:block-incoming)
          (first))))
 
+(defn block-remote? [state-atom from]
+  (when (= :remote from)
+    (->> (swap-vals! state-atom update :block-remote (comp vec (fnil rest [])))
+         (first)
+         (:block-remote)
+         (first))))
+
 (defn pump-byte! [state id from ^InputStream inp out ^Socket src ^Socket dst]
   (let [rd (try
              (.read inp)
@@ -124,7 +131,44 @@
           (swap! state update :dropped-bytes (fnil inc 0))
           true)
 
-        :else
+        (= :remote from)
+        (do
+          (when-let [ms (block-remote? state from)]
+            (let [dest-ms (if (= ms 0)
+                            Long/MAX_VALUE
+                            (+ (System/currentTimeMillis) ms))]
+              (log/warn "Blocking remote"
+                        (sock->remote-str src)
+                        "for" (if (= ms 0)
+                                Long/MAX_VALUE
+                                ms)
+                        "ms")
+              (try
+                (swap! state update :blocked-remote-count (fnil inc 0))
+                (loop []
+                  (Thread/sleep 10)
+                  (when (and (running? state)
+                             (not (.isClosed src))
+                             (not (.isClosed dst))
+                             (> dest-ms (System/currentTimeMillis)))
+                    (recur)))
+                (finally
+                  (swap! state update :blocked-remote-count (fnil dec 0))))
+              (cond
+                (not (running? state))
+                (log/info "Aborted sleeping due to shutdown requested")
+
+                (and (running? state) (.isClosed src))
+                (log/info "Aborted sleeping due to source closed connection")
+
+                (and (running? state) (.isClosed dst))
+                (log/info "Aborted sleeping due to destination closed connection")
+
+                :else
+                (log/info "Done sleeping, other state"))))
+          (forward-byte! state out rd))
+
+        (= :incoming from)
         (do
           (when-let [ms (block-incoming? state from)]
             (let [dest-ms (if (= ms 0)
@@ -218,7 +262,9 @@
          :unhandled-exceptions #{}
          :running? true
          :block-incoming []
+         :block-remote []
          :blocked-incoming-count 0
+         :blocked-remote-count 0
          :drop-remote 0)
   (let [{:keys [bind port]
          :or   {bind "127.0.0.1"
@@ -241,8 +287,17 @@
 (defn block-all-incoming-plus-one [state]
   (assoc state :block-incoming (vec (repeat (inc (count (get-in state [:socks :incoming]))) 0))))
 
+(defn block-all-duplex-plus-one [state]
+  (-> state
+      (assoc :block-incoming (vec (repeat (inc (count (get-in state [:socks :incoming]))) 0)))
+      (assoc :block-remote (vec (repeat (inc (count (get-in state [:socks :remote]))) 0)))))
+
 (defn block-all-incoming-plus-one! [state-atom]
   (swap! state-atom block-all-incoming-plus-one))
+
+
+(defn block-all-duplex-plus-one! [state-atom]
+  (swap! state-atom block-all-duplex-plus-one))
 
 (comment
   (def st (atom {:remote-host "localhost"
