@@ -89,14 +89,14 @@
 (defn block-incoming! [state ms]
   (swap! state update :block-incoming (fnil conj []) ms))
 
-(defn forward-byte! [state ^OutputStream out rd]
+(defn forward-byte! [state ^OutputStream out rd from]
   (let [w (try
             (.write out ^int rd)
             (.flush out)
             1
             (catch Exception e
               (when (running? state)
-                (log/warn "Exception while writing to socket:" (ex-message e)))
+                (log/warn "Exception while writing" from "to socket:" (ex-message e)))
               -1))]
     (if (= 1 w)
       true
@@ -166,7 +166,7 @@
 
                 :else
                 (log/info "Done sleeping, other state"))))
-          (forward-byte! state out rd))
+          (forward-byte! state out rd from))
 
         (= :incoming from)
         (do
@@ -203,7 +203,7 @@
 
                 :else
                 (log/info "Done sleeping, other state"))))
-          (forward-byte! state out rd))))))
+          (forward-byte! state out rd from))))))
 
 (defn pump! [state from ^Socket src ^Socket dst]
   (let [id (random-uuid)]
