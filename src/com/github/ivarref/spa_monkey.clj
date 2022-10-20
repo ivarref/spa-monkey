@@ -218,6 +218,7 @@
          :unhandled-exceptions #{}
          :running? true
          :block-incoming []
+         :blocked-incoming-count 0
          :drop-remote 0)
   (let [{:keys [bind port]
          :or   {bind "127.0.0.1"
