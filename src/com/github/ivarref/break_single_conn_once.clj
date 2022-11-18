@@ -15,6 +15,9 @@
     (org.postgresql.core PGStream QueryExecutor QueryExecutorBase)
     (org.postgresql.jdbc PgConnection)))
 
+; sudo bash -c 'echo 6 > /proc/sys/net/ipv4/tcp_retries2'
+; sdk default java 17.0.4.1-tem
+
 (defn conn->socket [^PooledConnection conn]
   (when (instance? PooledConnection conn)
     (let [^PgConnection conn (.getConnection conn)
@@ -29,7 +32,7 @@
     @(cluster/get-val cluster val-key)))
 
 (defn accept! []
-  (log/debug "Start accepting all packets")
+  (log/info "Clear all packet filters")
   (as-> ^{:out :string :err :string} ($ ./accept) v
         (check v)))
 
@@ -44,12 +47,14 @@
   (as-> ^{:out :string :err :string} ($ "/usr/sbin/nft" -f ./drop.txt) v
         (check v)))
 
+(defn sock->readable [sock]
+  (str "127.0.0.1:" (.getLocalPort sock)
+       "->"
+       "127.0.0.1:" (.getPort sock)))
+
 (defn drop-sock! [sock]
   (let [drop-txt (sock->drop sock)]
-    (log/info "Dropping TCP packets for"
-              (str "127.0.0.1:" (.getLocalPort sock))
-              "->"
-              (str "127.0.0.1:" (.getPort sock)))
+    (log/info "Dropping TCP packets for" (sock->readable sock))
     (drop-str! (str/join "\n"
                          ["flush ruleset"
                           "table ip filter {"
@@ -85,7 +90,7 @@
           (let [^Socket sock (conn->socket conn)]
             (if (= 1 (swap! drop-count inc))
               (drop-sock! sock)
-              (log/info "Not dropping anything for" sock)))))
+              (log/info "Not dropping anything for" (sock->readable sock))))))
       (let [start-time (System/currentTimeMillis)
             done-read? (promise)]
         (log/info "Starting read-segment on blocked connection ...")

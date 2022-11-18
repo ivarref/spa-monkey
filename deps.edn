@@ -1,11 +1,11 @@
 {:paths     ["src"]
  :deps      {org.clojure/clojure        {:mvn/version "1.11.1"}
-             org.postgresql/postgresql  {:mvn/version "42.3.3"}
+             org.postgresql/postgresql  {:mvn/version "42.5.0"}
              org.clojure/tools.logging  {:mvn/version "1.2.4"}
              babashka/process           {:mvn/version "0.1.7"}
              nrepl/nrepl                {:mvn/version "1.0.0"}
              com.taoensso/encore        {:mvn/version "3.24.0"}
-             com.datomic/datomic-pro    {:mvn/version "1.0.6397"}
+             com.datomic/datomic-pro    {:mvn/version "1.0.6527"}
              com.taoensso/timbre        {:mvn/version "5.2.1"}
              com.fzakaria/slf4j-timbre  {:mvn/version "0.3.21"}
              org.slf4j/log4j-over-slf4j {:mvn/version "1.7.30"}
