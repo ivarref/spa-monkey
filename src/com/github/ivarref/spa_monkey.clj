@@ -5,7 +5,7 @@
   (:gen-class))
 
 (defn close [^Closeable s]
-  (when s
+  (when (and s (instance? Closeable s))
     (try
       (.close s)
       (catch IOException _
@@ -269,22 +269,26 @@
   (let [{:keys [bind port]
          :or   {bind "127.0.0.1"
                 port 20009}} @state
-        ready? (promise)]
+        exception? (promise)]
     (log/info "Starting spa-monkey on" (str bind ":" port))
     (new-thread
       state
       :server
-      (doto
-        (ServerSocket.)
-        (.setReuseAddress true)
-        (.bind (InetSocketAddress. ^String bind ^int port)))
+      (try
+        (doto
+          (ServerSocket.)
+          (.setReuseAddress true)
+          (.bind (InetSocketAddress. ^String bind ^int port)))
+        (catch Exception e
+          (deliver exception? e)
+          (throw e)))
       (fn [^ServerSocket server]
-        (deliver ready? :true)
+        (deliver exception? nil)
         (while (running? state)
           (when-let [sock (accept state server)]
             (new-thread state :incoming sock (fn [sock] (handle-connection! state sock)))))
         #_(info "Server exiting")))
-    @ready?))
+    @exception?))
 
 (defn block-all-incoming-plus-one [state]
   (assoc state :block-incoming (vec (repeat (inc (count (get-in state [:socks :incoming]))) 0))))

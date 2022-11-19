@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-trap 'trap - SIGTERM && kill -- -$$;' SIGINT SIGTERM EXIT
+BREAK="false"
+trap 'trap - SIGTERM && export BREAK="true"; kill -- -$$;' SIGINT SIGTERM EXIT
 
 # https://jvns.ca/blog/2020/06/28/entr/
-while true
+while [[ "${BREAK}" == "false" ]]
 do
-{ git ls-files; git ls-files . --exclude-standard --others; } | entr -dz clojure -X:break-after-ack
+  { git ls-files; git ls-files . --exclude-standard --others; } | grep -v "logs/\|^\." | entr -dz clojure -X:break-after-ack
 done

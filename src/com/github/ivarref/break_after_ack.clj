@@ -84,17 +84,19 @@
     (when block?
       (log/info "Starting nREPL server ....")
       (nrepl/start-server :bind "127.0.0.1" :port 7777))
-    (spa-monkey/start! monkey)
+    (when-let [e (spa-monkey/start! monkey)]
+      (throw e))
     (let [conn (u/get-conn 54321)
-          drop-count (atom 0)]
+          drop-count (atom 0)
+          block-sock (atom nil)]
       (hookd/install-return-consumer!
         "org.apache.tomcat.jdbc.pool.ConnectionPool"
         "getConnection"
         (fn [^Connection conn]
           (let [^Socket sock (conn->socket conn)]
-            (if (= 1 (swap! drop-count inc))
-              (drop-sock! sock)
-              (log/info "Not dropping anything for" (sock->readable sock))))))
+            (when (= 1 (swap! drop-count inc))
+              (log/info "Got socket" (sock->readable sock))
+              (reset! block-sock sock)))))
       (let [start-time (System/currentTimeMillis)
             done-read? (promise)]
         (log/info "Starting read-segment on blocked connection ...")
@@ -117,4 +119,5 @@
     (when block?
       @(promise))
     (finally
-      (accept!))))
+      (accept!)
+      (spa-monkey/stop! monkey))))
