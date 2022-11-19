@@ -73,7 +73,7 @@
   (try
     (log-init/init-logging! (merge opts
                                    {:log-file "break-after-ack"
-                                    :levels [[#{"datomic.*"} :debug]
+                                    :levels [[#{"datomic.*"} :warn]
                                              [#{"com.github.ivarref.*"} :info]
                                              [#{"*"} :info]]}))
     (accept!)
@@ -86,7 +86,7 @@
       (nrepl/start-server :bind "127.0.0.1" :port 7777))
     (when-let [e (spa-monkey/start! monkey)]
       (throw e))
-    (let [conn (u/get-conn 54321)
+    (let [conn (u/get-conn :port 54321)
           drop-count (atom 0)
           block-sock (atom nil)]
       (hookd/install-return-consumer!
