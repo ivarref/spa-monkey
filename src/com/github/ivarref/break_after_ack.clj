@@ -5,8 +5,8 @@
     [clojure.tools.logging :as log]
     [com.github.ivarref.hookd :as hookd]
     [com.github.ivarref.log-init :as log-init]
-    [com.github.ivarref.utils :as u]
     [com.github.ivarref.spa-monkey :as spa-monkey]
+    [com.github.ivarref.utils :as u]
     [datomic.cluster :as cluster]
     [nrepl.server :as nrepl])
   (:import
