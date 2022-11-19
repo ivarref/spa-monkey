@@ -2,11 +2,12 @@
   (:require [clojure.tools.logging :as log]
             [datomic.api :as d]))
 
-(defn get-conn []
+(defn get-conn [& {:keys [port]
+                   :or   {port 5432}}]
   (let [start-time (System/currentTimeMillis)
         uri (str "datomic:sql://agent?"
                  "jdbc:postgresql://"
-                 "localhost:5432"
+                 "localhost:" port
                  "/postgres?user=postgres&password="
                  (System/getenv "POSTGRES_PASSWORD")
                  (System/getenv "CONN_EXTRA"))

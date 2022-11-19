@@ -2,7 +2,7 @@
  :deps      {org.clojure/clojure        {:mvn/version "1.11.1"}
              org.postgresql/postgresql  {:mvn/version "42.5.0"}
              org.clojure/tools.logging  {:mvn/version "1.2.4"}
-             babashka/process           {:mvn/version "0.1.7"}
+             babashka/process           {:mvn/version "0.3.11"}
              nrepl/nrepl                {:mvn/version "1.0.0"}
              com.taoensso/encore        {:mvn/version "3.24.0"}
              com.datomic/datomic-pro    {:mvn/version "1.0.6527"}
@@ -14,6 +14,9 @@
              com.github.ivarref/hookd   {:mvn/version "0.1.20"}}
  :aliases   {:nrepl                  {:exec-fn   com.github.ivarref.case-1/start-nrepl-server!
                                       :exec-args {:block? true}}
+             :break-after-ack {:exec-fn   com.github.ivarref.break-after-ack/do-test!
+                               :exec-args {:block?   false}
+                               :jvm-opts  ["-Djdk.attach.allowAttachSelf=true" "-XX:-OmitStackTraceInFastThrow"]}
              :break-single-conn-once {:exec-fn   com.github.ivarref.break-single-conn-once/do-test!
                                       :exec-args {:block?   false
                                                   :log-file "break-single-connection"}

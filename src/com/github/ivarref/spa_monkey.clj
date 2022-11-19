@@ -268,7 +268,8 @@
          :drop-remote 0)
   (let [{:keys [bind port]
          :or   {bind "127.0.0.1"
-                port 20009}} @state]
+                port 20009}} @state
+        ready? (promise)]
     (log/info "Starting spa-monkey on" (str bind ":" port))
     (new-thread
       state
@@ -278,11 +279,12 @@
         (.setReuseAddress true)
         (.bind (InetSocketAddress. ^String bind ^int port)))
       (fn [^ServerSocket server]
-        ;(info "Started server")
+        (deliver ready? :true)
         (while (running? state)
           (when-let [sock (accept state server)]
             (new-thread state :incoming sock (fn [sock] (handle-connection! state sock)))))
-        #_(info "Server exiting")))))
+        #_(info "Server exiting")))
+    @ready?))
 
 (defn block-all-incoming-plus-one [state]
   (assoc state :block-incoming (vec (repeat (inc (count (get-in state [:socks :incoming]))) 0))))
