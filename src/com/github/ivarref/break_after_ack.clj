@@ -70,6 +70,7 @@
                        :port        54321}))
 
 (defonce sock-atom (atom nil))
+(defonce drop-sock (atom nil))
 
 (defn do-test-inner [_]
   (hookd/install-return-consumer!
@@ -79,8 +80,7 @@
   (when-let [e (spa-monkey/start! monkey)]
     (throw e))
   (let [conn (u/get-conn :port 54321)
-        drop-count (atom 0)
-        block-sock (atom nil)]
+        drop-count (atom 0)]
     (hookd/install-return-consumer!
       "org.apache.tomcat.jdbc.pool.ConnectionPool"
       "getConnection"
@@ -88,8 +88,14 @@
         (let [^Socket sock (conn->socket conn)]
           (when (= 1 (swap! drop-count inc))
             (reset! sock-atom sock)
-            (log/info "Got socket" (sock->readable sock))
-            (reset! block-sock sock)))))
+            (log/info "Got socket" (sock->readable sock))))))
+    (spa-monkey/add-handler!
+      monkey
+      (fn [{:keys [op dst]}]
+        (when (= op :recv)
+          (drop-sock! dst)
+          (reset! drop-sock dst)
+          :pop)))
     (let [start-time (System/currentTimeMillis)
           done? (promise)]
       (log/info "Starting read-segment on blocked connection ...")

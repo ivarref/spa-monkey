@@ -5,7 +5,7 @@
            (java.net InetSocketAddress ServerSocket Socket SocketTimeoutException))
   (:gen-class))
 
-(defn close [^Closeable s]
+(defn- close [^Closeable s]
   (when (and s (instance? Closeable s))
     (try
       (.close s)
@@ -20,15 +20,15 @@
         :else
         (str "unhandled:" s " of type " (.getClass (.getRemoteSocketAddress s)))))
 
-(defn add-socket [sock typ state]
+(defn- add-socket [sock typ state]
   (-> state
       (update-in [:socks typ] (fnil conj #{}) sock)))
 
-(defn del-socket [sock typ state]
+(defn- del-socket [sock typ state]
   (-> state
       (update-in [:socks typ] (fnil disj #{}) sock)))
 
-(defn running? [state]
+(defn- running? [state]
   (when state
     (:running? @state)))
 
@@ -51,8 +51,7 @@
          (finally
            (swap! state# (fn [old-state#] (update old-state# :threads (fnil disj #{}) (Thread/currentThread)))))))))
 
-
-(defn forward-byte! [state ^OutputStream out rd from]
+(defn- forward-byte! [state ^OutputStream out rd from]
   (let [w (try
             (.write out ^int rd)
             (.flush out)
@@ -65,7 +64,7 @@
       true
       nil)))
 
-(defn pump-byte! [^Atom state id typ ^InputStream inp out ^Socket src ^Socket dst]
+(defn- pump-byte! [^Atom state id typ ^InputStream inp out ^Socket src ^Socket dst]
   (let [rd (try
              (.read inp)
              (catch Throwable e
@@ -82,7 +81,7 @@
               (swap! state update :handlers dissoc handler-id))))
         (forward-byte! state out rd typ)))))
 
-(defn pump! [id typ state ^Socket src ^Socket dst]
+(defn- pump! [id typ state ^Socket src ^Socket dst]
   (try
     (with-open [inp (BufferedInputStream. (.getInputStream src))
                 out (BufferedOutputStream. (.getOutputStream dst))]
@@ -95,7 +94,7 @@
         (throw e)
         nil))))
 
-(defn handle-connection! [id state ^Socket incoming]
+(defn- handle-connection! [id state ^Socket incoming]
   (log/info "Handle new incoming connection from" (sock->remote-str incoming))
   (let [{:keys [remote-host remote-port connection-timeout]
          :or   {remote-host        "127.0.0.1"
@@ -110,7 +109,7 @@
     (new-thread id state :send remote (fn [_] (pump! id :send state incoming remote)))
     (pump! id :recv state remote incoming)))
 
-(defn accept [state ^ServerSocket server]
+(defn- accept [state ^ServerSocket server]
   (try
     (.accept server)
     (catch Exception e
