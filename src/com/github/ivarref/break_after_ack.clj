@@ -39,6 +39,10 @@
   (as-> ^{:out :string :err :string} ($ "/usr/sbin/nft" -f ./drop.txt) v
         (check v)))
 
+(defn socket->ports [^Socket sock]
+  [(.getLocalPort sock)
+   (.getPort (.getRemoteSocketAddress sock))])
+
 (defn sock->readable [sock]
   (str "127.0.0.1:" (.getLocalPort sock)
        "->"
