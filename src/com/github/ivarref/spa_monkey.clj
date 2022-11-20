@@ -116,7 +116,7 @@
          (:block-remote)
          (first))))
 
-(defn pump-byte! [state id from ^InputStream inp out ^Socket src ^Socket dst]
+(defn pump-byte! [state id typ ^InputStream inp out ^Socket src ^Socket dst]
   (let [rd (try
              (.read inp)
              (catch Throwable e
@@ -126,14 +126,14 @@
     (if (= -1 rd)
       nil
       (cond
-        (drop-forward-byte? state id from)
+        (drop-forward-byte? state id typ)
         (do
           (swap! state update :dropped-bytes (fnil inc 0))
           true)
 
-        (= :remote from)
+        (= :remote typ)
         (do
-          (when-let [ms (block-remote? state from)]
+          (when-let [ms (block-remote? state typ)]
             (let [dest-ms (if (= ms 0)
                             Long/MAX_VALUE
                             (+ (System/currentTimeMillis) ms))]
@@ -166,11 +166,11 @@
 
                 :else
                 (log/info "Done sleeping, other state"))))
-          (forward-byte! state out rd from))
+          (forward-byte! state out rd typ))
 
-        (= :incoming from)
+        (= :incoming typ)
         (do
-          (when-let [ms (block-incoming? state from)]
+          (when-let [ms (block-incoming? state typ)]
             (let [dest-ms (if (= ms 0)
                             Long/MAX_VALUE
                             (+ (System/currentTimeMillis) ms))]
@@ -203,23 +203,23 @@
 
                 :else
                 (log/info "Done sleeping, other state"))))
-          (forward-byte! state out rd from))))))
+          (forward-byte! state out rd typ))))))
 
-(defn pump! [state from ^Socket src ^Socket dst]
-  (let [id (random-uuid)]
-    (try
-      (with-open [inp (BufferedInputStream. (.getInputStream src))
-                  out (BufferedOutputStream. (.getOutputStream dst))]
-        (loop []
-          (when (and (running? state) (not (.isClosed src)) (not (.isClosed dst)))
-            (when (pump-byte! state id from inp out src dst)
-              (recur)))))
-      (catch Exception e
-        (if (running? state)
-          (throw e)
-          nil))
-      (finally
-        (swap! state update :drop (fnil disj #{}) id)))))
+(defn pump! [id typ state ^Socket src ^Socket dst]
+  (try
+    (swap! state assoc-in [:sock-details id typ] [src dst])
+    (with-open [inp (BufferedInputStream. (.getInputStream src))
+                out (BufferedOutputStream. (.getOutputStream dst))]
+      (loop []
+        (when (and (running? state) (not (.isClosed src)) (not (.isClosed dst)))
+          (when (pump-byte! state id typ inp out src dst)
+            (recur)))))
+    (catch Exception e
+      (if (running? state)
+        (throw e)
+        nil))
+    (finally
+      (swap! state update :drop (fnil disj #{}) id))))
 
 (defn handle-connection! [state ^Socket incoming]
   (log/info "Handle new incoming connection from" (sock->remote-str incoming))
@@ -227,14 +227,15 @@
          :or   {remote-host        "127.0.0.1"
                 remote-port        3117
                 connection-timeout 3000}} @state
+        id (random-uuid)
         remote (try
                  (doto (Socket.)
                    (.connect (InetSocketAddress. ^String remote-host ^int remote-port) connection-timeout))
                  (catch SocketTimeoutException ste
                    (log/error "Timeout connection to" (str remote-host ":" remote-port))
                    (throw ste)))]
-    (new-thread state :remote remote (fn [_] (pump! state :incoming incoming remote)))
-    (pump! state :remote remote incoming)))
+    (new-thread state :send remote (fn [_] (pump! id :send state incoming remote)))
+    (pump! id :recv state remote incoming)))
 
 (defn accept [state ^ServerSocket server]
   (try
@@ -249,9 +250,9 @@
   (while (not-empty (:threads @state))
     (doseq [sock (get-in @state [:socks :server])]
       (close sock))
-    (doseq [sock (get-in @state [:socks :remote])]
+    (doseq [sock (get-in @state [:socks :recv])]
       (close sock))
-    (doseq [sock (get-in @state [:socks :incoming])]
+    (doseq [sock (get-in @state [:socks :send])]
       (close sock))
     (Thread/sleep 100)))
 
@@ -286,7 +287,7 @@
         (deliver exception? nil)
         (while (running? state)
           (when-let [sock (accept state server)]
-            (new-thread state :incoming sock (fn [sock] (handle-connection! state sock)))))
+            (new-thread state :recv sock (fn [sock] (handle-connection! state sock)))))
         #_(info "Server exiting")))
     @exception?))
 

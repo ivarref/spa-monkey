@@ -87,6 +87,7 @@
       (fn [^Connection conn]
         (let [^Socket sock (conn->socket conn)]
           (when (= 1 (swap! drop-count inc))
+            (reset! sock-atom sock)
             (log/info "Got socket" (sock->readable sock))
             (reset! block-sock sock)))))
     (let [start-time (System/currentTimeMillis)
@@ -97,12 +98,6 @@
       (deliver done? :done)
       (let [stop-time (System/currentTimeMillis)]
         (log/info "Reading on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time)))))))
-
-(comment
-  (log-init/init-logging! {:log-file "break-after-ack"
-                           :levels   [[#{"datomic.*"} :warn]
-                                      [#{"com.github.ivarref.*"} :info]
-                                      [#{"*"} :info]]}))
 
 (defn do-test! [{:keys [block?] :as opts}]
   (try
