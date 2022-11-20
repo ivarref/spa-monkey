@@ -15,7 +15,7 @@
  :aliases   {:nrepl                  {:exec-fn   com.github.ivarref.case-1/start-nrepl-server!
                                       :exec-args {:block? true}}
              :break-after-ack {:exec-fn   com.github.ivarref.break-after-ack/do-test!
-                               :exec-args {:block?   false}
+                               :exec-args {:block?   true}
                                :jvm-opts  ["-Djdk.attach.allowAttachSelf=true" "-XX:-OmitStackTraceInFastThrow"]}
              :break-single-conn-once {:exec-fn   com.github.ivarref.break-single-conn-once/do-test!
                                       :exec-args {:block?   false
