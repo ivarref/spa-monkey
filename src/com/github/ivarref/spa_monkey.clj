@@ -54,6 +54,7 @@
            (log/error "Unhandled exception:" (ex-message t#))
            (swap! state# (fn [old-state#] (update old-state# :unhandled-exceptions (fnil conj #{}) t#))))
          (finally
+           (log/info "Thread" ~id ~typ "exiting")
            (swap! state# (fn [old-state#] (update old-state# :threads (fnil disj #{}) (Thread/currentThread)))))))))
 
 (defn- forward-byte! [state ^OutputStream out rd from]
