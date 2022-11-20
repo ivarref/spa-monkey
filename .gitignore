@@ -6,3 +6,4 @@
 drop.txt
 drop
 postgres/
+.attach*
