@@ -69,6 +69,8 @@
                        :remote-port 5432
                        :port        54321}))
 
+(defonce sock-atom (atom nil))
+
 (defn do-test-inner [_]
   (hookd/install-return-consumer!
     "org.apache.tomcat.jdbc.pool.ConnectionPool"
