@@ -69,55 +69,47 @@
                        :remote-port 5432
                        :port        54321}))
 
-(defn do-test! [{:keys [block?] :as opts}]
+(defn do-test-inner [{:keys [block?] :as opts}]
+  (hookd/install-return-consumer!
+    "org.apache.tomcat.jdbc.pool.ConnectionPool"
+    "::Constructor"
+    (partial reset! conn-pool))
+  (when block?
+    (log/info "Starting nREPL server ....")
+    (nrepl/start-server :bind "127.0.0.1" :port 7777))
+  (when-let [e (spa-monkey/start! monkey)]
+    (throw e))
+  (let [conn (u/get-conn :port 54321)
+        drop-count (atom 0)
+        block-sock (atom nil)]
+    (hookd/install-return-consumer!
+      "org.apache.tomcat.jdbc.pool.ConnectionPool"
+      "getConnection"
+      (fn [^Connection conn]
+        (let [^Socket sock (conn->socket conn)]
+          (when (= 1 (swap! drop-count inc))
+            (log/info "Got socket" (sock->readable sock))
+            (reset! block-sock sock)))))
+    (let [start-time (System/currentTimeMillis)
+          done? (promise)]
+      (log/info "Starting read-segment on blocked connection ...")
+      (future (u/tick-thread done?))
+      (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
+      (deliver done? :done)
+      (let [stop-time (System/currentTimeMillis)]
+        (log/info "Reading on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))))))
+  (when block?
+    @(promise)))
+
+(defn do-test! [opts]
   (try
     (log-init/init-logging! (merge opts
                                    {:log-file "break-after-ack"
-                                    :levels [[#{"datomic.*"} :warn]
-                                             [#{"com.github.ivarref.*"} :info]
-                                             [#{"*"} :info]]}))
+                                    :levels   [[#{"datomic.*"} :warn]
+                                               [#{"com.github.ivarref.*"} :info]
+                                               [#{"*"} :info]]}))
     (accept!)
-    (hookd/install-return-consumer!
-      "org.apache.tomcat.jdbc.pool.ConnectionPool"
-      "::Constructor"
-      (partial reset! conn-pool))
-    (when block?
-      (log/info "Starting nREPL server ....")
-      (nrepl/start-server :bind "127.0.0.1" :port 7777))
-    (when-let [e (spa-monkey/start! monkey)]
-      (throw e))
-    (let [conn (u/get-conn :port 54321)
-          drop-count (atom 0)
-          block-sock (atom nil)]
-      (hookd/install-return-consumer!
-        "org.apache.tomcat.jdbc.pool.ConnectionPool"
-        "getConnection"
-        (fn [^Connection conn]
-          (let [^Socket sock (conn->socket conn)]
-            (when (= 1 (swap! drop-count inc))
-              (log/info "Got socket" (sock->readable sock))
-              (reset! block-sock sock)))))
-      (let [start-time (System/currentTimeMillis)
-            done-read? (promise)]
-        (log/info "Starting read-segment on blocked connection ...")
-        (future
-          (loop [uptime (int (/ (log-init/jvm-uptime-ms) 60000))
-                 v 0]
-            (when-not (realized? done-read?)
-              (let [timeout? (true? (deref done-read? 1000 true))
-                    new-uptime (int (/ (log-init/jvm-uptime-ms) 60000))]
-                (when timeout?
-                  (if (not= uptime new-uptime)
-                    (do
-                      (log/info (if (even? v) "tick" "tack"))
-                      (recur new-uptime (inc v)))
-                    (recur uptime v)))))))
-        (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
-        (deliver done-read? :done)
-        (let [stop-time (System/currentTimeMillis)]
-          (log/info "Reading on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))))))
-    (when block?
-      @(promise))
+    (do-test-inner opts)
     (finally
       (accept!)
       (spa-monkey/stop! monkey))))
