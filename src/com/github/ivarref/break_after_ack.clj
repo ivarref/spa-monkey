@@ -93,7 +93,7 @@
     (let [start-time (System/currentTimeMillis)
           done? (promise)]
       (log/info "Starting read-segment on blocked connection ...")
-      (future (u/tick-thread done?))
+      (u/start-tick-thread done?)
       (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
       (deliver done? :done)
       (let [stop-time (System/currentTimeMillis)]

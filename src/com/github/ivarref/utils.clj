@@ -19,15 +19,16 @@
     (log/info "Got datomic connection in" spent-time "milliseconds")
     conn))
 
-(defn tick-thread [done?]
-  (loop [uptime (int (/ (log-init/jvm-uptime-ms) 60000))
-         v 0]
-    (when-not (realized? done?)
-      (let [timeout? (true? (deref done? 1000 true))
-            new-uptime (int (/ (log-init/jvm-uptime-ms) 60000))]
-        (when timeout?
-          (if (not= uptime new-uptime)
-            (do
-              (log/info (if (even? v) "tick" "tack"))
-              (recur new-uptime (inc v)))
-            (recur uptime v)))))))
+(defn start-tick-thread [done?]
+  (future
+    (loop [uptime (int (/ (log-init/jvm-uptime-ms) 60000))
+           v 0]
+      (when-not (realized? done?)
+        (let [timeout? (true? (deref done? 1000 true))
+              new-uptime (int (/ (log-init/jvm-uptime-ms) 60000))]
+          (when timeout?
+            (if (not= uptime new-uptime)
+              (do
+                (log/info (if (even? v) "tick" "tack"))
+                (recur new-uptime (inc v)))
+              (recur uptime v))))))))
