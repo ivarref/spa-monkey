@@ -96,13 +96,18 @@
       (let [stop-time (System/currentTimeMillis)]
         (log/info "Reading on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time)))))))
 
+(comment
+  (log-init/init-logging! {:log-file "break-after-ack"
+                           :levels   [[#{"datomic.*"} :warn]
+                                      [#{"com.github.ivarref.*"} :info]
+                                      [#{"*"} :info]]}))
+
 (defn do-test! [{:keys [block?] :as opts}]
   (try
-    (log-init/init-logging! (merge opts
-                                   {:log-file "break-after-ack"
-                                    :levels   [[#{"datomic.*"} :warn]
-                                               [#{"com.github.ivarref.*"} :info]
-                                               [#{"*"} :info]]}))
+    (log-init/init-logging! {:log-file "break-after-ack"
+                             :levels   [[#{"datomic.*"} :warn]
+                                        [#{"com.github.ivarref.*"} :info]
+                                        [#{"*"} :info]]})
     (accept!)
     (when block?
       (log/info "Starting nREPL server ....")
