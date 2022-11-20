@@ -74,7 +74,7 @@
              (.read inp)
              (catch Throwable e
                (when (running? state)
-                 (log/warn id typ (sock->readable src) "Exception while reading socket:" (ex-message e) "of type" (.getClass e)))
+                 (log/warn id typ "src" (sock->readable src) "dst" (sock->readable dst) "Exception while reading socket:" (ex-message e) "of type" (.getClass e)))
                -1))]
     (if (= -1 rd)
       nil
