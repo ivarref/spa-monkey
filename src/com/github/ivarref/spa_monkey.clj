@@ -12,6 +12,11 @@
       (catch IOException _
         nil))))
 
+(defn- sock->readable [sock]
+  (str "127.0.0.1:" (.getLocalPort sock)
+       "->"
+       "127.0.0.1:" (.getPort sock)))
+
 (defn sock->remote-str [^Socket s]
   (cond (instance? InetSocketAddress (.getRemoteSocketAddress s))
         (let [addr (.getRemoteSocketAddress s)]
@@ -69,7 +74,7 @@
              (.read inp)
              (catch Throwable e
                (when (running? state)
-                 (log/warn id typ "Exception while reading socket:" (ex-message e) "of type" (.getClass e)))
+                 (log/warn id typ (sock->readable src) "Exception while reading socket:" (ex-message e) "of type" (.getClass e)))
                -1))]
     (if (= -1 rd)
       nil
