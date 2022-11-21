@@ -48,7 +48,7 @@
 (defmacro new-thread [id state typ sock f]
   `(let [state# ~state]
      (future
-       (let [curr-name# (.getName (Thread/currentThread))]
+       (let [org-name# (.getName (Thread/currentThread))]
          (try
            (.setName (Thread/currentThread) (str "ThreadGroup-" ~id "-" (name ~typ)))
            (swap! state# (fn [old-state#] (update old-state# :threads (fnil conj #{}) (Thread/currentThread))))
@@ -66,7 +66,7 @@
            (finally
              (log/info "Thread group" ~id ~typ "exiting")
              (swap! state# (fn [old-state#] (update old-state# :threads (fnil disj #{}) (Thread/currentThread))))
-             (.setName (Thread/currentThread) curr-name#)))))))
+             (.setName (Thread/currentThread) org-name#)))))))
 
 (defn- forward-byte! [state ^OutputStream out rd from]
   (let [w (try

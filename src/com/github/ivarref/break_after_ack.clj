@@ -69,7 +69,7 @@
                        :remote-port 5432
                        :port        54321}))
 
-(defonce sock-promise (promise))
+(defonce pool-socket-promise (promise))
 (defonce drop-sock (atom nil))
 
 (defn do-test-inner [_]
@@ -80,29 +80,29 @@
   (when-let [e (spa-monkey/start! monkey)]
     (throw e))
   (let [conn (u/get-conn :port 54321)
-        drop-count (atom 0)]
+        get-conn-count (atom 0)]
     (hookd/install-return-consumer!
       "org.apache.tomcat.jdbc.pool.ConnectionPool"
       "getConnection"
       (fn [^Connection conn]
         (let [^Socket sock (conn->socket conn)]
-          (when (= 1 (swap! drop-count inc))
-            (deliver sock-promise sock)
-            (log/info "Got socket" (spa-monkey/ports-str sock))))))
+          (when (= 1 (swap! get-conn-count inc))
+            (deliver pool-socket-promise sock)
+            (log/info "ConnectionPool/getConnection returning socket" (spa-monkey/ports-str sock))))))
     (spa-monkey/add-handler!
       monkey
       (fn [{:keys [op dst]}]
         (when (and (= op :recv)
-                   (realized? sock-promise)
+                   (realized? pool-socket-promise)
                    (= (spa-monkey/ports dst :reverse? true)
-                      (spa-monkey/ports @sock-promise)))
+                      (spa-monkey/ports @pool-socket-promise)))
           (drop-sock! dst)
           (reset! drop-sock dst)
           :pop)))
     (let [start-time (System/currentTimeMillis)
           done? (promise)]
       (log/info "Starting read-segment on (will be) blocked connection ...")
-      (u/start-tick-thread sock-promise done?)
+      (u/start-tick-thread pool-socket-promise done?)
       (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
       (deliver done? :done)
       (let [stop-time (System/currentTimeMillis)]
