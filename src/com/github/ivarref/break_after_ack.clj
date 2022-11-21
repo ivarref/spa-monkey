@@ -39,10 +39,6 @@
   (as-> ^{:out :string :err :string} ($ "/usr/sbin/nft" -f ./drop.txt) v
         (check v)))
 
-(defn socket->ports [^Socket sock]
-  [(.getLocalPort sock)
-   (.getPort (.getRemoteSocketAddress sock))])
-
 (defn sock->readable [sock]
   (str "127.0.0.1:" (.getLocalPort sock)
        "->"
@@ -56,7 +52,7 @@
 
 (defn drop-sock! [sock]
   (let [drop-txt (sock->drop sock)]
-    (log/info "Dropping TCP packets for" (sock->readable sock))
+    (log/info "Dropping TCP packets for" (spa-monkey/ports-str sock))
     (drop-str! (str/join "\n"
                          ["flush ruleset"
                           "table ip filter {"
@@ -73,7 +69,7 @@
                        :remote-port 5432
                        :port        54321}))
 
-(defonce sock-atom (atom nil))
+(defonce sock-promise (promise))
 (defonce drop-sock (atom nil))
 
 (defn do-test-inner [_]
@@ -91,19 +87,22 @@
       (fn [^Connection conn]
         (let [^Socket sock (conn->socket conn)]
           (when (= 1 (swap! drop-count inc))
-            (reset! sock-atom sock)
-            (log/info "Got socket" (sock->readable sock))))))
+            (deliver sock-promise sock)
+            (log/info "Got socket" (spa-monkey/ports-str sock))))))
     (spa-monkey/add-handler!
       monkey
       (fn [{:keys [op dst]}]
-        (when (= op :recv)
+        (when (and (= op :recv)
+                   (realized? sock-promise)
+                   (= (spa-monkey/ports dst :reverse? true)
+                      (spa-monkey/ports @sock-promise)))
           (drop-sock! dst)
           (reset! drop-sock dst)
           :pop)))
     (let [start-time (System/currentTimeMillis)
           done? (promise)]
-      (log/info "Starting read-segment on blocked connection ...")
-      (u/start-tick-thread done?)
+      (log/info "Starting read-segment on (will be) blocked connection ...")
+      (u/start-tick-thread sock-promise done?)
       (read-segment conn "854f8149-7116-45dc-b3df-5b57a5cd1e4e")
       (deliver done? :done)
       (let [stop-time (System/currentTimeMillis)]

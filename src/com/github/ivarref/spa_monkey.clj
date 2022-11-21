@@ -12,6 +12,14 @@
       (catch IOException _
         nil))))
 
+(defn ports [sock & {:keys [reverse?]}]
+  (if reverse?
+    [(.getPort sock) (.getLocalPort sock)]
+    [(.getLocalPort sock) (.getPort sock)]))
+
+(defn ports-str [sock]
+  (str (.getLocalPort sock) "->" (.getPort sock)))
+
 (defn- sock->readable [sock]
   (str "127.0.0.1:" (.getLocalPort sock)
        "->"
@@ -40,22 +48,25 @@
 (defmacro new-thread [id state typ sock f]
   `(let [state# ~state]
      (future
-       (try
-         (swap! state# (fn [old-state#] (update old-state# :threads (fnil conj #{}) (Thread/currentThread))))
-         (let [sock# ~sock
-               f# ~f]
-           (try
-             (swap! state# (partial add-socket sock# ~typ))
-             (f# sock#)
-             (finally
-               (close sock#)
-               (swap! state# (partial del-socket sock# ~typ)))))
-         (catch Throwable t#
-           (log/error "Unhandled exception:" (ex-message t#))
-           (swap! state# (fn [old-state#] (update old-state# :unhandled-exceptions (fnil conj #{}) t#))))
-         (finally
-           (log/info "Thread" ~id ~typ "exiting")
-           (swap! state# (fn [old-state#] (update old-state# :threads (fnil disj #{}) (Thread/currentThread)))))))))
+       (let [curr-name# (.getName (Thread/currentThread))]
+         (try
+           (.setName (Thread/currentThread) (str "ThreadGroup-" ~id "-" (name ~typ)))
+           (swap! state# (fn [old-state#] (update old-state# :threads (fnil conj #{}) (Thread/currentThread))))
+           (let [sock# ~sock
+                 f# ~f]
+             (try
+               (swap! state# (partial add-socket sock# ~typ))
+               (f# sock#)
+               (finally
+                 (close sock#)
+                 (swap! state# (partial del-socket sock# ~typ)))))
+           (catch Throwable t#
+             (log/error "Unhandled exception:" (ex-message t#))
+             (swap! state# (fn [old-state#] (update old-state# :unhandled-exceptions (fnil conj #{}) t#))))
+           (finally
+             (log/info "Thread group" ~id ~typ "exiting")
+             (swap! state# (fn [old-state#] (update old-state# :threads (fnil disj #{}) (Thread/currentThread))))
+             (.setName (Thread/currentThread) curr-name#)))))))
 
 (defn- forward-byte! [state ^OutputStream out rd from]
   (let [w (try
@@ -75,7 +86,7 @@
              (.read inp)
              (catch Throwable e
                (when (running? state)
-                 (log/warn id typ "src" (sock->readable src) "dst" (sock->readable dst) "Exception while reading socket:" (ex-message e) "of type" (.getClass e)))
+                 (log/warn "Thread group" id typ "src" (ports-str src) "=>" (ports-str dst) "Exception while reading socket:" (ex-message e) "of type" (.getClass e)))
                -1))]
     (if (= -1 rd)
       nil
@@ -83,7 +94,7 @@
         (doseq [[handler-id f] (get @state :handlers)]
           (let [retval (f {:id id :op typ :src src :dst dst})]
             (when (= :pop retval)
-              (log/info "dropping handler" handler-id)
+              (log/info "Dropping handler" handler-id)
               (swap! state update :handlers dissoc handler-id))))
         (forward-byte! state out rd typ)))))
 
@@ -101,7 +112,6 @@
         nil))))
 
 (defn- handle-connection! [id state ^Socket incoming]
-  (log/info "Handle new incoming connection from" (sock->remote-str incoming))
   (let [{:keys [remote-host remote-port connection-timeout]
          :or   {remote-host        "127.0.0.1"
                 remote-port        3117
@@ -112,6 +122,7 @@
                  (catch SocketTimeoutException ste
                    (log/error "Timeout connection to" (str remote-host ":" remote-port))
                    (throw ste)))]
+    (log/info "Thread group" id "proxying new incoming connection from" (ports-str incoming) "=>" (ports-str remote))
     (new-thread id state :send remote (fn [_] (pump! id :send state incoming remote)))
     (pump! id :recv state remote incoming)))
 

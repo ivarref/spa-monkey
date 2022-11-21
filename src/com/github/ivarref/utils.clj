@@ -1,7 +1,8 @@
 (ns com.github.ivarref.utils
   (:require [clojure.tools.logging :as log]
             [com.github.ivarref.log-init :as log-init]
-            [datomic.api :as d]))
+            [datomic.api :as d])
+  (:import (java.net Socket)))
 
 (defn get-conn [& {:keys [port]
                    :or   {port 5432}}]
@@ -19,16 +20,28 @@
     (log/info "Got datomic connection in" spent-time "milliseconds")
     conn))
 
-(defn start-tick-thread [done?]
+(defn start-tick-thread [sock-promise done?]
   (future
-    (loop [uptime (int (/ (log-init/jvm-uptime-ms) 60000))
-           v 0]
-      (when-not (realized? done?)
-        (let [timeout? (true? (deref done? 1000 true))
-              new-uptime (int (/ (log-init/jvm-uptime-ms) 60000))]
-          (when timeout?
-            (if (not= uptime new-uptime)
-              (do
-                (log/info (if (even? v) "tick" "tack"))
-                (recur new-uptime (inc v)))
-              (recur uptime v))))))))
+    (let [curr-name (.getName (Thread/currentThread))]
+      (try
+        (.setName (Thread/currentThread) "Ticker")
+        (if (= :error (deref sock-promise 3000 :error))
+          (throw (ex-info "Timeout waiting for socket" {}))
+          (log/info "Tick thread started"))
+        (loop [uptime (int (/ (log-init/jvm-uptime-ms) 60000))
+               v 0]
+          (when (and (not (.isClosed @sock-promise))
+                     (not (realized? done?)))
+            (let [timeout? (true? (deref done? 1000 true))
+                  new-uptime (int (/ (log-init/jvm-uptime-ms) 60000))]
+              (when timeout?
+                (if (not= uptime new-uptime)
+                  (do
+                    (log/info (if (even? v) "tick" "tack"))
+                    (recur new-uptime (inc v)))
+                  (recur uptime v))))))
+        (catch Throwable t
+          (log/error t "Error:" (ex-message t)))
+        (finally
+          (log/info "Tick thread exiting")
+          (.setName (Thread/currentThread) curr-name))))))
