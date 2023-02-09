@@ -17,7 +17,7 @@
                (d/create-database uri)
                (d/connect uri))
         spent-time (- (System/currentTimeMillis) start-time)]
-    (log/info "Got datomic connection in" spent-time "milliseconds")
+    (log/debug "Got datomic connection in" spent-time "milliseconds")
     conn))
 
 (defn start-tick-thread [sock-promise done?]

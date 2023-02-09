@@ -37,11 +37,11 @@
                              (str "\n" (timbre/stacktrace ?err {:stacktrace-fonts nil})))]
       (str
         (ms->duration (jvm-uptime-ms))
-        " "
-        (.getName (Thread/currentThread))
         " ["
         (str/upper-case (name level))
         "] "
+        (.getName (Thread/currentThread))
+        " "
         ?ns-str
         " "
         (force msg_)
@@ -51,12 +51,18 @@
       nil)))
 
 (defonce lock (atom nil))
+(defonce line-count (atom 0))
 
-(defn atomic-println [log-file arg]
+(defn format-line-number [line-number]
+  (format "%04d" line-number))
+
+(defn atomic-println [log-file line]
   (locking lock
-    (when (some? log-file)
-      (spit log-file (str arg "\n") :append true))
-    (println arg)))
+    (let [line-number (swap! line-count inc)
+          line (str (format-line-number line-number) " " line)]
+      (when (some? log-file)
+        (spit log-file (str line "\n") :append true))
+      (println line))))
 
 (defn init-logging! [{:keys [log-file levels]
                       :or   {levels [[#{"datomic.*"} :warn]
@@ -65,10 +71,10 @@
   (let [log-file (when (some? log-file)
                    (str "logs/"
                         log-file
-                        "_"
-                        (.format
-                          (DateTimeFormatter/ofPattern "yyyy-MM-dd_HH_mm_ss")
-                          (ZonedDateTime/now))
+                        #_"_"
+                        #_(.format
+                            (DateTimeFormatter/ofPattern "yyyy-MM-dd_HH_mm_ss")
+                            (ZonedDateTime/now))
                         ".log"))]
     (when (some? log-file)
       (spit log-file ""))
@@ -87,4 +93,4 @@
                                            (let [{:keys [output_]} data]
                                              (atomic-println log-file (force output_))))}}})
     (when (some? log-file)
-      (log/info "logging to file" log-file))))
+      (log/debug "logging to file" log-file))))
