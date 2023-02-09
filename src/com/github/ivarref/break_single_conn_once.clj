@@ -17,6 +17,10 @@
     (org.postgresql.jdbc PgConnection)))
 
 ; sudo bash -c 'echo 6 > /proc/sys/net/ipv4/tcp_retries2'
+
+; my machine's default:
+; sudo bash -c 'echo 15 > /proc/sys/net/ipv4/tcp_retries2'
+
 ; $ cat /proc/sys/net/ipv4/tcp_retries2
 ; 15
 ; sdk default java 17.0.4.1-tem
