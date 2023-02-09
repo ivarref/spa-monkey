@@ -1,8 +1,7 @@
 (ns com.github.ivarref.utils
   (:require [clojure.tools.logging :as log]
             [com.github.ivarref.log-init :as log-init]
-            [datomic.api :as d])
-  (:import (java.net Socket)))
+            [datomic.api :as d]))
 
 (defn get-conn [& {:keys [port]
                    :or   {port 5432}}]

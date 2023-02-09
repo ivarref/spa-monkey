@@ -30,15 +30,39 @@
           ^PGStream stream (.get field qe)]
       (.getSocket stream))))
 
+(defn nft-sudo [filename]
+  (log/info "Executing $ sudo \"/usr/sbin/nft\" -f" filename "...")
+  (let [fut (future (try
+                      (as-> ^{:out :string :err :string} ($ sudo "/usr/sbin/nft" -f ~filename) v
+                            (check v))
+                      :ok
+                      (catch Throwable t
+                        t)))
+        res (deref fut (* 10 60000) ::timeout)]
+    (cond
+      (= ::timeout res)
+      (do
+        (log/info "Executing $ sudo \"/usr/sbin/nft\" -f" filename "... Timeout!")
+        (throw (ex-info "sudo nft timeout" {})))
+
+      (= :ok res)
+      (do
+        (log/info "Executing $ sudo \"/usr/sbin/nft\" -f" filename "... OK!")
+        :ok)
+
+      (instance? Throwable res)
+      (do
+        (log/error res "Executing $ sudo \"/usr/sbin/nft\" -f" filename "... Error:" (ex-message res))
+        (throw res))
+
+      :else
+      (do
+        (log/error "Unhandled state. Got res:" res)
+        (throw res)))))
+
 (defn accept! []
   (log/info "Clear all packet filters ...")
-  (try
-    (as-> ^{:out :string :err :string} ($ sudo "/usr/sbin/nft" -f ./accept.txt) v
-          (check v))
-    (log/info "Clear all packet filters ... OK!")
-    (catch Throwable t
-      (log/error "Could not clear packet filters:" (ex-message t))
-      (throw t))))
+  (nft-sudo "./accept.txt"))
 
 (defn sock->drop [^Socket s]
   (str "tcp dport " (.getPort s) " "
@@ -54,8 +78,7 @@
           (log/error t "Writing drop.txt failed:" (ex-message t))
           false))
     (do
-      (as-> ^{:out :string :err :string} ($ sudo "/usr/sbin/nft" -f ./drop.txt) v
-            (check v))
+      (nft-sudo "./drop.txt")
       (log/info "Executed nft OK"))
     (log/error "Not invoking nft!")))
 
