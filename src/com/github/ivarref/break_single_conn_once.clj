@@ -33,7 +33,7 @@
 (defn accept! []
   (log/info "Clear all packet filters ...")
   (try
-    (as-> ^{:out :string :err :string} ($ sudo ./accept) v
+    (as-> ^{:out :string :err :string} ($ sudo "/usr/sbin/nft" -f ./accept.txt) v
           (check v))
     (log/info "Clear all packet filters ... OK!")
     (catch Throwable t
