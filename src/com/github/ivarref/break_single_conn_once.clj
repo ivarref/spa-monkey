@@ -31,10 +31,11 @@
       (.getSocket stream))))
 
 (defn accept! []
-  (log/info "Clear all packet filters")
+  (log/info "Clear all packet filters ...")
   (try
     (as-> ^{:out :string :err :string} ($ sudo ./accept) v
           (check v))
+    (log/info "Clear all packet filters ... OK!")
     (catch Throwable t
       (log/error "Could not clear packet filters:" (ex-message t))
       (throw t))))
@@ -52,8 +53,10 @@
         (catch Throwable t
           (log/error t "Writing drop.txt failed:" (ex-message t))
           false))
-    (as-> ^{:out :string :err :string} ($ sudo "/usr/sbin/nft" -f ./drop.txt) v
-          (check v))
+    (do
+      (as-> ^{:out :string :err :string} ($ sudo "/usr/sbin/nft" -f ./drop.txt) v
+            (check v))
+      (log/info "Executed nft OK"))
     (log/error "Not invoking nft!")))
 
 (defn sock->readable [sock]
