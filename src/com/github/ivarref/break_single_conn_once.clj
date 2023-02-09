@@ -31,7 +31,7 @@
       (.getSocket stream))))
 
 (defn nft-sudo [filename]
-  (log/info "Executing $ sudo \"/usr/sbin/nft\" -f" filename "...")
+  (log/info "Executing $ sudo /usr/sbin/nft -f" filename "...")
   (let [fut (future (try
                       (as-> ^{:out :string :err :string} ($ sudo "/usr/sbin/nft" -f ~filename) v
                             (check v))
@@ -42,23 +42,23 @@
     (cond
       (= ::timeout res)
       (do
-        (log/info "Executing $ sudo \"/usr/sbin/nft\" -f" filename "... Timeout!")
+        (log/info "Executing $ sudo /usr/sbin/nft -f" filename "... Timeout!")
         (throw (ex-info "sudo nft timeout" {})))
 
       (= :ok res)
       (do
-        (log/info "Executing $ sudo \"/usr/sbin/nft\" -f" filename "... OK!")
-        :ok)
+        (log/info "Executing $ sudo /usr/sbin/nft -f" filename "... OK!")
+        true)
 
       (instance? Throwable res)
       (do
-        (log/error res "Executing $ sudo \"/usr/sbin/nft\" -f" filename "... Error:" (ex-message res))
+        (log/error res "Executing $ sudo /usr/sbin/nft -f" filename "... Error:" (ex-message res))
         (throw res))
 
       :else
       (do
         (log/error "Unhandled state. Got res:" res)
-        (throw res)))))
+        (throw (ex-info "Unexpected state" {:result res}))))))
 
 (defn accept! []
   (log/info "Clear all packet filters ...")
@@ -77,10 +77,10 @@
         (catch Throwable t
           (log/error t "Writing drop.txt failed:" (ex-message t))
           false))
+    (nft-sudo "./drop.txt")
     (do
-      (nft-sudo "./drop.txt")
-      (log/info "Executed nft OK"))
-    (log/error "Not invoking nft!")))
+      (log/error "Not invoking nft!")
+      false)))
 
 (defn sock->readable [sock]
   (str "127.0.0.1:" (.getLocalPort sock)
