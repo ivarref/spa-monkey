@@ -18,7 +18,7 @@
 
 ; sudo bash -c 'echo 6 > /proc/sys/net/ipv4/tcp_retries2'
 
-; my machine's default:
+; my machine's default is 15:
 ; sudo bash -c 'echo 15 > /proc/sys/net/ipv4/tcp_retries2'
 
 ; $ cat /proc/sys/net/ipv4/tcp_retries2
@@ -160,7 +160,8 @@
           (log/debug "got result" (type result)))
         (deliver done-read? :done)
         (let [stop-time (System/currentTimeMillis)]
-          (log/info "Query on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))))))
+          (log/info "Query on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time)))
+          (Thread/sleep 90000)))) ; Give datomic time to report StorageGetMsec
     (when block?
       @(promise))
     (catch Throwable t
