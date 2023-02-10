@@ -18,7 +18,8 @@
 
 ; sudo bash -c 'echo 6 > /proc/sys/net/ipv4/tcp_retries2'
 
-; my machine's default is 15:
+; my machine's (Linux 5.15.91-1-MANJARO #1 SMP PREEMPT Wed Feb 1 12:03:19 UTC 2023 x86_64 GNU/Linux)
+; default is 15:
 ; sudo bash -c 'echo 15 > /proc/sys/net/ipv4/tcp_retries2'
 
 ; $ cat /proc/sys/net/ipv4/tcp_retries2
@@ -35,9 +36,9 @@
       (.getSocket stream))))
 
 (defn nft-sudo [filename]
-  (log/info "Executing $ sudo /usr/sbin/nft -f" filename "...")
+  (log/info "Executing sudo nft -f" filename "...")
   (let [fut (future (try
-                      (as-> ^{:out :string :err :string} ($ sudo "/usr/sbin/nft" -f ~filename) v
+                      (as-> ^{:out :string :err :string} ($ sudo nft -f ~filename) v
                             (check v))
                       :ok
                       (catch Throwable t
@@ -46,17 +47,17 @@
     (cond
       (= ::timeout res)
       (do
-        (log/info "Executing $ sudo /usr/sbin/nft -f" filename "... Timeout!")
+        (log/info "Executing sudo nft -f" filename "... Timeout!")
         (throw (ex-info "sudo nft timeout" {})))
 
       (= :ok res)
       (do
-        (log/info "Executing $ sudo /usr/sbin/nft -f" filename "... OK!")
+        (log/info "Executing sudo nft -f" filename "... OK!")
         true)
 
       (instance? Throwable res)
       (do
-        (log/error res "Executing $ sudo /usr/sbin/nft -f" filename "... Error:" (ex-message res))
+        (log/error res "Executing sudo nft -f" filename "... Error:" (ex-message res))
         (throw res))
 
       :else
@@ -66,7 +67,7 @@
 
 (defn accept! []
   (log/info "Clear all packet filters ...")
-  (nft-sudo "./accept.txt"))
+  (nft-sudo "accept.txt"))
 
 (defn sock->drop [^Socket s]
   (str "tcp dport " (.getPort s) " "
@@ -81,7 +82,7 @@
         (catch Throwable t
           (log/error t "Writing drop.txt failed:" (ex-message t))
           false))
-    (nft-sudo "./drop.txt")
+    (nft-sudo "drop.txt")
     (do
       (log/error "Not invoking nft!")
       false)))
@@ -116,7 +117,7 @@
         (when timeout?
           (if (not= uptime new-uptime)
             (do
-              (log/info (if (even? v) "tick" "tack"))
+              (log/info (if (even? v) "Tick" "Tack"))
               (recur new-uptime (inc v)))
             (recur uptime v)))))))
 
@@ -127,6 +128,8 @@
                                              [#{"com.github.ivarref.*"} :info]
                                              [#{"*"} :info]]}))
     (log/debug "user.name is" (System/getProperty "user.name"))
+    (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
+      (log/info tcp-retry-file "is" (str/trim (slurp tcp-retry-file))))
     (accept!)
     (hookd/install-return-consumer!
       "org.apache.tomcat.jdbc.pool.ConnectionPool"
@@ -157,14 +160,16 @@
                             :where
                             [?e :db/doc ?doc]]
                           (d/db conn))]
-          (log/debug "got result" (type result)))
+          (log/debug "Got query result" result))
         (deliver done-read? :done)
         (let [stop-time (System/currentTimeMillis)]
-          (log/info "Query on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time)))
+          (log/info "Query on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))
+                    "aka" (int (- stop-time start-time)) "milliseconds")
+          (log/info "Waiting 90 seconds for datomic.process-monitor")
           (Thread/sleep 90000)))) ; Give datomic time to report StorageGetMsec
     (when block?
       @(promise))
     (catch Throwable t
-      (log/error t "unexpected exception:" (ex-message t)))
+      (log/error t "Unexpected exception:" (ex-message t)))
     (finally
       (accept!))))
