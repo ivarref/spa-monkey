@@ -20,10 +20,10 @@
 
 ; my machine's (Linux 5.15.91-1-MANJARO #1 SMP PREEMPT Wed Feb 1 12:03:19 UTC 2023 x86_64 GNU/Linux)
 ; default is 15:
-; sudo bash -c 'echo 15 > /proc/sys/net/ipv4/tcp_retries2'
-
 ; $ cat /proc/sys/net/ipv4/tcp_retries2
 ; 15
+
+; sudo bash -c 'echo 15 > /proc/sys/net/ipv4/tcp_retries2'
 ; sdk default java 17.0.4.1-tem
 
 (defn conn->socket [^PooledConnection conn]
