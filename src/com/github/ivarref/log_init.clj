@@ -42,8 +42,8 @@
         "] "
         (.getName (Thread/currentThread))
         " "
-        ?ns-str
-        " "
+        (when-not (str/starts-with? ?ns-str "com.github.ivarref")
+          (str ?ns-str " "))
         (force msg_)
         #_maybe-stacktrace))
     (catch Throwable t
