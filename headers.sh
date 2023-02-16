@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
-rm -rf gen/org
+mkdir gen/ || true
+rm -rf gen/org || true
 $HOME/Downloads/jextract-19/bin/jextract --source -t org.jextract point.h
 mv org gen/.
