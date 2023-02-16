@@ -9,12 +9,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketImpl;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static java.lang.foreign.MemoryLayout.PathElement.*;
 import static java.lang.foreign.MemoryLayout.PathElement.groupElement;
 
 public class GetSockOpt {
@@ -165,6 +165,23 @@ public class GetSockOpt {
         return socketImplToFd(socket);
     }
 
+    public static int socketToFd(Socket sock) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
+        Method m = Socket.class.getDeclaredMethod("getImpl");
+        m.setAccessible(true);
+        SocketImpl socket = (SocketImpl) m.invoke(sock);
+        return socketImplToFd(socket);
+    }
+
+    public static Map<String, Object> getTcpInfo(Object sock) throws Throwable {
+        if (sock instanceof ServerSocket) {
+            return tcpInfo(serverSocketToFd((ServerSocket) sock));
+        } else if (sock instanceof Socket) {
+            return tcpInfo(socketToFd((Socket) sock));
+        } else {
+            throw new RuntimeException("Unsupported type: " + sock);
+        }
+    }
+
     public static Map<String, Object> tcpInfo(int fd) throws Throwable {
         Map<String, Object> res = new TreeMap<>();
         try (Arena offHeap = Arena.openConfined()) {
@@ -179,8 +196,6 @@ public class GetSockOpt {
                 int bufLen = lenPointer.getAtIndex(ValueLayout.JAVA_INT, 0);
                 if (bufLen != tcpInfo.byteSize()) {
                     System.err.println("New bufLen: " + bufLen + " vs original: " + tcpInfo.byteSize());
-                } else {
-//                        System.out.println("Same buffer size");
                 }
                 List<MemoryLayout> memoryLayouts = tcpInfoStruct.memberLayouts();
                 extractMembers(tcpInfoStruct, res, tcpInfo, memoryLayouts);
