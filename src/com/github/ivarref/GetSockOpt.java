@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static java.lang.foreign.MemoryLayout.PathElement.*;
 import static java.lang.foreign.MemoryLayout.PathElement.groupElement;
 
 public class GetSockOpt {
@@ -66,6 +67,34 @@ public class GetSockOpt {
         return (int) 11L;
     }
 
+    private static String tcpi_state_str(int val) {
+        if (val == TCP_LISTEN()) {
+            return "LISTEN";
+        } else if (val == TCP_CLOSE()) {
+            return "CLOSE";
+        } else if (val == TCP_CLOSE_WAIT()) {
+            return "CLOSE_WAIT";
+        } else if (val == TCP_CLOSING()) {
+            return "CLOSING";
+        } else if (val == TCP_ESTABLISHED()) {
+            return "ESTABLISHED";
+        } else if (val == TCP_FIN_WAIT1()) {
+            return "FIN_WAIT_1";
+        } else if (val == TCP_FIN_WAIT2()) {
+            return "FIN_WAIT_2";
+        } else if (val == TCP_LAST_ACK()) {
+            return "LAST_ACK";
+        } else if (val == TCP_SYN_RECV()) {
+            return "SYN_RECV";
+        } else if (val == TCP_SYN_SENT()) {
+            return "SYN_SENT";
+        } else if (val == TCP_TIME_WAIT()) {
+            return "TIME_WAIT";
+        } else {
+            return "UNKNOWN state:" + val;
+        }
+    }
+
     public static int SOL_TCP() {
         return (int) 6L;
     }
@@ -108,10 +137,6 @@ public class GetSockOpt {
             ValueLayout.JAVA_INT.withName("tcpi_total_retrans")
     ).withName("tcp_info");
 
-//    public static final VarHandle tcpiState = tcpInfoStruct.varHandle(groupElement("tcpi_state"));
-//    public static final VarHandle tcpiLastDataRecv = tcpInfoStruct.varHandle(groupElement("tcpi_last_data_recv"));
-//    public static final VarHandle tcpiUnacked = tcpInfoStruct.varHandle(groupElement("tcpi_unacked"));
-
     private final static Linker linker = Linker.nativeLinker();
     private final static SymbolLookup stdlib = linker.defaultLookup();
 
@@ -127,8 +152,6 @@ public class GetSockOpt {
         Method getFileDescriptor = SocketImpl.class.getDeclaredMethod("getFileDescriptor");
         getFileDescriptor.setAccessible(true);
         FileDescriptor fd = (FileDescriptor) getFileDescriptor.invoke(sock);
-//        System.out.println("fd is: " + fd + " of type " + fd.getClass());
-
         Field fdField = FileDescriptor.class.getDeclaredField("fd");
         fdField.setAccessible(true);
         int fdInt = (int) fdField.get(fd);
@@ -151,6 +174,7 @@ public class GetSockOpt {
             int retval = (int) getsockopt.invoke(fd, SOL_TCP(), TCP_INFO(), tcpInfo, lenPointer);
             if (retval != 0) {
                 System.err.println("getsockopt error: " + retval);
+                throw new RuntimeException("getsockopt error: " + retval);
             } else {
                 int bufLen = lenPointer.getAtIndex(ValueLayout.JAVA_INT, 0);
                 if (bufLen != tcpInfo.byteSize()) {
@@ -169,18 +193,15 @@ public class GetSockOpt {
         for (MemoryLayout layout : memoryLayouts) {
             if (layout.name().isPresent()) {
                 String name = layout.name().get();
-                System.out.println(name);
                 VarHandle varHandle = root.varHandle(groupElement(name));
                 Object val = varHandle.get(tcpInfo);
                 res.put(name, val);
                 if ("tcpi_state".equalsIgnoreCase(name)) {
+                    byte b = (byte) val;
+                    res.put("tcpi_state_str", tcpi_state_str((int)b));
                 }
             } else if (layout instanceof GroupLayout) {
                 // TOOD implement
-//                GroupLayout group = (GroupLayout) layout;
-//                VarHandle handle = layout.varHandle();
-//                extractMembers(group, res, tcpInfo, group.memberLayouts());
-//                System.out.println("wooho");
             }
         }
     }
