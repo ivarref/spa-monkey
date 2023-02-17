@@ -129,7 +129,8 @@
             (recur uptime v)))))))
 
 (defn get-state [sock]
-  (into (sorted-map) (GetSockOpt/getTcpInfo sock)))
+  (-> (into (sorted-map) (GetSockOpt/getTcpInfo sock))
+      (assoc "open?" (not (.isClosed sock)))))
 
 (defn watch-socket! [^Socket sock]
   (future
@@ -139,9 +140,8 @@
             now (System/currentTimeMillis)]
         (log/info "Initial state for fd" fd initial-state)
         (loop [prev-state initial-state]
-          (Thread/sleep 1000)
-          (let [new-state (get-state sock)]
-                ;{:keys/strs [tcpi_last_data_sent tcpi_last_ack_recv]} new-state]
+          (Thread/sleep 1)
+          (let [{:strs [open?] :as new-state} (get-state sock)]
              (when (not= new-state prev-state)
                (doseq [[new-k new-v] new-state]
                  (when (and (not= new-v (get prev-state new-k))
@@ -150,10 +150,13 @@
                                               "tcpi_last_data_recv"
                                               "tcpi_last_data_sent"}
                                             new-k)))
-                   (log/info (not (.isClosed sock)) "fd" fd new-k (get prev-state new-k) "=>" new-v))))
-             (recur new-state))))
+                   (log/info "fd" fd new-k (get prev-state new-k) "=>" new-v))))
+             (when open?
+               (recur new-state)))))
       (catch Throwable t
-        (log/error "Error in socket watcher:" (ex-message t))))))
+        (if (.isClosed sock)
+          (log/warn "Error in socket watcher:" (ex-message t))
+          (log/error "Error in socket watcher:" (ex-message t)))))))
 
 (defn do-test! [{:keys [block?] :as opts}]
   (try

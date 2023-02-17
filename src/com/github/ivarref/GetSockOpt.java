@@ -239,7 +239,7 @@ struct tcp_info
             lenPointer.setAtIndex(ValueLayout.JAVA_INT, 0, (int) tcpInfo.byteSize());
             int retval = (int) getsockopt.invoke(fd, SOL_TCP(), TCP_INFO(), tcpInfo, lenPointer);
             if (retval != 0) {
-                System.err.println("getsockopt error: " + retval);
+//                System.err.println("getsockopt error: " + retval);
                 throw new RuntimeException("getsockopt error: " + retval);
             } else {
                 int bufLen = lenPointer.getAtIndex(ValueLayout.JAVA_INT, 0);
