@@ -132,31 +132,52 @@
   (-> (into (sorted-map) (GetSockOpt/getTcpInfo sock))
       (assoc "open?" (not (.isClosed sock)))))
 
+(defn with-clock [state now-ms]
+  (reduce-kv (fn [o k v]
+               (assoc o k [v now-ms]))
+             {}
+             state))
+
+(defn no-clock [state]
+  (reduce-kv (fn [o k [v _now-ms]]
+               (assoc o k v))
+             {}
+             state))
+
 (defn watch-socket! [^Socket sock]
   (future
     (try
       (let [initial-state (get-state sock)
-            fd (GetSockOpt/getFd sock)
-            now (System/currentTimeMillis)]
+            fd (GetSockOpt/getFd sock)]
         (log/info "Initial state for fd" fd initial-state)
-        (loop [prev-state initial-state]
-          (Thread/sleep 1)
-          (let [{:strs [open?] :as new-state} (get-state sock)]
-             (when (not= new-state prev-state)
-               (doseq [[new-k new-v] new-state]
-                 (when (and (not= new-v (get prev-state new-k))
-                            (not (contains? #{"tcpi_last_ack_recv"
-                                              "tcpi_last_ack_sent"
-                                              "tcpi_last_data_recv"
-                                              "tcpi_last_data_sent"}
-                                            new-k)))
-                   (log/info "fd" fd new-k (get prev-state new-k) "=>" new-v))))
-             (when open?
-               (recur new-state)))))
+        (loop [prev-state (with-clock initial-state (System/currentTimeMillis))]
+          ;(Thread/sleep 1)
+          (let [now-ms (System/currentTimeMillis)
+                {:strs [open?] :as new-state} (get-state sock)]
+             (if (not= new-state (no-clock prev-state))
+               (do
+                 (doseq [[new-k new-v] new-state]
+                   (when (and (not= new-v (first (get prev-state new-k)))
+                              (not (contains? #{"tcpi_last_ack_recv"
+                                                "tcpi_last_ack_sent"
+                                                "tcpi_last_data_recv"
+                                                "tcpi_last_data_sent"}
+                                              new-k)))
+                     (let [ms-diff (- now-ms (second (get prev-state new-k)))]
+                       (log/info "fd" fd new-k (first (get prev-state new-k)) "=>" new-v (str "(In " ms-diff " ms)")))))
+                 (when open?
+                   (recur (reduce-kv (fn [o k [old-v _old-ms :as old-val]]
+                                        (if (not= old-v (get new-state k))
+                                          (assoc o k [(get new-state k) now-ms])
+                                          (assoc o k old-val)))
+                                     {}
+                                     prev-state))))
+               (when open?
+                 (recur prev-state))))))
       (catch Throwable t
         (if (.isClosed sock)
-          (log/warn "Error in socket watcher:" (ex-message t))
-          (log/error "Error in socket watcher:" (ex-message t)))))))
+          (log/warn "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))
+          (log/error "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t)))))))
 
 (defn do-test! [{:keys [block?] :as opts}]
   (try
