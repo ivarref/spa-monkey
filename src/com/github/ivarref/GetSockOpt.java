@@ -99,6 +99,51 @@ public class GetSockOpt {
         return (int) 6L;
     }
 
+    /*
+    // from /usr/include/netinet/tcp.h
+struct tcp_info
+{
+    uint8_t       tcpi_state;
+    uint8_t       tcpi_ca_state;
+    uint8_t       tcpi_retransmits;
+    uint8_t       tcpi_probes;
+    uint8_t       tcpi_backoff;
+    uint8_t       tcpi_options;
+    uint8_t       tcpi_snd_wscale : 4, tcpi_rcv_wscale : 4;
+
+    uint32_t      tcpi_rto;
+    uint32_t      tcpi_ato;
+    uint32_t      tcpi_snd_mss;
+    uint32_t      tcpi_rcv_mss;
+
+    uint32_t      tcpi_unacked;
+    uint32_t      tcpi_sacked;
+    uint32_t      tcpi_lost;
+    uint32_t      tcpi_retrans;
+    uint32_t      tcpi_fackets;
+
+  // Times.
+    uint32_t      tcpi_last_data_sent;
+    uint32_t      tcpi_last_ack_sent;     // Not remembered, sorry.
+    uint32_t      tcpi_last_data_recv;
+    uint32_t      tcpi_last_ack_recv;
+
+    // Metrics.
+    uint32_t      tcpi_pmtu;
+    uint32_t      tcpi_rcv_ssthresh;
+    uint32_t      tcpi_rtt;
+    uint32_t      tcpi_rttvar;
+    uint32_t      tcpi_snd_ssthresh;
+    uint32_t      tcpi_snd_cwnd;
+    uint32_t      tcpi_advmss;
+    uint32_t      tcpi_reordering;
+
+    uint32_t      tcpi_rcv_rtt;
+    uint32_t      tcpi_rcv_space;
+
+    uint32_t      tcpi_total_retrans;
+};
+     */
     static final GroupLayout tcpInfoStruct = MemoryLayout.structLayout(
             ValueLayout.JAVA_BYTE.withName("tcpi_state"),
             ValueLayout.JAVA_BYTE.withName("tcpi_ca_state"),
@@ -106,11 +151,14 @@ public class GetSockOpt {
             ValueLayout.JAVA_BYTE.withName("tcpi_probes"),
             ValueLayout.JAVA_BYTE.withName("tcpi_backoff"),
             ValueLayout.JAVA_BYTE.withName("tcpi_options"),
-            MemoryLayout.structLayout(
-                    MemoryLayout.paddingLayout(4).withName("tcpi_snd_wscale"),
-                    MemoryLayout.paddingLayout(4).withName("tcpi_rcv_wscale"),
-                    MemoryLayout.paddingLayout(8)
-            ),
+
+            ValueLayout.JAVA_BYTE.withName("IGNORE_tcpi_snd_wscale_AND_tcpi_rcv_wscale"),
+            // This is how I read
+            // uint8_t       tcpi_snd_wscale : 4, tcpi_rcv_wscale : 4;
+            // i.e. they are both 4 bits wide and thus take a up a single byte.
+            // See "6. Bitfields" of http://www.catb.org/esr/structure-packing/
+            // I'm not quite sure how to parse it (high/low little/big endian?).
+            // Let's ignore it for now.
             ValueLayout.JAVA_INT.withName("tcpi_rto"),
             ValueLayout.JAVA_INT.withName("tcpi_ato"),
             ValueLayout.JAVA_INT.withName("tcpi_snd_mss"),
@@ -208,12 +256,15 @@ public class GetSockOpt {
         for (MemoryLayout layout : memoryLayouts) {
             if (layout.name().isPresent()) {
                 String name = layout.name().get();
+                if (name.startsWith("IGNORE_")) {
+                    continue;
+                }
                 VarHandle varHandle = root.varHandle(groupElement(name));
                 Object val = varHandle.get(tcpInfo);
                 res.put(name, val);
                 if ("tcpi_state".equalsIgnoreCase(name)) {
                     byte b = (byte) val;
-                    res.put("tcpi_state_str", tcpi_state_str((int)b));
+                    res.put("tcpi_state_str", tcpi_state_str((int) b));
                 }
             } else if (layout instanceof GroupLayout) {
                 // TOOD implement
