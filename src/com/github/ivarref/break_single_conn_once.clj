@@ -10,6 +10,7 @@
     [nrepl.server :as nrepl]
     [taoensso.timbre :as timbre])
   (:import
+    (com.github.ivarref GetSockOpt)
     (java.net Socket)
     (java.sql Connection)
     (javax.sql PooledConnection)
@@ -108,7 +109,11 @@
 
 (defonce conn-pool (atom nil))
 
-(defn tick-tack-loop [done-read?]
+#_(defn tcp-info [sock]
+    (-> (into (sorted-map) (GetSockOpt/getTcpInfo sock))
+        (select-keys ["tcpi_state_str" "tcpi_unacked"])))
+
+(defn tick-tack-loop [done-read? blocked-socket]
   (loop [uptime (int (/ (log-init/jvm-uptime-ms) 60000))
          v 0]
     (when-not (realized? done-read?)
@@ -117,9 +122,38 @@
         (when timeout?
           (if (not= uptime new-uptime)
             (do
-              (log/info (if (even? v) "Tick" "Tack"))
+              (log/info (if (even? v) "Tick" "Tack")
+                        (when (realized? blocked-socket)
+                          (into (sorted-map) (GetSockOpt/getTcpInfo @blocked-socket))))
               (recur new-uptime (inc v)))
             (recur uptime v)))))))
+
+(defn get-state [sock]
+  (into (sorted-map) (GetSockOpt/getTcpInfo sock)))
+
+(defn watch-socket! [^Socket sock]
+  (future
+    (try
+      (let [initial-state (get-state sock)
+            fd (GetSockOpt/getFd sock)
+            now (System/currentTimeMillis)]
+        (log/info "Initial state for fd" fd initial-state)
+        (loop [prev-state initial-state]
+          (Thread/sleep 1000)
+          (let [new-state (get-state sock)]
+                ;{:keys/strs [tcpi_last_data_sent tcpi_last_ack_recv]} new-state]
+             (when (not= new-state prev-state)
+               (doseq [[new-k new-v] new-state]
+                 (when (and (not= new-v (get prev-state new-k))
+                            (not (contains? #{"tcpi_last_ack_recv"
+                                              "tcpi_last_ack_sent"
+                                              "tcpi_last_data_recv"
+                                              "tcpi_last_data_sent"}
+                                            new-k)))
+                   (log/info (not (.isClosed sock)) "fd" fd new-k (get prev-state new-k) "=>" new-v))))
+             (recur new-state))))
+      (catch Throwable t
+        (log/error "Error in socket watcher:" (ex-message t))))))
 
 (defn do-test! [{:keys [block?] :as opts}]
   (try
@@ -139,14 +173,19 @@
       (log/info "Starting nREPL server ....")
       (nrepl/start-server :bind "127.0.0.1" :port 7777))
     (let [conn (u/get-conn)
-          drop-count (atom 0)]
+          drop-count (atom 0)
+          blocked-socket (promise)]
       (hookd/install-return-consumer!
         "org.apache.tomcat.jdbc.pool.ConnectionPool"
         "getConnection"
         (fn [^Connection conn]
           (let [^Socket sock (conn->socket conn)]
             (if (= 1 (swap! drop-count inc))
-              (drop-sock! sock)
+              (do
+                (deliver blocked-socket sock)
+                (drop-sock! sock)
+                (watch-socket! sock)
+                #_(log/info "Blocked socket:" (tcp-info @blocked-socket)))
               (log/info "Not dropping anything for" (sock->readable sock))))))
       (let [start-time (System/currentTimeMillis)
             done-read? (promise)]
@@ -154,7 +193,7 @@
                                            [#{"com.github.ivarref.*"} :info]
                                            [#{"*"} :info]]})
         (log/info "Starting query on blocked connection ...")
-        (future (tick-tack-loop done-read?))
+        (future (tick-tack-loop done-read? blocked-socket))
         (let [result (d/q '[:find ?e ?doc
                             :in $
                             :where
@@ -162,6 +201,9 @@
                           (d/db conn))]
           (log/debug "Got query result" result))
         (deliver done-read? :done)
+        ;(log/info "Blocked socket:" (tcp-info @blocked-socket))
+        ;(Thread/sleep 5000)
+        ;(log/info "Blocked socket:" (tcp-info @blocked-socket))
         (let [stop-time (System/currentTimeMillis)]
           (log/info "Query on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))
                     "aka" (int (- stop-time start-time)) "milliseconds")

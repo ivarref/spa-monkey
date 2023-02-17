@@ -151,14 +151,11 @@ struct tcp_info
             ValueLayout.JAVA_BYTE.withName("tcpi_probes"),
             ValueLayout.JAVA_BYTE.withName("tcpi_backoff"),
             ValueLayout.JAVA_BYTE.withName("tcpi_options"),
-
-            ValueLayout.JAVA_BYTE.withName("IGNORE_tcpi_snd_wscale_AND_tcpi_rcv_wscale"),
-            // This is how I read
-            // uint8_t       tcpi_snd_wscale : 4, tcpi_rcv_wscale : 4;
-            // i.e. they are both 4 bits wide and thus take a up a single byte.
-            // See "6. Bitfields" of http://www.catb.org/esr/structure-packing/
-            // I'm not quite sure how to parse it (high/low little/big endian?).
-            // Let's ignore it for now.
+            MemoryLayout.structLayout(
+                    MemoryLayout.paddingLayout(4).withName("tcpi_snd_wscale"),
+                    MemoryLayout.paddingLayout(4).withName("tcpi_rcv_wscale"),
+                    MemoryLayout.paddingLayout(8)
+            ),
             ValueLayout.JAVA_INT.withName("tcpi_rto"),
             ValueLayout.JAVA_INT.withName("tcpi_ato"),
             ValueLayout.JAVA_INT.withName("tcpi_snd_mss"),
@@ -220,14 +217,18 @@ struct tcp_info
         return socketImplToFd(socket);
     }
 
-    public static Map<String, Object> getTcpInfo(Object sock) throws Throwable {
+    public static int getFd(Object sock) throws Throwable {
         if (sock instanceof ServerSocket) {
-            return tcpInfo(serverSocketToFd((ServerSocket) sock));
+            return serverSocketToFd((ServerSocket) sock);
         } else if (sock instanceof Socket) {
-            return tcpInfo(socketToFd((Socket) sock));
+            return socketToFd((Socket) sock);
         } else {
-            throw new RuntimeException("Unsupported type: " + sock);
+            throw new RuntimeException("Unsupported type: " + sock.getClass());
         }
+    }
+
+    public static Map<String, Object> getTcpInfo(Object sock) throws Throwable {
+        return tcpInfo(getFd(sock));
     }
 
     public static Map<String, Object> tcpInfo(int fd) throws Throwable {
