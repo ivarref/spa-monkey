@@ -84,7 +84,8 @@
                              (not (contains? #{"tcpi_last_ack_recv"
                                                "tcpi_last_ack_sent"
                                                "tcpi_last_data_recv"
-                                               "tcpi_last_data_sent"}
+                                               "tcpi_last_data_sent"
+                                               "tcpi_probes"}
                                              new-k)))
                     (let [ms-diff (- now-ms (second (get prev-state new-k)))]
                       (log/info nam "fd" fd new-k (first (get prev-state new-k)) "=>" new-v (str "(In " ms-diff " ms)")))))
