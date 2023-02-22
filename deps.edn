@@ -17,7 +17,7 @@
              #_:break-after-ack #_{:exec-fn   com.github.ivarref.break-after-ack/do-test!
                                    :exec-args {:block? true}
                                    :jvm-opts  ["-Djdk.attach.allowAttachSelf=true" "-XX:-OmitStackTraceInFastThrow"]}
-             :tcp-retry {:exec-fn   com.github.ivarref.break-single-conn-once/do-test!
+             :tcp-retry {:exec-fn   com.github.ivarref.tcp-retry/do-test!
                          :exec-args {:block?   false
                                      :log-file "tcp_retry"}
                          :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
