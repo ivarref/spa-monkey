@@ -35,13 +35,13 @@ The following environment variables needs to be set:
 * `POSTGRES_PASSWORD`: Password to be used for PostgreSQL.
 
 You will also want to: be prepared to enter your root password,
-add `nft` to sudoers or run `clojure` using `sudo -E clojure`.
+add `/usr/bin/nft` to sudoers for your user or run `clojure` using `sudo -E`.
 
 Running this code requires Java 20 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
 
 ## Case 1: TCP retry saves the day
 
-Running `sudo -E clojure -X:tcp-retry` you will see:
+Running `sudo -E ./tcp-retry.sh` you will see:
 
 ```
 0001 00:00:03 [INFO] main /proc/sys/net/ipv4/tcp_retries2 is 15
@@ -49,27 +49,18 @@ Running `sudo -E clojure -X:tcp-retry` you will see:
 0003 00:00:03 [INFO] main Executing sudo nft -f accept.txt ...
 0004 00:00:03 [INFO] main Executing sudo nft -f accept.txt ... OK!
 0005 00:00:05 [INFO] main Starting query on blocked connection ...
-0006 00:00:05 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :phase :begin, :pid 367074, :tid 61}
-0007 00:00:05 [INFO] CLI-agent-send-off-pool-3 Dropping TCP packets for 127.0.0.1:47548->127.0.0.1:5432 fd 77
+0006 00:00:05 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :phase :begin, :pid 368393, :tid 59}
+0007 00:00:05 [INFO] CLI-agent-send-off-pool-3 Dropping TCP packets for 127.0.0.1:46902->127.0.0.1:5432 fd 77
 0008 00:00:05 [INFO] CLI-agent-send-off-pool-3 Executing sudo nft -f drop.txt ...
 0009 00:00:05 [INFO] CLI-agent-send-off-pool-3 Executing sudo nft -f drop.txt ... OK!
-0010 00:00:05 [INFO] CLI-agent-send-off-pool-4 socket Initial state for fd 77 {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_last_ack_recv 127, tcpi_last_ack_sent 0, tcpi_last_data_recv 127, tcpi_last_data_sent 0, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_probes 0, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 214, tcpi_rttvar 118, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state 1, tcpi_state_str ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
-0011 00:00:05 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 0 => 1 (In 194 ms)
-0012 00:00:05 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 0 => 1 (In 194 ms)
-0013 00:00:06 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 1 => 2 (In 434 ms)
-0014 00:00:06 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 1 => 2 (In 434 ms)
-0015 00:00:07 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 2 => 3 (In 828 ms)
-0016 00:00:07 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 2 => 3 (In 828 ms)
-0017 00:00:08 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 3 => 4 (In 1651 ms)
-0018 00:00:08 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 3 => 4 (In 1651 ms)
-0019 00:00:12 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 4 => 5 (In 3333 ms)
-0020 00:00:12 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 4 => 5 (In 3333 ms)
-0021 00:00:18 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 5 => 6 (In 6614 ms)
-0022 00:00:18 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 5 => 6 (In 6614 ms)
-0023 00:00:32 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 6 => 7 (In 13229 ms)
-0024 00:00:32 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 6 => 7 (In 13229 ms)
-0025 00:00:59 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 7 => 8 (In 27092 ms)
-0026 00:00:59 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 7 => 8 (In 27092 ms)
+0010 00:00:05 [INFO] CLI-agent-send-off-pool-4 socket Initial state for fd 77 {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_last_ack_recv 134, tcpi_last_ack_sent 0, tcpi_last_data_recv 134, tcpi_last_data_sent 4, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_probes 0, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 220, tcpi_rttvar 94, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state 1, tcpi_state_str ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
+0011 00:00:06 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 0 => 1 (In 200 ms)
+0012 00:00:06 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 1 => 2 (In 429 ms)
+0013 00:00:07 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 2 => 3 (In 827 ms)
+0014 00:00:09 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 3 => 4 (In 1651 ms)
+0015 00:00:12 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 4 => 5 (In 3384 ms)
+0016 00:00:19 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 5 => 6 (In 6618 ms)
+0017 00:00:32 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 6 => 7 (In 13227 ms)
 ...
 ```
 
@@ -109,12 +100,14 @@ After approximately 16 minutes the kernel gives up
 trying to re-send our packets and waiting for the corresponding
 TCP acknowledgements. The kernel then closes the connection.
 
+We have already seen `tcpi_backoff` steadily increasing.
+
 It's possible to verify 
 that this is indeed what is
 happening by changing the kernel
 TCP retry number:
 `sudo bash -c 'echo 6 > /proc/sys/net/ipv4/tcp_retries2'`
-If you then re-run `clojure -X:tcp-retry` you will see
+If you then re-run `./tcp-retry.sh` you will see
 a much shorter timeout.
 
 The default value of `/proc/sys/net/ipv4/tcp_retries2` is 15, i.e.

@@ -3,123 +3,105 @@
 0003 00:00:03 [INFO] main Executing sudo nft -f accept.txt ...
 0004 00:00:03 [INFO] main Executing sudo nft -f accept.txt ... OK!
 0005 00:00:05 [INFO] main Starting query on blocked connection ...
-0006 00:00:05 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :phase :begin, :pid 367074, :tid 61}
-0007 00:00:05 [INFO] CLI-agent-send-off-pool-3 Dropping TCP packets for 127.0.0.1:47548->127.0.0.1:5432 fd 77
+0006 00:00:05 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :phase :begin, :pid 368393, :tid 59}
+0007 00:00:05 [INFO] CLI-agent-send-off-pool-3 Dropping TCP packets for 127.0.0.1:46902->127.0.0.1:5432 fd 77
 0008 00:00:05 [INFO] CLI-agent-send-off-pool-3 Executing sudo nft -f drop.txt ...
 0009 00:00:05 [INFO] CLI-agent-send-off-pool-3 Executing sudo nft -f drop.txt ... OK!
-0010 00:00:05 [INFO] CLI-agent-send-off-pool-4 socket Initial state for fd 77 {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_last_ack_recv 127, tcpi_last_ack_sent 0, tcpi_last_data_recv 127, tcpi_last_data_sent 0, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_probes 0, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 214, tcpi_rttvar 118, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state 1, tcpi_state_str ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
-0011 00:00:05 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 0 => 1 (In 194 ms)
-0012 00:00:05 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 0 => 1 (In 194 ms)
-0013 00:00:06 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 1 => 2 (In 434 ms)
-0014 00:00:06 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 1 => 2 (In 434 ms)
-0015 00:00:07 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 2 => 3 (In 828 ms)
-0016 00:00:07 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 2 => 3 (In 828 ms)
-0017 00:00:08 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 3 => 4 (In 1651 ms)
-0018 00:00:08 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 3 => 4 (In 1651 ms)
-0019 00:00:12 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 4 => 5 (In 3333 ms)
-0020 00:00:12 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 4 => 5 (In 3333 ms)
-0021 00:00:18 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 5 => 6 (In 6614 ms)
-0022 00:00:18 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 5 => 6 (In 6614 ms)
-0023 00:00:32 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 6 => 7 (In 13229 ms)
-0024 00:00:32 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 6 => 7 (In 13229 ms)
-0025 00:00:59 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 7 => 8 (In 27092 ms)
-0026 00:00:59 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 7 => 8 (In 27092 ms)
-0027 00:01:00 [INFO] CLI-agent-send-off-pool-2 Tick
-0028 00:01:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:tid 51, :ObjectCacheCount 20, :AvailableMB 7880.0, :StorageGetMsec {:lo 0, :hi 6, :sum 22, :count 20}, :pid 367074, :event :metrics, :ObjectCache {:lo 0, :hi 1, :sum 36, :count 65}, :LogIngestMsec {:lo 0, :hi 8, :sum 8, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :DbAddFulltextMsec {:lo 0, :hi 0, :sum 0, :count 2}, :PodGetMsec {:lo 1, :hi 5, :sum 8, :count 3}, :LogIngestBytes {:lo 0, :hi 0, :sum 0, :count 2}, :StorageGetBytes {:lo 31, :hi 3105, :sum 6205, :count 20}, :DirLoads {:lo 1, :hi 1, :sum 2, :count 2}}
-0029 00:01:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0030 00:01:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0823, :phase :end, :pid 367074, :tid 51}
-0031 00:01:52 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 8 => 9 (In 52908 ms)
-0032 00:01:52 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 8 => 9 (In 52908 ms)
-0033 00:02:00 [INFO] CLI-agent-send-off-pool-2 Tack
-0034 00:02:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0035 00:02:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0036 00:02:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0772, :phase :end, :pid 367074, :tid 51}
-0037 00:03:00 [INFO] CLI-agent-send-off-pool-2 Tick
-0038 00:03:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7850.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0039 00:03:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0040 00:03:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0696, :phase :end, :pid 367074, :tid 51}
-0041 00:03:37 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 9 => 10 (In 105813 ms)
-0042 00:03:37 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 9 => 10 (In 105813 ms)
-0043 00:04:00 [INFO] CLI-agent-send-off-pool-2 Tack
-0044 00:04:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0045 00:04:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0046 00:04:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0615, :phase :end, :pid 367074, :tid 51}
-0047 00:05:00 [INFO] CLI-agent-send-off-pool-2 Tick
-0048 00:05:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7800.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0049 00:05:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0050 00:05:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0643, :phase :end, :pid 367074, :tid 51}
-0051 00:05:44 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 10 => 11 (In 126289 ms)
-0052 00:05:44 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 10 => 11 (In 126289 ms)
-0053 00:06:00 [INFO] CLI-agent-send-off-pool-2 Tack
-0054 00:06:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0055 00:06:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0056 00:06:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0629, :phase :end, :pid 367074, :tid 51}
-0057 00:07:00 [INFO] CLI-agent-send-off-pool-2 Tick
-0058 00:07:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0059 00:07:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0060 00:07:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0441, :phase :end, :pid 367074, :tid 51}
-0061 00:07:47 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 11 => 12 (In 122881 ms)
-0062 00:07:47 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 11 => 12 (In 122881 ms)
-0063 00:08:00 [INFO] CLI-agent-send-off-pool-2 Tack
-0064 00:08:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0065 00:08:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0066 00:08:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0619, :phase :end, :pid 367074, :tid 51}
-0067 00:09:00 [INFO] CLI-agent-send-off-pool-2 Tick
-0068 00:09:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0069 00:09:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0070 00:09:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0797, :phase :end, :pid 367074, :tid 51}
-0071 00:09:49 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 12 => 13 (In 122883 ms)
-0072 00:09:49 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 12 => 13 (In 122883 ms)
-0073 00:10:00 [INFO] CLI-agent-send-off-pool-2 Tack
-0074 00:10:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0075 00:10:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0076 00:10:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0548, :phase :end, :pid 367074, :tid 51}
-0077 00:11:00 [INFO] CLI-agent-send-off-pool-2 Tick
-0078 00:11:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7890.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0079 00:11:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0080 00:11:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0697, :phase :end, :pid 367074, :tid 51}
-0081 00:11:52 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 13 => 14 (In 122878 ms)
-0082 00:11:52 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 13 => 14 (In 122878 ms)
-0083 00:12:00 [INFO] CLI-agent-send-off-pool-2 Tack
-0084 00:12:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7800.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0085 00:12:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0086 00:12:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0924, :phase :end, :pid 367074, :tid 51}
-0087 00:13:00 [INFO] CLI-agent-send-off-pool-2 Tick
-0088 00:13:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7810.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0089 00:13:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0090 00:13:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.019, :phase :end, :pid 367074, :tid 51}
-0091 00:13:55 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 14 => 15 (In 122878 ms)
-0092 00:13:55 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_probes 14 => 15 (In 122878 ms)
-0093 00:14:00 [INFO] CLI-agent-send-off-pool-2 Tack
-0094 00:14:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7820.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0095 00:14:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0096 00:14:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0575, :phase :end, :pid 367074, :tid 51}
-0097 00:15:00 [INFO] CLI-agent-send-off-pool-2 Tick
-0098 00:15:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7850.0, :ObjectCacheCount 20, :event :metrics, :pid 367074, :tid 51}
-0099 00:15:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0100 00:15:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0423, :phase :end, :pid 367074, :tid 51}
-0101 00:15:58 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 15 => 0 (In 122880 ms)
-0102 00:15:58 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_state 1 => 7 (In 952785 ms)
-0103 00:15:58 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_state_str ESTABLISHED => CLOSE (In 952785 ms)
-0104 00:15:58 [WARN] CLI-agent-send-off-pool-4 socket Error in socket watcher for fd 77 , message: getsockopt error: -1
-0105 00:15:58 [WARN] CLI-agent-send-off-pool-3 org.apache.tomcat.jdbc.pool.PooledConnection Unable to clear Warnings, connection will be closed.
-0106 00:15:58 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 367074, :tid 61}
-0107 00:15:58 [INFO] CLI-agent-send-off-pool-3 Not dropping anything for 127.0.0.1:37514->127.0.0.1:5432
-0108 00:15:58 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :msec 953000.0, :phase :end, :pid 367074, :tid 61}
-0109 00:15:58 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :phase :begin, :pid 367074, :tid 61}
-0110 00:15:58 [INFO] CLI-agent-send-off-pool-3 Not dropping anything for 127.0.0.1:37514->127.0.0.1:5432
-0111 00:15:58 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :msec 1.9, :phase :end, :pid 367074, :tid 61}
-0112 00:15:58 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :phase :begin, :pid 367074, :tid 61}
-0113 00:15:58 [INFO] CLI-agent-send-off-pool-3 Not dropping anything for 127.0.0.1:37514->127.0.0.1:5432
-0114 00:15:58 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :msec 1.51, :phase :end, :pid 367074, :tid 61}
-0115 00:15:58 [INFO] main Query on blocked connection ... Done in 00:15:52 aka 952980 milliseconds
-0116 00:15:58 [INFO] main Waiting 90 seconds for datomic.process-monitor
-0117 00:16:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:tid 51, :ObjectCacheCount 23, :AvailableMB 7840.0, :StorageGetMsec {:lo 1, :hi 953000, :sum 953002, :count 3}, :pid 367074, :event :metrics, :ObjectCache {:lo 0, :hi 0, :sum 0, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :StorageGetBytes {:lo 65, :hi 2114, :sum 2269, :count 3}, :StorageGetBackoffMsec {:lo 0, :hi 0, :sum 0, :count 1}}
-0118 00:16:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0119 00:16:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0578, :phase :end, :pid 367074, :tid 51}
-0120 00:17:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 23, :event :metrics, :pid 367074, :tid 51}
-0121 00:17:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 367074, :tid 51}
-0122 00:17:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0575, :phase :end, :pid 367074, :tid 51}
-0123 00:17:28 [INFO] main Clear all packet filters ...
-0124 00:17:28 [INFO] main Executing sudo nft -f accept.txt ...
-0125 00:17:28 [INFO] main Executing sudo nft -f accept.txt ... OK!
+0010 00:00:05 [INFO] CLI-agent-send-off-pool-4 socket Initial state for fd 77 {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_last_ack_recv 134, tcpi_last_ack_sent 0, tcpi_last_data_recv 134, tcpi_last_data_sent 4, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_probes 0, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 220, tcpi_rttvar 94, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state 1, tcpi_state_str ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
+0011 00:00:06 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 0 => 1 (In 200 ms)
+0012 00:00:06 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 1 => 2 (In 429 ms)
+0013 00:00:07 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 2 => 3 (In 827 ms)
+0014 00:00:09 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 3 => 4 (In 1651 ms)
+0015 00:00:12 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 4 => 5 (In 3384 ms)
+0016 00:00:19 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 5 => 6 (In 6618 ms)
+0017 00:00:32 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 6 => 7 (In 13227 ms)
+0018 00:00:58 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 7 => 8 (In 26667 ms)
+0019 00:01:00 [INFO] CLI-agent-send-off-pool-1 Tick
+0020 00:01:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:tid 51, :ObjectCacheCount 20, :AvailableMB 7840.0, :StorageGetMsec {:lo 0, :hi 6, :sum 23, :count 20}, :pid 368393, :event :metrics, :ObjectCache {:lo 0, :hi 1, :sum 38, :count 64}, :LogIngestMsec {:lo 0, :hi 6, :sum 6, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :DbAddFulltextMsec {:lo 0, :hi 0, :sum 0, :count 2}, :PodGetMsec {:lo 2, :hi 3, :sum 7, :count 3}, :LogIngestBytes {:lo 0, :hi 0, :sum 0, :count 2}, :StorageGetBytes {:lo 31, :hi 3105, :sum 6205, :count 20}, :DirLoads {:lo 1, :hi 1, :sum 2, :count 2}}
+0021 00:01:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0022 00:01:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0944, :phase :end, :pid 368393, :tid 51}
+0023 00:01:51 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 8 => 9 (In 52904 ms)
+0024 00:02:00 [INFO] CLI-agent-send-off-pool-1 Tack
+0025 00:02:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0026 00:02:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0027 00:02:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0722, :phase :end, :pid 368393, :tid 51}
+0028 00:03:00 [INFO] CLI-agent-send-off-pool-1 Tick
+0029 00:03:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7890.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0030 00:03:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0031 00:03:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0702, :phase :end, :pid 368393, :tid 51}
+0032 00:03:37 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 9 => 10 (In 105815 ms)
+0033 00:04:00 [INFO] CLI-agent-send-off-pool-1 Tack
+0034 00:04:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0035 00:04:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0036 00:04:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0295, :phase :end, :pid 368393, :tid 51}
+0037 00:05:01 [INFO] CLI-agent-send-off-pool-1 Tick
+0038 00:05:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0039 00:05:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0040 00:05:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0669, :phase :end, :pid 368393, :tid 51}
+0041 00:05:43 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 10 => 11 (In 126292 ms)
+0042 00:06:00 [INFO] CLI-agent-send-off-pool-1 Tack
+0043 00:06:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0044 00:06:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0045 00:06:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0599, :phase :end, :pid 368393, :tid 51}
+0046 00:07:00 [INFO] CLI-agent-send-off-pool-1 Tick
+0047 00:07:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0048 00:07:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0049 00:07:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0621, :phase :end, :pid 368393, :tid 51}
+0050 00:07:46 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 11 => 12 (In 122877 ms)
+0051 00:08:00 [INFO] CLI-agent-send-off-pool-1 Tack
+0052 00:08:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0053 00:08:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0054 00:08:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0677, :phase :end, :pid 368393, :tid 51}
+0055 00:09:00 [INFO] CLI-agent-send-off-pool-1 Tick
+0056 00:09:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0057 00:09:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0058 00:09:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.111, :phase :end, :pid 368393, :tid 51}
+0059 00:09:49 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 12 => 13 (In 122883 ms)
+0060 00:10:00 [INFO] CLI-agent-send-off-pool-1 Tack
+0061 00:10:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0062 00:10:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0063 00:10:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.143, :phase :end, :pid 368393, :tid 51}
+0064 00:11:00 [INFO] CLI-agent-send-off-pool-1 Tick
+0065 00:11:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0066 00:11:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0067 00:11:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0899, :phase :end, :pid 368393, :tid 51}
+0068 00:11:52 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 13 => 14 (In 122877 ms)
+0069 00:12:00 [INFO] CLI-agent-send-off-pool-1 Tack
+0070 00:12:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0071 00:12:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0072 00:12:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.108, :phase :end, :pid 368393, :tid 51}
+0073 00:13:00 [INFO] CLI-agent-send-off-pool-1 Tick
+0074 00:13:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7850.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0075 00:13:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0076 00:13:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.134, :phase :end, :pid 368393, :tid 51}
+0077 00:13:55 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 14 => 15 (In 122884 ms)
+0078 00:14:00 [INFO] CLI-agent-send-off-pool-1 Tack
+0079 00:14:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0080 00:14:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0081 00:14:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0885, :phase :end, :pid 368393, :tid 51}
+0082 00:15:00 [INFO] CLI-agent-send-off-pool-1 Tick
+0083 00:15:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7890.0, :ObjectCacheCount 20, :event :metrics, :pid 368393, :tid 51}
+0084 00:15:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0085 00:15:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0707, :phase :end, :pid 368393, :tid 51}
+0086 00:15:58 [WARN] CLI-agent-send-off-pool-4 socket Error in socket watcher for fd 77 , message: getsockopt error: -1
+0087 00:15:58 [WARN] CLI-agent-send-off-pool-3 org.apache.tomcat.jdbc.pool.PooledConnection Unable to clear Warnings, connection will be closed.
+0088 00:15:58 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 368393, :tid 59}
+0089 00:15:58 [INFO] CLI-agent-send-off-pool-3 Not dropping anything for 127.0.0.1:46436->127.0.0.1:5432
+0090 00:15:58 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :msec 953000.0, :phase :end, :pid 368393, :tid 59}
+0091 00:15:58 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :phase :begin, :pid 368393, :tid 59}
+0092 00:15:58 [INFO] CLI-agent-send-off-pool-3 Not dropping anything for 127.0.0.1:46436->127.0.0.1:5432
+0093 00:15:58 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :msec 2.22, :phase :end, :pid 368393, :tid 59}
+0094 00:15:58 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :phase :begin, :pid 368393, :tid 59}
+0095 00:15:58 [INFO] CLI-agent-send-off-pool-3 Not dropping anything for 127.0.0.1:46436->127.0.0.1:5432
+0096 00:15:58 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :msec 1.45, :phase :end, :pid 368393, :tid 59}
+0097 00:15:58 [INFO] main Query on blocked connection ... Done in 00:15:52 aka 952604 milliseconds
+0098 00:15:58 [INFO] main Waiting 90 seconds for datomic.process-monitor
+0099 00:16:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:tid 51, :ObjectCacheCount 23, :AvailableMB 7880.0, :StorageGetMsec {:lo 1, :hi 953000, :sum 953003, :count 3}, :pid 368393, :event :metrics, :ObjectCache {:lo 0, :hi 0, :sum 0, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :StorageGetBytes {:lo 65, :hi 2114, :sum 2269, :count 3}, :StorageGetBackoffMsec {:lo 0, :hi 0, :sum 0, :count 1}}
+0100 00:16:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0101 00:16:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0478, :phase :end, :pid 368393, :tid 51}
+0102 00:17:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 23, :event :metrics, :pid 368393, :tid 51}
+0103 00:17:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 368393, :tid 51}
+0104 00:17:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0417, :phase :end, :pid 368393, :tid 51}
+0105 00:17:28 [INFO] main Clear all packet filters ...
+0106 00:17:28 [INFO] main Executing sudo nft -f accept.txt ...
+0107 00:17:28 [INFO] main Executing sudo nft -f accept.txt ... OK!

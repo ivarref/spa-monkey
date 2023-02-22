@@ -69,39 +69,43 @@
 
 (defn watch-socket! [nam ^Socket sock]
   (future
-    (try
-      (let [initial-state (get-state sock)
-            fd (GetSockOpt/getFd sock)]
-        (log/info nam "Initial state for fd" fd initial-state)
-        (loop [prev-state (with-clock initial-state (System/currentTimeMillis))]
-          (Thread/sleep 5)
-          (let [now-ms (System/currentTimeMillis)
-                {:strs [open?] :as new-state} (get-state sock)]
-            (if (not= new-state (no-clock prev-state))
-              (do
-                (doseq [[new-k new-v] new-state]
-                  (when (and (not= new-v (first (get prev-state new-k)))
-                             (not (contains? #{"tcpi_last_ack_recv"
-                                               "tcpi_last_ack_sent"
-                                               "tcpi_last_data_recv"
-                                               "tcpi_last_data_sent"
-                                               "tcpi_probes"}
-                                             new-k)))
-                    (let [ms-diff (- now-ms (second (get prev-state new-k)))]
-                      (log/info nam "fd" fd new-k (first (get prev-state new-k)) "=>" new-v (str "(In " ms-diff " ms)")))))
+    (let [org-name (.getName (Thread/currentThread))]
+      (.setName (Thread/currentThread) "socket-watcher")
+      (try
+        (let [initial-state (get-state sock)
+              fd (GetSockOpt/getFd sock)]
+          (log/info nam "Initial state for fd" fd initial-state)
+          (loop [prev-state (with-clock initial-state (System/currentTimeMillis))]
+            (Thread/sleep 5)
+            (let [now-ms (System/currentTimeMillis)
+                  {:strs [open?] :as new-state} (get-state sock)]
+              (if (not= new-state (no-clock prev-state))
+                (do
+                  (doseq [[new-k new-v] new-state]
+                    (when (and (not= new-v (first (get prev-state new-k)))
+                               (not (contains? #{"tcpi_last_ack_recv"
+                                                 "tcpi_last_ack_sent"
+                                                 "tcpi_last_data_recv"
+                                                 "tcpi_last_data_sent"
+                                                 "tcpi_probes"}
+                                               new-k)))
+                      (let [ms-diff (- now-ms (second (get prev-state new-k)))]
+                        (log/info nam "fd" fd new-k (first (get prev-state new-k)) "=>" new-v (str "(In " ms-diff " ms)")))))
+                  (when open?
+                    (recur (reduce-kv (fn [o k [old-v _old-ms :as old-val]]
+                                        (if (not= old-v (get new-state k))
+                                          (assoc o k [(get new-state k) now-ms])
+                                          (assoc o k old-val)))
+                                      {}
+                                      prev-state))))
                 (when open?
-                  (recur (reduce-kv (fn [o k [old-v _old-ms :as old-val]]
-                                      (if (not= old-v (get new-state k))
-                                        (assoc o k [(get new-state k) now-ms])
-                                        (assoc o k old-val)))
-                                    {}
-                                    prev-state))))
-              (when open?
-                (recur prev-state))))))
-      (catch Throwable t
-        (if (.isClosed sock)
-          (log/warn nam "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))
-          (log/error nam "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t)))))))
+                  (recur prev-state))))))
+        (catch Throwable t
+          (if (.isClosed sock)
+            (log/warn nam "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))
+            (log/error nam "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))))
+        (finally
+          (.setName (Thread/currentThread) org-name))))))
 
 (defn do-test! [{:keys [block?] :as opts}]
   (try
