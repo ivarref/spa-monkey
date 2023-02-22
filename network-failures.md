@@ -49,18 +49,19 @@ Running `sudo -E ./tcp-retry.sh` you will see:
 0003 00:00:03 [INFO] main Executing sudo nft -f accept.txt ...
 0004 00:00:03 [INFO] main Executing sudo nft -f accept.txt ... OK!
 0005 00:00:05 [INFO] main Starting query on blocked connection ...
-0006 00:00:05 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :phase :begin, :pid 368393, :tid 59}
-0007 00:00:05 [INFO] CLI-agent-send-off-pool-3 Dropping TCP packets for 127.0.0.1:46902->127.0.0.1:5432 fd 77
+0006 00:00:05 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :phase :begin, :pid 369854, :tid 60}
+0007 00:00:05 [INFO] CLI-agent-send-off-pool-3 Dropping TCP packets for 127.0.0.1:59820->127.0.0.1:5432 fd 152
 0008 00:00:05 [INFO] CLI-agent-send-off-pool-3 Executing sudo nft -f drop.txt ...
 0009 00:00:05 [INFO] CLI-agent-send-off-pool-3 Executing sudo nft -f drop.txt ... OK!
-0010 00:00:05 [INFO] CLI-agent-send-off-pool-4 socket Initial state for fd 77 {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_last_ack_recv 134, tcpi_last_ack_sent 0, tcpi_last_data_recv 134, tcpi_last_data_sent 4, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_probes 0, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 220, tcpi_rttvar 94, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state 1, tcpi_state_str ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
-0011 00:00:06 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 0 => 1 (In 200 ms)
-0012 00:00:06 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 1 => 2 (In 429 ms)
-0013 00:00:07 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 2 => 3 (In 827 ms)
-0014 00:00:09 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 3 => 4 (In 1651 ms)
-0015 00:00:12 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 4 => 5 (In 3384 ms)
-0016 00:00:19 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 5 => 6 (In 6618 ms)
-0017 00:00:32 [INFO] CLI-agent-send-off-pool-4 socket fd 77 tcpi_backoff 6 => 7 (In 13227 ms)
+0010 00:00:05 [INFO] socket-watcher Initial state for fd 152 {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_last_ack_recv 154, tcpi_last_ack_sent 0, tcpi_last_data_recv 154, tcpi_last_data_sent 7, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_probes 0, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 193, tcpi_rttvar 81, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state 1, tcpi_state_str ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
+0011 00:00:06 [INFO] socket-watcher fd 152 tcpi_backoff 0 => 1 (In 190 ms)
+0012 00:00:06 [INFO] socket-watcher fd 152 tcpi_backoff 1 => 2 (In 415 ms)
+0013 00:00:07 [INFO] socket-watcher fd 152 tcpi_backoff 2 => 3 (In 830 ms)
+0014 00:00:09 [INFO] socket-watcher fd 152 tcpi_backoff 3 => 4 (In 1653 ms)
+0015 00:00:12 [INFO] socket-watcher fd 152 tcpi_backoff 4 => 5 (In 3412 ms)
+0016 00:00:19 [INFO] socket-watcher fd 152 tcpi_backoff 5 => 6 (In 6610 ms)
+0017 00:00:32 [INFO] socket-watcher fd 152 tcpi_backoff 6 => 7 (In 13231 ms)
+0018 00:00:59 [INFO] socket-watcher fd 152 tcpi_backoff 7 => 8 (In 26667 ms)
 ...
 ```
 
@@ -99,8 +100,6 @@ and then finally:
 After approximately 16 minutes the kernel gives up
 trying to re-send our packets and waiting for the corresponding
 TCP acknowledgements. The kernel then closes the connection.
-
-We have already seen `tcpi_backoff` steadily increasing.
 
 It's possible to verify 
 that this is indeed what is
