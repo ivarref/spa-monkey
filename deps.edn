@@ -20,7 +20,21 @@
              :tcp-retry {:exec-fn   com.github.ivarref.break-single-conn-once/do-test!
                          :exec-args {:block?   false
                                      :log-file "tcp_retry"}
-                         :jvm-opts  ["-Djdk.attach.allowAttachSelf=true" "-XX:-OmitStackTraceInFastThrow"]}
+                         :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                     "-XX:-OmitStackTraceInFastThrow"
+                                     "--enable-preview"
+                                     "--enable-native-access=ALL-UNNAMED"
+                                     "--add-opens" "java.base/java.net=ALL-UNNAMED"
+                                     "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
+             :getsockopt {:exec-fn   com.github.ivarref.break-single-conn-once/getsockopt-demo
+                          :exec-args {}
+                          :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                      "-XX:-OmitStackTraceInFastThrow"
+                                      "--enable-preview"
+                                      "--enable-native-access=ALL-UNNAMED"
+                                      "--add-opens" "java.base/java.net=ALL-UNNAMED"
+                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
+
              #_:case1                  #_{:exec-fn   com.github.ivarref.case-1/do-test!
                                           :exec-args {:block?   false
                                                       :log-file "case1"}}

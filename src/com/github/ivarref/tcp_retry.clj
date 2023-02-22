@@ -1,4 +1,4 @@
-(ns com.github.ivarref.break-single-conn-once
+(ns com.github.ivarref.tcp-retry
   (:require
     [babashka.process :refer [$ check]]
     [clojure.string :as str]
