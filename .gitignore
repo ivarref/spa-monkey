@@ -8,3 +8,4 @@ drop
 postgres/
 .attach*
 *.class
+gen/
