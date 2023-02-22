@@ -67,14 +67,14 @@
              {}
              state))
 
-(defn watch-socket! [nam ^Socket sock]
+(defn watch-socket! [^Socket sock]
   (future
     (let [org-name (.getName (Thread/currentThread))]
       (.setName (Thread/currentThread) "socket-watcher")
       (try
         (let [initial-state (get-state sock)
               fd (GetSockOpt/getFd sock)]
-          (log/info nam "Initial state for fd" fd initial-state)
+          (log/info "Initial state for fd" fd initial-state)
           (loop [prev-state (with-clock initial-state (System/currentTimeMillis))]
             (Thread/sleep 5)
             (let [now-ms (System/currentTimeMillis)
@@ -90,7 +90,7 @@
                                                  "tcpi_probes"}
                                                new-k)))
                       (let [ms-diff (- now-ms (second (get prev-state new-k)))]
-                        (log/info nam "fd" fd new-k (first (get prev-state new-k)) "=>" new-v (str "(In " ms-diff " ms)")))))
+                        (log/info "fd" fd new-k (first (get prev-state new-k)) "=>" new-v (str "(In " ms-diff " ms)")))))
                   (when open?
                     (recur (reduce-kv (fn [o k [old-v _old-ms :as old-val]]
                                         (if (not= old-v (get new-state k))
@@ -102,8 +102,8 @@
                   (recur prev-state))))))
         (catch Throwable t
           (if (.isClosed sock)
-            (log/warn nam "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))
-            (log/error nam "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))))
+            (log/warn "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))
+            (log/error "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))))
         (finally
           (.setName (Thread/currentThread) org-name))))))
 
