@@ -134,7 +134,7 @@
             (if (= 1 (swap! drop-count inc))
               (do
                 (nft/drop-sock! sock)
-                (watch-socket! "socket" sock)
+                (watch-socket! sock)
                 #_(log/info "Blocked socket:" (tcp-info @blocked-socket)))
               (log/info "Not dropping anything for" (nft/sock->readable sock))))))
       (let [start-time (System/currentTimeMillis)
