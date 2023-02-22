@@ -2,7 +2,8 @@
   (:require [babashka.process :refer [$ check]]
             [clojure.string :as str]
             [clojure.tools.logging :as log])
-  (:import (java.net Socket)))
+  (:import (com.github.ivarref GetSockOpt)
+           (java.net Socket)))
 
 (defn nft-sudo [filename]
   (log/info "Executing sudo nft -f" filename "...")
@@ -72,5 +73,5 @@
                              drop-txt
                              "}"
                              "}"])]
-    (log/info "Dropping TCP packets for" (sock->readable sock))
+    (log/info "Dropping TCP packets for" (sock->readable sock) "fd" (GetSockOpt/getFd sock))
     (drop-str! drop-file)))

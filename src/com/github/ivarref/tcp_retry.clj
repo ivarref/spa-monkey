@@ -38,7 +38,7 @@
 
 (defonce conn-pool (atom nil))
 
-(defn tick-tack-loop [done-read? blocked-socket]
+(defn tick-tack-loop [done-read?]
   (loop [uptime (int (/ (log-init/jvm-uptime-ms) 60000))
          v 0]
     (when-not (realized? done-read?)
@@ -47,9 +47,7 @@
         (when timeout?
           (if (not= uptime new-uptime)
             (do
-              (log/info (if (even? v) "Tick" "Tack")
-                        (when (realized? blocked-socket)
-                          (into (sorted-map) (GetSockOpt/getTcpInfo @blocked-socket))))
+              (log/info (if (even? v) "Tick" "Tack"))
               (recur new-uptime (inc v)))
             (recur uptime v)))))))
 
@@ -122,8 +120,7 @@
       (log/info "Starting nREPL server ....")
       (nrepl/start-server :bind "127.0.0.1" :port 7777))
     (let [conn (u/get-conn)
-          drop-count (atom 0)
-          blocked-socket (promise)]
+          drop-count (atom 0)]
       (hookd/install-return-consumer!
         "org.apache.tomcat.jdbc.pool.ConnectionPool"
         "getConnection"
@@ -131,7 +128,6 @@
           (let [^Socket sock (conn->socket conn)]
             (if (= 1 (swap! drop-count inc))
               (do
-                (deliver blocked-socket sock)
                 (nft/drop-sock! sock)
                 (watch-socket! "socket" sock)
                 #_(log/info "Blocked socket:" (tcp-info @blocked-socket)))
@@ -142,7 +138,7 @@
                                            [#{"com.github.ivarref.*"} :info]
                                            [#{"*"} :info]]})
         (log/info "Starting query on blocked connection ...")
-        (future (tick-tack-loop done-read? blocked-socket))
+        (future (tick-tack-loop done-read?))
         (let [result (d/q '[:find ?e ?doc
                             :in $
                             :where
@@ -150,9 +146,6 @@
                           (d/db conn))]
           (log/debug "Got query result" result))
         (deliver done-read? :done)
-        ;(log/info "Blocked socket:" (tcp-info @blocked-socket))
-        ;(Thread/sleep 5000)
-        ;(log/info "Blocked socket:" (tcp-info @blocked-socket))
         (let [stop-time (System/currentTimeMillis)]
           (log/info "Query on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))
                     "aka" (int (- stop-time start-time)) "milliseconds")
