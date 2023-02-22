@@ -1,6 +1,5 @@
 (ns com.github.ivarref.log-init
   (:require
-    [babashka.process.pprint]
     [clojure.string :as str]
     [clojure.tools.logging :as log]
     [taoensso.timbre :as timbre])

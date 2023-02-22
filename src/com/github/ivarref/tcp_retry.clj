@@ -1,19 +1,17 @@
 (ns com.github.ivarref.tcp-retry
   (:require
-    [babashka.process :refer [$ check]]
     [clojure.string :as str]
     [clojure.tools.logging :as log]
     [com.github.ivarref.hookd :as hookd]
     [com.github.ivarref.log-init :as log-init]
+    [com.github.ivarref.nft :as nft]
     [com.github.ivarref.utils :as u]
     [datomic.api :as d]
     [nrepl.server :as nrepl]
     [taoensso.timbre :as timbre])
   (:import
     (com.github.ivarref GetSockOpt)
-    (java.io BufferedReader InputStreamReader PrintWriter)
-    (java.net InetSocketAddress ServerSocket Socket)
-    (java.nio.charset StandardCharsets)
+    (java.net Socket)
     (java.sql Connection)
     (javax.sql PooledConnection)
     (org.postgresql.core PGStream QueryExecutor QueryExecutorBase)
@@ -38,82 +36,7 @@
           ^PGStream stream (.get field qe)]
       (.getSocket stream))))
 
-(defn nft-sudo [filename]
-  (log/info "Executing sudo nft -f" filename "...")
-  (let [fut (future (try
-                      (as-> ^{:out :string :err :string} ($ sudo nft -f ~filename) v
-                            (check v))
-                      :ok
-                      (catch Throwable t
-                        t)))
-        res (deref fut (* 10 60000) ::timeout)]
-    (cond
-      (= ::timeout res)
-      (do
-        (log/info "Executing sudo nft -f" filename "... Timeout!")
-        (throw (ex-info "sudo nft timeout" {})))
-
-      (= :ok res)
-      (do
-        (log/info "Executing sudo nft -f" filename "... OK!")
-        true)
-
-      (instance? Throwable res)
-      (do
-        (log/error res "Executing sudo nft -f" filename "... Error:" (ex-message res))
-        (throw res))
-
-      :else
-      (do
-        (log/error "Unhandled state. Got res:" res)
-        (throw (ex-info "Unexpected state" {:result res}))))))
-
-(defn accept! []
-  (log/info "Clear all packet filters ...")
-  (nft-sudo "accept.txt"))
-
-(defn sock->drop [^Socket s]
-  (str "tcp dport " (.getPort s) " "
-       "tcp sport " (.getLocalPort s) " "
-       "ip saddr 127.0.0.1 "
-       "ip daddr 127.0.0.1 drop;"))
-
-(defn drop-str! [s]
-  (if (try
-        (spit "drop.txt" s)
-        true
-        (catch Throwable t
-          (log/error t "Writing drop.txt failed:" (ex-message t))
-          false))
-    (nft-sudo "drop.txt")
-    (do
-      (log/error "Not invoking nft!")
-      false)))
-
-(defn sock->readable [sock]
-  (str "127.0.0.1:" (.getLocalPort sock)
-       "->"
-       "127.0.0.1:" (.getPort sock)))
-
-(defn drop-sock! [sock]
-  (let [drop-txt (sock->drop sock)
-        drop-file (str/join "\n"
-                            ["flush ruleset"
-                             "table ip filter {"
-                             "chain output {"
-                             "type filter hook output priority filter;"
-                             "policy accept;"
-                             drop-txt
-                             "}"
-                             "}"])]
-    (log/info "Dropping TCP packets for" (sock->readable sock))
-    (drop-str! drop-file)))
-
 (defonce conn-pool (atom nil))
-
-#_(defn tcp-info [sock]
-    (-> (into (sorted-map) (GetSockOpt/getTcpInfo sock))
-        (select-keys ["tcpi_state_str" "tcpi_unacked"])))
 
 (defn tick-tack-loop [done-read? blocked-socket]
   (loop [uptime (int (/ (log-init/jvm-uptime-ms) 60000))
@@ -153,7 +76,7 @@
             fd (GetSockOpt/getFd sock)]
         (log/info nam "Initial state for fd" fd initial-state)
         (loop [prev-state (with-clock initial-state (System/currentTimeMillis))]
-          ;(Thread/sleep 1)
+          (Thread/sleep 5)
           (let [now-ms (System/currentTimeMillis)
                 {:strs [open?] :as new-state} (get-state sock)]
             (if (not= new-state (no-clock prev-state))
@@ -181,65 +104,6 @@
           (log/warn nam "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))
           (log/error nam "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t)))))))
 
-(defn handle-client [running? ^Socket sock]
-  (try
-    (with-open [in (-> sock
-                       .getInputStream
-                       (InputStreamReader. StandardCharsets/UTF_8)
-                       BufferedReader.)
-                out (PrintWriter. (.getOutputStream sock) true StandardCharsets/UTF_8)]
-      (loop []
-        (when-let [line (.readLine in)]
-          (log/info "Server received:" line)
-          (Thread/sleep 1000)
-          (.println out line)
-          (Thread/sleep 1000)
-          (when @running? (recur)))))
-    (finally
-      (.close sock))))
-
-(defn accept-loop [running? server-socket]
-  (try
-    (when @running?
-      (log/info "Waiting for connections ..."))
-    (while @running?
-      (let [new-client (.accept server-socket)]
-        (watch-socket! "server" new-client)
-        (future (handle-client running? new-client))))
-    (log/info "Server exiting")
-    (catch Throwable t
-      (log/error "Unexpected error:" (ex-message t)))))
-
-(defn getsockopt-demo [_]
-  (try
-    (log-init/init-logging! {:levels [[#{"datomic.*"} :warn]
-                                      [#{"com.github.ivarref.*"} :info]
-                                      [#{"*"} :info]]})
-    (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
-      (log/info tcp-retry-file "is" (str/trim (slurp tcp-retry-file))))
-    (let [ss (doto (ServerSocket.)
-               (.setReuseAddress true)
-               (.bind (InetSocketAddress. "localhost" 8080)))
-          port (.getLocalPort ss)
-          running? (atom true)]
-      (log/info "Listening at port" port)
-      (future (accept-loop running? ss))
-      (Thread/sleep 100)
-      (with-open [sock (Socket. "localhost" ^int port)
-                  out (PrintWriter. (.getOutputStream sock) true StandardCharsets/UTF_8)
-                  in (-> sock
-                         .getInputStream
-                         (InputStreamReader. StandardCharsets/UTF_8)
-                         BufferedReader.)]
-        (watch-socket! "client" sock)
-        (.println out "Hello world!")
-        (log/info "client sent Hello world!")
-        (when-let [line (.readLine in)]
-          (log/info "client received:" line)))
-      #_(let [client ()]))
-    (catch Throwable t
-      (log/error t "Unexpected exception:" (ex-message t)))))
-
 (defn do-test! [{:keys [block?] :as opts}]
   (try
     (log-init/init-logging! (merge opts
@@ -249,7 +113,7 @@
     (log/debug "user.name is" (System/getProperty "user.name"))
     (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
       (log/info tcp-retry-file "is" (str/trim (slurp tcp-retry-file))))
-    (accept!)
+    (nft/accept!)
     (hookd/install-return-consumer!
       "org.apache.tomcat.jdbc.pool.ConnectionPool"
       "::Constructor"
@@ -268,10 +132,10 @@
             (if (= 1 (swap! drop-count inc))
               (do
                 (deliver blocked-socket sock)
-                (drop-sock! sock)
-                (watch-socket! sock)
+                (nft/drop-sock! sock)
+                (watch-socket! "socket" sock)
                 #_(log/info "Blocked socket:" (tcp-info @blocked-socket)))
-              (log/info "Not dropping anything for" (sock->readable sock))))))
+              (log/info "Not dropping anything for" (nft/sock->readable sock))))))
       (let [start-time (System/currentTimeMillis)
             done-read? (promise)]
         (timbre/merge-config! {:min-level [[#{"datomic.*"} :debug]
@@ -299,4 +163,4 @@
     (catch Throwable t
       (log/error t "Unexpected exception:" (ex-message t)))
     (finally
-      (accept!))))
+      (nft/accept!))))
