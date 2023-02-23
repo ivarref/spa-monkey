@@ -37,7 +37,8 @@ The following environment variables needs to be set:
 You will also want to: be prepared to enter your root password,
 add `/usr/bin/nft` to sudoers for your user or run the scripts using `sudo -E`.
 
-Running this code requires Java 20 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
+Running this code requires running Linux and  
+Java 20 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
 
 ## Case 1: TCP retry saves the day
 
@@ -80,7 +81,7 @@ After this we simply wait and watch for TCP_INFO socket changes:
 ...
 ```
 
-`tcpi_backoff` is collected from [getsockopt](https://man7.org/linux/man-pages/man2/getsockopt.2.html) with `TCP_INFO`.
+`tcpi_backoff` is collected from [getsockopt](https://man7.org/linux/man-pages/man2/getsockopt.2.html) using `TCP_INFO`.
 The [ss man page](https://man7.org/linux/man-pages/man8/ss.8.html)
 gives this definition of `isck_backoff`:
 
@@ -88,12 +89,13 @@ gives this definition of `isck_backoff`:
 actual re-transmission timeout value is icsk_rto <<
 icsk_backoff
 
-This field, `iscv_backoff`, is copied verbatim in [the kernel](https://github.com/torvalds/linux/blob/5b7c4cabbb65f5c469464da6c5f614cbd7f730f2/net/ipv4/tcp.c#L3829) into `tcpi_backoff`.
+This field, `iscv_backoff`, is copied verbatim into `tcpi_backoff` in the [kernel](https://github.com/torvalds/linux/blob/5b7c4cabbb65f5c469464da6c5f614cbd7f730f2/net/ipv4/tcp.c#L3829).
 In `getsockopt` `isck_rto` is however converted from [jiffies](https://man7.org/linux/man-pages/man7/time.7.html) to microseconds into the `tcpi_rto` field.
 We can see that `tcpi_rto` is initialized at `203333` microseconds,
 i.e. just over 200 milliseconds.
 These values correspond reasonably well to the observed
-timeouts printed on the console.
+durations of each transition of `tcpi_backoff` on the console:
+it starts at ~200 milliseconds, then doubles, doubles again, etc..
 
 Then finally we see:
 
@@ -122,7 +124,7 @@ From the [kernel ip-sysctl documentation](https://www.kernel.org/doc/Documentati
 In our case the timeout took ~950 seconds.
 
 After the connection is closed by the kernel,
-Datomic finally retries fetching the data on line 71:
+Datomic finally retries fetching the data:
 
 ```
 0088 00:15:53 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 382404, :tid 59}
@@ -137,7 +139,7 @@ Datomic finally retries fetching the data on line 71:
 0097 00:15:53 [INFO] Query on blocked connection ... Done in 00:15:47 aka 947996 milliseconds
 ```
 
-There are a few more things to note here.
+There are a few things to note here.
 One is that there is only a single warning, which
 was issued by `org.apache.tomcat.jdbc.pool.PooledConnection`.
 Its message reads:
@@ -158,15 +160,13 @@ of `949000`, i.e. around 16 minutes.
 This is logged at an INFO-level, making it hard
 to spot.
 
-The retry strategy also states:
-
-```
-0088 00:15:53 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 382404, :tid 59}
-```
+In summary: a network issue like this
+is rather hard to both spot and troubleshoot using Datomic.
 
 ## Case 2: a query that hangs forever?
 
-In case 1 we saw what happened when the TCP send buffer had unacknowledged data on a dropped connection: the kernel saved us and the Datomic query, albeit taking ~16 minutes.
+In case 1 we saw what happened when the TCP send buffer had unacknowledged data on a dropped connection: 
+the kernel saved us and the Datomic retried query, albeit taking ~16 minutes.
 
 What happens if the connection becomes blocked after the send buffer is acknowledged,
 but before a response is received?
