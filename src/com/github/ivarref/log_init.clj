@@ -39,8 +39,8 @@
         " ["
         (str/upper-case (name level))
         "] "
-        (.getName (Thread/currentThread))
-        " "
+        (when-not (str/starts-with? ?ns-str "com.github.ivarref")
+          (str (.getName (Thread/currentThread)) " "))
         (when-not (str/starts-with? ?ns-str "com.github.ivarref")
           (str ?ns-str " "))
         (force msg_)

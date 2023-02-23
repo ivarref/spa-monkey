@@ -76,7 +76,7 @@
               fd (GetSockOpt/getFd sock)]
           (log/info "Initial state for fd" fd initial-state)
           (loop [prev-state (with-clock initial-state (System/currentTimeMillis))]
-            (Thread/sleep 5)
+            (Thread/sleep 1)
             (let [now-ms (System/currentTimeMillis)
                   {:strs [open?] :as new-state} (get-state sock)]
               (if (not= new-state (no-clock prev-state))
@@ -161,4 +161,5 @@
     (catch Throwable t
       (log/error t "Unexpected exception:" (ex-message t)))
     (finally
-      (nft/accept!))))
+      (nft/accept!)
+      (log/info "Exiting"))))

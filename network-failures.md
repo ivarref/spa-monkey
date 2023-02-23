@@ -19,7 +19,7 @@ org.postgresql/postgresql 42.5.0
 OpenJDK 64-Bit Server VM (build 20-ea+34-2340, mixed mode, sharing)
 ```
 
-We will be using [nftables](https://wiki.nftables.org/wiki-nftables/index.php/What_is_nftables%3F) to simulate network errors.
+We will be using [nftables](http://nftables.org/projects/nftables/index.html) to simulate network errors.
 
 ## Setup
 
@@ -35,7 +35,7 @@ The following environment variables needs to be set:
 * `POSTGRES_PASSWORD`: Password to be used for PostgreSQL.
 
 You will also want to: be prepared to enter your root password,
-add `/usr/bin/nft` to sudoers for your user or run `clojure` using `sudo -E`.
+add `/usr/bin/nft` to sudoers for your user or run the scripts using `sudo -E`.
 
 Running this code requires Java 20 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
 
@@ -44,24 +44,15 @@ Running this code requires Java 20 or later as it uses [JEP 434: Foreign Functio
 Running `sudo -E ./tcp-retry.sh` you will see:
 
 ```
-0001 00:00:03 [INFO] main /proc/sys/net/ipv4/tcp_retries2 is 15
-0002 00:00:03 [INFO] main Clear all packet filters ...
-0003 00:00:03 [INFO] main Executing sudo nft -f accept.txt ...
-0004 00:00:03 [INFO] main Executing sudo nft -f accept.txt ... OK!
-0005 00:00:05 [INFO] main Starting query on blocked connection ...
-0006 00:00:05 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :phase :begin, :pid 369854, :tid 60}
-0007 00:00:05 [INFO] CLI-agent-send-off-pool-3 Dropping TCP packets for 127.0.0.1:59820->127.0.0.1:5432 fd 152
-0008 00:00:05 [INFO] CLI-agent-send-off-pool-3 Executing sudo nft -f drop.txt ...
-0009 00:00:05 [INFO] CLI-agent-send-off-pool-3 Executing sudo nft -f drop.txt ... OK!
-0010 00:00:05 [INFO] socket-watcher Initial state for fd 152 {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_last_ack_recv 154, tcpi_last_ack_sent 0, tcpi_last_data_recv 154, tcpi_last_data_sent 7, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_probes 0, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 193, tcpi_rttvar 81, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state 1, tcpi_state_str ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
-0011 00:00:06 [INFO] socket-watcher fd 152 tcpi_backoff 0 => 1 (In 190 ms)
-0012 00:00:06 [INFO] socket-watcher fd 152 tcpi_backoff 1 => 2 (In 415 ms)
-0013 00:00:07 [INFO] socket-watcher fd 152 tcpi_backoff 2 => 3 (In 830 ms)
-0014 00:00:09 [INFO] socket-watcher fd 152 tcpi_backoff 3 => 4 (In 1653 ms)
-0015 00:00:12 [INFO] socket-watcher fd 152 tcpi_backoff 4 => 5 (In 3412 ms)
-0016 00:00:19 [INFO] socket-watcher fd 152 tcpi_backoff 5 => 6 (In 6610 ms)
-0017 00:00:32 [INFO] socket-watcher fd 152 tcpi_backoff 6 => 7 (In 13231 ms)
-0018 00:00:59 [INFO] socket-watcher fd 152 tcpi_backoff 7 => 8 (In 26667 ms)
+0001 00:00:03 [INFO] /proc/sys/net/ipv4/tcp_retries2 is 15
+0002 00:00:03 [INFO] Clear all packet filters ...
+0003 00:00:03 [INFO] Executing sudo nft -f accept.txt ...
+0004 00:00:03 [INFO] Executing sudo nft -f accept.txt ... OK!
+0005 00:00:05 [INFO] Starting query on blocked connection ...
+0006 00:00:05 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :phase :begin, :pid 382404, :tid 59}
+0007 00:00:05 [INFO] Dropping TCP packets for 127.0.0.1:45492->127.0.0.1:5432 fd 152
+0008 00:00:05 [INFO] Executing sudo nft -f drop.txt ...
+0009 00:00:05 [INFO] Executing sudo nft -f drop.txt ... OK!
 ...
 ```
 
@@ -75,37 +66,48 @@ destined for PostgreSQL, which is running at port 5432.
 We're starting to drop packets just before
 `org.apache.tomcat.jdbc.pool.ConnectionPool/getConnection`
 returns a connection, and thus also before any packet is sent.
-After this we simply wait:
+After this we simply wait and watch for TCP_INFO socket changes:
 ```
-0010 00:01:00 [INFO] CLI-agent-send-off-pool-1 Tick
-...
-0014 00:02:00 [INFO] CLI-agent-send-off-pool-1 Tack
-...
-0066 00:15:00 [INFO] CLI-agent-send-off-pool-1 Tick
+0010 00:00:05 [INFO] Initial state for fd 152 {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_last_ack_recv 120, tcpi_last_ack_sent 0, tcpi_last_data_recv 120, tcpi_last_data_sent 0, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_probes 0, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 200, tcpi_rttvar 110, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state 1, tcpi_state_str ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
+0011 00:00:06 [INFO] fd 152 tcpi_backoff 0 => 1 (In 192 ms)
+0012 00:00:06 [INFO] fd 152 tcpi_backoff 1 => 2 (In 430 ms)
+0013 00:00:07 [INFO] fd 152 tcpi_backoff 2 => 3 (In 825 ms)
+0014 00:00:08 [INFO] fd 152 tcpi_backoff 3 => 4 (In 1653 ms)
+0015 00:00:12 [INFO] fd 152 tcpi_backoff 4 => 5 (In 3466 ms)
+0016 00:00:19 [INFO] fd 152 tcpi_backoff 5 => 6 (In 6613 ms)
+0017 00:00:32 [INFO] fd 152 tcpi_backoff 6 => 7 (In 13227 ms)
+0018 00:00:59 [INFO] fd 152 tcpi_backoff 7 => 8 (In 27093 ms)
 ...
 ```
 
-and then finally:
+`tcpi_backoff` is collected from [getsockopt](https://man7.org/linux/man-pages/man2/getsockopt.2.html) with `TCP_INFO`.
+The [ss man page](https://man7.org/linux/man-pages/man8/ss.8.html)
+gives this definition of `isck_backoff`:
+
+> icsk_backoff used for exponential backoff re-transmission, the
+actual re-transmission timeout value is icsk_rto <<
+icsk_backoff
+
+This field, `iscv_backoff`, is copied verbatim in [the kernel](https://github.com/torvalds/linux/blob/5b7c4cabbb65f5c469464da6c5f614cbd7f730f2/net/ipv4/tcp.c#L3829) into `tcpi_backoff`.
+In `getsockopt` `isck_rto` is however converted from [jiffies](https://man7.org/linux/man-pages/man7/time.7.html) to microseconds into the `tcpi_rto` field.
+We can see that `tcpi_rto` is initialized at `203333` microseconds,
+i.e. just over 200 milliseconds.
+These values correspond reasonably well to the observed
+timeouts printed on the console.
+
+Then finally we see:
 
 ```
-0070 00:15:54 [WARN] CLI-agent-send-off-pool-3 org.apache.tomcat.jdbc.pool.PooledConnection Unable to clear Warnings, connection will be closed.
-0071 00:15:54 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 10344, :tid 45}
-0072 00:15:54 [INFO] CLI-agent-send-off-pool-3 Not dropping anything for 127.0.0.1:35970->127.0.0.1:5432
-...
-0080 00:15:54 [INFO] main Query on blocked connection ... Done in 00:15:48 aka 948623 milliseconds
-0081 00:15:54 [INFO] main Waiting 90 seconds for datomic.process-monitor
-0082 00:16:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:tid 37, :ObjectCacheCount 23, :AvailableMB 7850.0, :StorageGetMsec {:lo 1, :hi 949000, :sum 949003, :count 3}, :pid 10344, :event :metrics, :ObjectCache {:lo 0, :hi 0, :sum 0, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :StorageGetBytes {:lo 65, :hi 2114, :sum 2269, :count 3}, :StorageGetBackoffMsec {:lo 0, :hi 0, :sum 0, :count 1}}
+0087 00:15:53 [WARN] CLI-agent-send-off-pool-3 org.apache.tomcat.jdbc.pool.PooledConnection Unable to clear Warnings, connection will be closed.
+0088 00:15:53 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 382404, :tid 59}
 ```
 
 After approximately 16 minutes the kernel gives up
 trying to re-send our packets and waiting for the corresponding
 TCP acknowledgements. The kernel then closes the connection.
 
-It's possible to verify 
-that this is indeed what is
-happening by changing the kernel
-TCP retry number:
-`sudo bash -c 'echo 6 > /proc/sys/net/ipv4/tcp_retries2'`
+It's possible to change the number of TCP retries:
+e.g. `sudo bash -c 'echo 6 > /proc/sys/net/ipv4/tcp_retries2'`
 If you then re-run `./tcp-retry.sh` you will see
 a much shorter timeout.
 
@@ -117,12 +119,23 @@ From the [kernel ip-sysctl documentation](https://www.kernel.org/doc/Documentati
 
 > The default value of 15 yields a hypothetical timeout of 924.6 seconds and is a lower bound for the effective timeout.  TCP will effectively time out at the first RTO which exceeds the hypothetical timeout.
 
-In our case the timeout took ~940 seconds.
-
-[//]: # (If some usually fast task takes just over ~940 seconds, or perhaps even a multiple of that, you may be having this issue.)
+In our case the timeout took ~950 seconds.
 
 After the connection is closed by the kernel,
-Datomic finally retries fetching the data on line 71.
+Datomic finally retries fetching the data on line 71:
+
+```
+0088 00:15:53 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 382404, :tid 59}
+0089 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
+0090 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :msec 948000.0, :phase :end, :pid 382404, :tid 59}
+0091 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :phase :begin, :pid 382404, :tid 59}
+0092 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
+0093 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :msec 2.47, :phase :end, :pid 382404, :tid 59}
+0094 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :phase :begin, :pid 382404, :tid 59}
+0095 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
+0096 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :msec 1.53, :phase :end, :pid 382404, :tid 59}
+0097 00:15:53 [INFO] Query on blocked connection ... Done in 00:15:47 aka 947996 milliseconds
+```
 
 There are a few more things to note here.
 One is that there is only a single warning, which
@@ -140,10 +153,16 @@ infrastructure.
 
 Despite the fact that the query took approximately 16
 minutes, Datomic does not give any warning itself.
-It does however report (line 82) that `:StorageGetMsec` had a `:hi[gh]`
+It does however report that `:StorageGetMsec` had a `:hi[gh]`
 of `949000`, i.e. around 16 minutes. 
-This is logged at an INFO-level, making it rather hard
+This is logged at an INFO-level, making it hard
 to spot.
+
+The retry strategy also states:
+
+```
+0088 00:15:53 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 382404, :tid 59}
+```
 
 ## Case 2: a query that hangs forever?
 
