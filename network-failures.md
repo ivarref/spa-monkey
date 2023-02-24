@@ -34,8 +34,10 @@ The following environment variables needs to be set:
 * `DATOMIC_LICENSE_KEY`: Datomic license key.
 * `POSTGRES_PASSWORD`: Password to be used for PostgreSQL.
 
-You will also want to: be prepared to enter your root password,
-add `/usr/bin/nft` to sudoers for your user or run the scripts using `sudo -E`.
+You will also want to: 
+* be prepared to enter your root password,
+* add `/usr/bin/nft` to sudoers for your user
+* or run the scripts using `sudo -E`.
 
 Running this code requires running Linux and  
 Java 20 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
@@ -90,11 +92,13 @@ actual re-transmission timeout value is icsk_rto <<
 icsk_backoff
 
 This field, `iscv_backoff`, is copied verbatim into `tcpi_backoff` in the [kernel](https://github.com/torvalds/linux/blob/5b7c4cabbb65f5c469464da6c5f614cbd7f730f2/net/ipv4/tcp.c#L3829).
-In `getsockopt` `isck_rto` is however converted from [jiffies](https://man7.org/linux/man-pages/man7/time.7.html) to microseconds into the `tcpi_rto` field.
-We can see that `tcpi_rto` is initialized at `203333` microseconds,
+
+The `isck_rto` field is handled differently. `rto` stands for `Re-transmission Time Out`.
+In `getsockopt` `isck_rto` is converted from [jiffies](https://man7.org/linux/man-pages/man7/time.7.html) to microseconds into the `tcpi_rto` field.
+We can see that `tcpi_rto` is initialized at 203333 microseconds,
 i.e. just over 200 milliseconds.
 These values correspond reasonably well to the observed
-durations of each transition of `tcpi_backoff` on the console:
+durations of each transition of `tcpi_backoff` in the log:
 it starts at ~200 milliseconds, then doubles, doubles again, etc..
 
 Then finally we see:
@@ -119,7 +123,7 @@ before the connection is considered broken
 and then closed by the kernel.
 From the [kernel ip-sysctl documentation](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt):
 
-> The default value of 15 yields a hypothetical timeout of 924.6 seconds and is a lower bound for the effective timeout.  TCP will effectively time out at the first RTO which exceeds the hypothetical timeout.
+> The default value of 15 yields a hypothetical timeout of 924.6 seconds and is a lower bound for the effective timeout.  TCP will effectively time out at the first RTO (Re-transmission Time Out) which exceeds the hypothetical timeout.
 
 In our case the timeout took ~950 seconds.
 
@@ -166,24 +170,18 @@ is rather hard to both spot and troubleshoot using Datomic.
 ## Case 2: a query that hangs forever?
 
 In case 1 we saw what happened when the TCP send buffer had unacknowledged data on a dropped connection: 
-the kernel saved us and the Datomic retried query, albeit taking ~16 minutes.
+the kernel saved us and Datomic retried the query, albeit taking ~16 minutes.
 
-What happens if the connection becomes blocked after the send buffer is acknowledged,
+What happens if the connection becomes blocked _after_ the send buffer is acknowledged,
 but before a response is received?
 
-[//]: # (This is a slightly more convoluted scenario to reproduce.)
-
 We will introduce an in-process TCP proxy that forwards packets to and from the database.
-This allows for dropping the connection to the peer
-on the receival of data from the database.
-At this point in time we want to be sure that
-the send buffer is ACK-ed.
-
-[//]: # (In this specific case, I'd say you would find that your tcp_info structure would hold a nonzero tcp_info.tcpi_unacked. You'd get this via getsockopt(TCP_INFO).)
-
-[//]: # (https://stackoverflow.com/questions/443134/in-linux-how-do-i-know-if-an-ack-is-received-to-a-certain-tcp-packet)
-
-[//]: # (Use wireshark/tshark to verify/see that ACK *has* arrived... ?! What is an ACK? How fast is/was the ACK?)
+This allows for dropping packets to the peer
+upon receival of data from the database.
+We've seen that the initial re-transmission timeout
+is 200 ms. Waiting this amount and verifying that `tcpi_backoff`
+is (still) zero should guarantee that all previous
+packets have been ACK-ed before we start to drop packets.
 
 Let find out by executing `clojure -X:case2`:
 
