@@ -28,9 +28,9 @@
 (defn do-test! [{:keys [block?] :as opts}]
   (try
     (log-init/init-logging! (merge opts
-                                   {:levels [[#{"datomic.*"} :warn]
-                                             [#{"com.github.ivarref.*"} :info]
-                                             [#{"*"} :info]]}))
+                                   {:min-level [[#{"datomic.*"} :warn]
+                                                [#{"com.github.ivarref.*"} :info]
+                                                [#{"*"} :info]]}))
     (log/debug "user.name is" (System/getProperty "user.name"))
     (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
       (log/info tcp-retry-file "is" (str/trim (slurp tcp-retry-file))))
@@ -61,6 +61,55 @@
                     (log/error t "Unexpected error in getConnection:" (ex-message t))
                     (System/exit 1)
                     (throw t)))))
+          start-time (System/currentTimeMillis)]
+      (timbre/merge-config! {:min-level [[#{"datomic.*"} :debug]
+                                         [#{"com.github.ivarref.*"} :info]
+                                         [#{"*"} :info]]})
+      (log/info "Starting query on blocked connection ...")
+      (let [result (d/q '[:find ?e ?doc
+                          :in $
+                          :where
+                          [?e :db/doc ?doc]]
+                        (d/db conn))]
+        (log/debug "Got query result" result))
+      (Thread/sleep 100)
+      (reset! running? false)
+      (let [stop-time (System/currentTimeMillis)]
+        (log/info "Query on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))
+                  "aka" (int (- stop-time start-time)) "milliseconds")
+        (log/info "Waiting 90 seconds for datomic.process-monitor")
+        (Thread/sleep 90000)))                              ; Give datomic time to report StorageGetMsec
+    (when block?
+      @(promise))
+    (catch Throwable t
+      (log/error t "Unexpected exception:" (ex-message t)))
+    (finally
+      (try
+        (nft/accept!)
+        (catch Throwable t
+          (log/error t "Error during nft/accept:" (ex-message t))))
+      (log/info "Exiting"))))
+
+(defn forever [{:keys [block?]}]
+  (try
+    (log-init/init-logging! {:log-file  "forever"
+                             :min-level [[#{"datomic.*"} :warn]
+                                         [#{"com.github.ivarref.*"} :info]
+                                         [#{"*"} :info]]})
+    (log/debug "user.name is" (System/getProperty "user.name"))
+    (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
+      (log/info tcp-retry-file "is" (str/trim (slurp tcp-retry-file))))
+    (nft/accept!)
+    (hookd/install-return-consumer!
+      "org.apache.tomcat.jdbc.pool.ConnectionPool"
+      "::Constructor"
+      (partial reset! conn-pool))
+    (when block?
+      (log/info "Starting nREPL server ....")
+      (nrepl/start-server :bind "127.0.0.1" :port 7777))
+    (let [conn (u/get-conn)
+          drop-count (atom 0)
+          running? (atom true)
           start-time (System/currentTimeMillis)]
       (timbre/merge-config! {:min-level [[#{"datomic.*"} :debug]
                                          [#{"com.github.ivarref.*"} :info]

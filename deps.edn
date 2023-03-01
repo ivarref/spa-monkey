@@ -12,9 +12,8 @@
              org.slf4j/jul-to-slf4j     {:mvn/version "1.7.30"}
              org.slf4j/jcl-over-slf4j   {:mvn/version "1.7.30"}
              com.github.ivarref/hookd   {:mvn/version "0.1.20"}}
- :aliases   {:forever    {:exec-fn   com.github.ivarref.tcp-retry/do-test!
-                          :exec-args {:block?   false
-                                      :log-file "forever"}
+ :aliases   {:forever    {:exec-fn   com.github.ivarref.tcp-retry/forever
+                          :exec-args {:block? false}
                           :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
                                       "-XX:-OmitStackTraceInFastThrow"
                                       "--enable-preview"

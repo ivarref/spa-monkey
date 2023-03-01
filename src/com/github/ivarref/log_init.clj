@@ -63,10 +63,10 @@
         (spit log-file (str line "\n") :append true))
       (println line))))
 
-(defn init-logging! [{:keys [log-file levels]
-                      :or   {levels [[#{"datomic.*"} :warn]
-                                     [#{"com.github.ivarref.*"} :debug]
-                                     [#{"*"} :info]]}}]
+(defn init-logging! [{:keys [log-file min-level]
+                      :or   {min-level [[#{"datomic.*"} :warn]
+                                        [#{"com.github.ivarref.*"} :debug]
+                                        [#{"*"} :info]]}}]
   (let [log-file (when (some? log-file)
                    (str "logs/"
                         log-file
@@ -81,7 +81,7 @@
     (SLF4JBridgeHandler/install)
     (.setLevel (Logger/getLogger "") Level/FINEST)
     (timbre/merge-config!
-      {:min-level levels
+      {:min-level min-level
        :output-fn (fn [data] (local-console-format-fn data))
        :appenders {:println {:enabled?   true
                              :async?     false
