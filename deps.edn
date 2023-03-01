@@ -12,20 +12,24 @@
              org.slf4j/jul-to-slf4j     {:mvn/version "1.7.30"}
              org.slf4j/jcl-over-slf4j   {:mvn/version "1.7.30"}
              com.github.ivarref/hookd   {:mvn/version "0.1.20"}}
- :aliases   {:nrepl     {:exec-fn   com.github.ivarref.case-1/start-nrepl-server!
-                         :exec-args {:block? true}}
-             #_:break-after-ack #_{:exec-fn   com.github.ivarref.break-after-ack/do-test!
-                                   :exec-args {:block? true}
-                                   :jvm-opts  ["-Djdk.attach.allowAttachSelf=true" "-XX:-OmitStackTraceInFastThrow"]}
-             :tcp-retry {:exec-fn   com.github.ivarref.tcp-retry/do-test!
-                         :exec-args {:block?   false
-                                     :log-file "tcp_retry"}
-                         :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
-                                     "-XX:-OmitStackTraceInFastThrow"
-                                     "--enable-preview"
-                                     "--enable-native-access=ALL-UNNAMED"
-                                     "--add-opens" "java.base/java.net=ALL-UNNAMED"
-                                     "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
+ :aliases   {:forever    {:exec-fn   com.github.ivarref.tcp-retry/do-test!
+                          :exec-args {:block?   false
+                                      :log-file "forever"}
+                          :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                      "-XX:-OmitStackTraceInFastThrow"
+                                      "--enable-preview"
+                                      "--enable-native-access=ALL-UNNAMED"
+                                      "--add-opens" "java.base/java.net=ALL-UNNAMED"
+                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
+             :tcp-retry  {:exec-fn   com.github.ivarref.tcp-retry/do-test!
+                          :exec-args {:block?   false
+                                      :log-file "tcp_retry"}
+                          :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                      "-XX:-OmitStackTraceInFastThrow"
+                                      "--enable-preview"
+                                      "--enable-native-access=ALL-UNNAMED"
+                                      "--add-opens" "java.base/java.net=ALL-UNNAMED"
+                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
              :getsockopt {:exec-fn   com.github.ivarref.break-single-conn-once/getsockopt-demo
                           :exec-args {}
                           :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
@@ -33,13 +37,6 @@
                                       "--enable-preview"
                                       "--enable-native-access=ALL-UNNAMED"
                                       "--add-opens" "java.base/java.net=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
-
-             #_:case1                  #_{:exec-fn   com.github.ivarref.case-1/do-test!
-                                          :exec-args {:block?   false
-                                                      :log-file "case1"}}
-             #_:case2                  #_{:exec-fn   com.github.ivarref.case-2/do-test!
-                                          :exec-args {:block?   false
-                                                      :log-file "case2"}}}
+                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}}
  :mvn/repos {"my.datomic.com" {:url "https://my.datomic.com/repo"}}}
 

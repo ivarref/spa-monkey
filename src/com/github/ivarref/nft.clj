@@ -57,7 +57,7 @@
       (log/error "Not invoking nft!")
       false)))
 
-(defn sock->readable [sock]
+(defn sock->readable [^Socket sock]
   (str "127.0.0.1:" (.getLocalPort sock)
        "->"
        "127.0.0.1:" (.getPort sock)))
