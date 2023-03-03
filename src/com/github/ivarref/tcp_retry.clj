@@ -127,6 +127,7 @@
         proxy-state
         (fn [{:keys [op dst]}]
           (when (= op :recv)
+            (Thread/sleep 500) ; make sure ACKs have arrived at the other side
             (nft/drop-sock! dst)
             (u/watch-socket! running? dst)
             :pop)))
