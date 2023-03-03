@@ -35,9 +35,16 @@
         (log/error "Unhandled state. Got res:" res)
         (throw (ex-info "Unexpected state" {:result res}))))))
 
-(defn accept! []
+(defn accept! [& {:keys [throw?]
+                  :or   {throw? true}}]
   (log/info "Clear all packet filters ...")
-  (nft-sudo "accept.txt"))
+  (try
+    (nft-sudo "accept.txt")
+    (catch Throwable t
+      (log/error t "Error during nft/accept:" (ex-message t))
+      (if throw?
+        (throw t)
+        (log/warn "Not re-throwing exception")))))
 
 (defn sock->drop [^Socket s]
   (str "tcp dport " (.getPort s) " "
@@ -58,9 +65,9 @@
       false)))
 
 (defn sock->readable [^Socket sock]
-  (str "127.0.0.1:" (.getLocalPort sock)
-       "->"
-       "127.0.0.1:" (.getPort sock)))
+  (str "" (.getLocalPort sock)
+       ":"
+       #_"localhost:" (.getPort sock)))
 
 (defn drop-sock! [sock]
   (let [drop-txt (sock->drop sock)

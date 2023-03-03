@@ -1,7 +1,7 @@
 (ns com.github.ivarref.spa-monkey
   (:require [clojure.tools.logging :as log])
   (:import (clojure.lang Atom)
-           (java.io BufferedInputStream BufferedOutputStream Closeable IOException InputStream OutputStream)
+           (java.io BufferedInputStream BufferedOutputStream Closeable InputStream OutputStream)
            (java.net InetSocketAddress ServerSocket Socket SocketTimeoutException))
   (:gen-class))
 
@@ -9,7 +9,8 @@
   (when (and s (instance? Closeable s))
     (try
       (.close s)
-      (catch IOException _
+      (catch Throwable t
+        (log/debug t "Error during .close:" (ex-message t))
         nil))))
 
 (defn ports [sock & {:keys [reverse?]}]

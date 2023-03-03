@@ -1,6 +1,8 @@
 (ns com.github.ivarref.utils
-  (:require [clojure.tools.logging :as log]
+  (:require [clojure.set :as set]
+            [clojure.tools.logging :as log]
             [com.github.ivarref.log-init :as log-init]
+            [com.github.ivarref.nft :as nft]
             [datomic.api :as d])
   (:import (com.github.ivarref GetSockOpt)
            (java.net Socket)
@@ -69,7 +71,9 @@
               "tcpi_last_ack_sent"
               "tcpi_last_data_recv"
               "tcpi_last_data_sent"
-              "tcpi_probes")
+              "tcpi_probes"
+              "tcpi_state")
+      (set/rename-keys {"tcpi_state_str" "tcpi_state"})
       (assoc "open?" (not (.isClosed sock)))))
 
 (defn with-clock [state now-ms]
@@ -99,7 +103,7 @@
       (try
         (let [initial-state (get-state sock)
               fd (GetSockOpt/getFd sock)]
-          (log/info "Initial state for fd" fd initial-state)
+          (log/info "fd" fd (nft/sock->readable sock) "initial state is" initial-state)
           (loop [prev-log (System/currentTimeMillis)
                  prev-state (with-clock initial-state (System/currentTimeMillis))]
             (Thread/sleep 1)
@@ -111,7 +115,7 @@
                   (doseq [[new-k new-v] new-state]
                     (when (not= new-v (first (get prev-state new-k)))
                       (let [ms-diff (- now-ms (second (get prev-state new-k)))]
-                        (log/info "fd" fd new-k (first (get prev-state new-k)) "=>" new-v (str "(In " ms-diff " ms)")))))
+                        (log/info "fd" fd (nft/sock->readable sock) new-k (first (get prev-state new-k)) "=>" new-v (str "(In " ms-diff " ms)")))))
                   (when (and @running? open?)
                     (recur now-ms
                            (reduce-kv (fn [o k [old-v _old-ms :as old-val]]
@@ -125,15 +129,15 @@
 
                 (> (- now-ms prev-log) tick-granularity-ms)
                 (do
-                  (log/info "No changes for fd" fd "last" (str (Duration/ofMillis (- now-ms (max-clock prev-state)))))
+                  (log/info "fd" fd (nft/sock->readable sock) "no changes last" (str (Duration/ofMillis (- now-ms (max-clock prev-state)))))
                   (recur now-ms prev-state))
 
                 :else
                 (recur prev-log prev-state)))))
         (catch Throwable t
           (if (.isClosed sock)
-            (log/warn "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))
-            (log/error "Error in socket watcher for fd" (GetSockOpt/getFd sock) ", message:" (ex-message t))))
+            (log/warn "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "error in socket watcher. Message:"  (ex-message t))
+            (log/error "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "error in socket watcher. Message:"  (ex-message t))))
         (finally
-          (log/info "Socket watcher for fd" (GetSockOpt/getFd sock) "exiting")
+          (log/info "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "watcher exiting")
           (.setName (Thread/currentThread) org-name))))))

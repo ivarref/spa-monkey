@@ -6,6 +6,7 @@
     [com.github.ivarref.log-init :as log-init]
     [com.github.ivarref.nft :as nft]
     [com.github.ivarref.utils :as u]
+    [com.github.ivarref.spa-monkey :as monkey]
     [datomic.api :as d]
     [nrepl.server :as nrepl]
     [taoensso.timbre :as timbre])
@@ -21,7 +22,7 @@
 ; 15
 
 ; sudo bash -c 'echo 15 > /proc/sys/net/ipv4/tcp_retries2'
-; sdk default java 17.0.4.1-tem
+; sdk default java 20.ea.34-open
 
 (defonce conn-pool (atom nil))
 
@@ -77,18 +78,19 @@
       (let [stop-time (System/currentTimeMillis)]
         (log/info "Query on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))
                   "aka" (int (- stop-time start-time)) "milliseconds")
-        (log/info "Waiting 90 seconds for datomic.process-monitor")
-        (Thread/sleep 90000)))                              ; Give datomic time to report StorageGetMsec
+        (log/info "Waiting 70 seconds for datomic.process-monitor")
+        (Thread/sleep 70000)))                              ; Give datomic time to report StorageGetMsec
     (when block?
       @(promise))
     (catch Throwable t
       (log/error t "Unexpected exception:" (ex-message t)))
     (finally
-      (try
-        (nft/accept!)
-        (catch Throwable t
-          (log/error t "Error during nft/accept:" (ex-message t))))
+      (nft/accept! :throw? false)
       (log/info "Exiting"))))
+
+(defonce proxy-state (atom {:remote-host "localhost"
+                            :remote-port 5432
+                            :port        54321}))
 
 (defn forever [{:keys [block?]}]
   (try
@@ -96,7 +98,6 @@
                              :min-level [[#{"datomic.*"} :warn]
                                          [#{"com.github.ivarref.*"} :info]
                                          [#{"*"} :info]]})
-    (log/debug "user.name is" (System/getProperty "user.name"))
     (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
       (log/info tcp-retry-file "is" (str/trim (slurp tcp-retry-file))))
     (nft/accept!)
@@ -107,10 +108,28 @@
     (when block?
       (log/info "Starting nREPL server ....")
       (nrepl/start-server :bind "127.0.0.1" :port 7777))
-    (let [conn (u/get-conn)
-          drop-count (atom 0)
+    (when-let [e (monkey/start! proxy-state)]
+      (log/error e "Could not start proxy:" (ex-message e))
+      (System/exit 1))
+    (let [conn (u/get-conn :port 54321)
           running? (atom true)
+          get-conn-count (atom 0)
           start-time (System/currentTimeMillis)]
+      (hookd/install-return-consumer!
+        "org.apache.tomcat.jdbc.pool.ConnectionPool"
+        "getConnection"
+        (fn [^Connection conn]
+          (let [^Socket sock (u/conn->socket conn)]
+            (when (= 1 (swap! get-conn-count inc))
+              (log/info "ConnectionPool/getConnection returning socket" (nft/sock->readable sock))
+              (u/watch-socket! running? sock)))))
+      (monkey/add-handler!
+        proxy-state
+        (fn [{:keys [op dst]}]
+          (when (= op :recv)
+            (nft/drop-sock! dst)
+            (u/watch-socket! running? dst)
+            :pop)))
       (timbre/merge-config! {:min-level [[#{"datomic.*"} :debug]
                                          [#{"com.github.ivarref.*"} :info]
                                          [#{"*"} :info]]})
@@ -126,15 +145,13 @@
       (let [stop-time (System/currentTimeMillis)]
         (log/info "Query on blocked connection ... Done in" (log-init/ms->duration (- stop-time start-time))
                   "aka" (int (- stop-time start-time)) "milliseconds")
-        (log/info "Waiting 90 seconds for datomic.process-monitor")
-        (Thread/sleep 90000)))                              ; Give datomic time to report StorageGetMsec
+        (log/info "Waiting 70 seconds for datomic.process-monitor")
+        (Thread/sleep 70000)))                              ; Give datomic time to report StorageGetMsec
     (when block?
       @(promise))
     (catch Throwable t
       (log/error t "Unexpected exception:" (ex-message t)))
     (finally
-      (try
-        (nft/accept!)
-        (catch Throwable t
-          (log/error t "Error during nft/accept:" (ex-message t))))
+      (monkey/stop! proxy-state)
+      (nft/accept! :throw? false)
       (log/info "Exiting"))))
