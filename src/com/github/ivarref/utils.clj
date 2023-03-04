@@ -96,14 +96,14 @@
 
 (def tick-granularity-ms 10000)
 
-(defn watch-socket! [running? ^Socket sock]
+(defn watch-socket! [nam running? ^Socket sock]
   (future
     (let [org-name (.getName (Thread/currentThread))]
       (.setName (Thread/currentThread) "socket-watcher")
       (try
         (let [initial-state (get-state sock)
               fd (GetSockOpt/getFd sock)]
-          (log/info "fd" fd (nft/sock->readable sock) "initial state is" initial-state)
+          (log/info nam "fd" fd (nft/sock->readable sock) "initial state is" initial-state)
           (loop [prev-log (System/currentTimeMillis)
                  prev-state (with-clock initial-state (System/currentTimeMillis))]
             (Thread/sleep 1)
@@ -115,7 +115,7 @@
                   (doseq [[new-k new-v] new-state]
                     (when (not= new-v (first (get prev-state new-k)))
                       (let [ms-diff (- now-ms (second (get prev-state new-k)))]
-                        (log/info "fd" fd (nft/sock->readable sock) new-k (first (get prev-state new-k)) "=>" new-v (str "(In " ms-diff " ms)")))))
+                        (log/info nam "fd" fd (nft/sock->readable sock) new-k (first (get prev-state new-k)) "=>" new-v (str "(In " ms-diff " ms)")))))
                   (when (and @running? open?)
                     (recur now-ms
                            (reduce-kv (fn [o k [old-v _old-ms :as old-val]]
@@ -129,15 +129,15 @@
 
                 (> (- now-ms prev-log) tick-granularity-ms)
                 (do
-                  (log/info "fd" fd (nft/sock->readable sock) "no changes last" (str (Duration/ofMillis (- now-ms (max-clock prev-state)))))
+                  (log/info nam "fd" fd (nft/sock->readable sock) "no changes last" (str (Duration/ofMillis (- now-ms (max-clock prev-state)))))
                   (recur now-ms prev-state))
 
                 :else
                 (recur prev-log prev-state)))))
         (catch Throwable t
           (if (.isClosed sock)
-            (log/warn "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "error in socket watcher. Message:"  (ex-message t))
-            (log/error "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "error in socket watcher. Message:"  (ex-message t))))
+            (log/warn nam "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "error in socket watcher. Message:"  (ex-message t))
+            (log/error nam "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "error in socket watcher. Message:"  (ex-message t))))
         (finally
-          (log/info "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "watcher exiting")
+          (log/info nam "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "watcher exiting")
           (.setName (Thread/currentThread) org-name))))))

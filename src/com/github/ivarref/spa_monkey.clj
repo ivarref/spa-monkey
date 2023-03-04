@@ -19,7 +19,7 @@
     [(.getLocalPort sock) (.getPort sock)]))
 
 (defn ports-str [sock]
-  (str (.getLocalPort sock) "->" (.getPort sock)))
+  (str (.getLocalPort sock) ":" (.getPort sock)))
 
 (defn- sock->readable [sock]
   (str "127.0.0.1:" (.getLocalPort sock)

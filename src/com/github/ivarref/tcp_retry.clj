@@ -56,7 +56,7 @@
                     (if (= 1 (swap! drop-count inc))
                       (do
                         (nft/drop-sock! sock)
-                        (u/watch-socket! running? sock))
+                        (u/watch-socket! "client" running? sock))
                       (log/info "Not dropping anything for" (nft/sock->readable sock))))
                   (catch Throwable t
                     (log/error t "Unexpected error in getConnection:" (ex-message t))
@@ -122,14 +122,14 @@
           (let [^Socket sock (u/conn->socket conn)]
             (when (= 1 (swap! get-conn-count inc))
               (log/info "ConnectionPool/getConnection returning socket" (nft/sock->readable sock))
-              (u/watch-socket! running? sock)))))
+              (u/watch-socket! "client" running? sock)))))
       (monkey/add-handler!
         proxy-state
         (fn [{:keys [op dst]}]
           (when (= op :recv)
             (Thread/sleep 500) ; make sure ACKs have arrived at the other side
             (nft/drop-sock! dst)
-            (u/watch-socket! running? dst)
+            (u/watch-socket! "proxy" running? dst)
             :pop)))
       (timbre/merge-config! {:min-level [[#{"datomic.*"} :debug]
                                          [#{"com.github.ivarref.*"} :info]
