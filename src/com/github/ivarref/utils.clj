@@ -99,7 +99,7 @@
 (defn watch-socket! [nam running? ^Socket sock]
   (future
     (let [org-name (.getName (Thread/currentThread))]
-      (.setName (Thread/currentThread) "socket-watcher")
+      (.setName (Thread/currentThread) (str nam "-socket-watcher"))
       (try
         (let [initial-state (get-state sock)
               fd (GetSockOpt/getFd sock)]

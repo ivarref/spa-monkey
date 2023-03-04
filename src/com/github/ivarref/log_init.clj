@@ -1,11 +1,11 @@
 (ns com.github.ivarref.log-init
   (:require
+    [cheshire.core :as json]
     [clojure.string :as str]
     [clojure.tools.logging :as log]
     [taoensso.timbre :as timbre])
   (:import (java.lang.management ManagementFactory)
-           (java.time Duration ZonedDateTime)
-           (java.time.format DateTimeFormatter)
+           (java.time Duration)
            (java.util.logging Level Logger)
            (org.slf4j.bridge SLF4JBridgeHandler)))
 
@@ -55,12 +55,21 @@
 (defn format-line-number [line-number]
   (format "%04d" line-number))
 
-(defn atomic-println [log-file line]
+(defn atomic-println [log-file line {:keys [level ?err msg_ ?ns-str]}]
   (locking lock
     (let [line-number (swap! line-count inc)
           line (str (format-line-number line-number) " " line)]
       (when (some? log-file)
-        (spit log-file (str line "\n") :append true))
+        (spit log-file (str line "\n") :append true)
+        (spit (str log-file ".json")
+              (str
+                (json/generate-string (array-map
+                                        :level (str/upper-case (name level))
+                                        :logger ?ns-str
+                                        :thread (.getName (Thread/currentThread))
+                                        :message (force msg_)))
+                "\n")
+              :append true))
       (println line))))
 
 (defn init-logging! [{:keys [log-file min-level]
@@ -70,13 +79,10 @@
   (let [log-file (when (some? log-file)
                    (str "logs/"
                         log-file
-                        #_"_"
-                        #_(.format
-                            (DateTimeFormatter/ofPattern "yyyy-MM-dd_HH_mm_ss")
-                            (ZonedDateTime/now))
                         ".log"))]
     (when (some? log-file)
-      (spit log-file ""))
+      (spit log-file "")
+      (spit (str log-file ".json") ""))
     (SLF4JBridgeHandler/removeHandlersForRootLogger)
     (SLF4JBridgeHandler/install)
     (.setLevel (Logger/getLogger "") Level/FINEST)
@@ -90,6 +96,6 @@
                              :output-fn  :inherit
                              :fn         (fn [data]
                                            (let [{:keys [output_]} data]
-                                             (atomic-println log-file (force output_))))}}})
+                                             (atomic-println log-file (force output_) data)))}}})
     (when (some? log-file)
       (log/debug "logging to file" log-file))))
