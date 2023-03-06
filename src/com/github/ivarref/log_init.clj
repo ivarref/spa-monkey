@@ -28,21 +28,21 @@
             (.toMinutesPart duration)
             (.toSecondsPart duration)])))
 
-(defn local-console-format-fn
+(defn console-format-line
   [data]
   (try
-    (let [{:keys [level ?err msg_ ?ns-str]} data
+    (let [{:keys [uptime-ms level ?err msg_ ?ns-str]} data
           maybe-stacktrace (when ?err
                              (str "\n" (timbre/stacktrace ?err {:stacktrace-fonts nil})))]
       (str
-        (ms->duration (jvm-uptime-ms))
+        (ms->duration uptime-ms)
         " ["
         (str/upper-case (name level))
         "] "
-        (when-not (str/starts-with? ?ns-str "com.github.ivarref")
-          (str (.getName (Thread/currentThread)) " "))
-        (when-not (str/starts-with? ?ns-str "com.github.ivarref")
-          (str ?ns-str " "))
+        #_(when-not (str/starts-with? ?ns-str "com.github.ivarref")
+            (str (.getName (Thread/currentThread)) " "))
+        #_(when-not (str/starts-with? ?ns-str "com.github.ivarref")
+            (str ?ns-str " "))
         (force msg_)
         #_maybe-stacktrace))
     (catch Throwable t
@@ -55,10 +55,10 @@
 (defn format-line-number [line-number]
   (format "%04d" line-number))
 
-(defn atomic-println [log-file line {:keys [level ?err msg_ ?ns-str]}]
+(defn atomic-log [log-file {:keys [uptime-ms level ?err msg_ ?ns-str] :as data}]
   (locking lock
     (let [line-number (swap! line-count inc)
-          line (str (format-line-number line-number) " " line)]
+          line (str (format-line-number line-number) " " (console-format-line data))]
       (when (some? log-file)
         (spit log-file (str line "\n") :append true)
         (spit (str log-file ".json")
@@ -67,6 +67,7 @@
                                         :level (str/upper-case (name level))
                                         :logger ?ns-str
                                         :thread (.getName (Thread/currentThread))
+                                        :uptime (ms->duration uptime-ms)
                                         :message (force msg_)))
                 "\n")
               :append true))
@@ -88,14 +89,13 @@
     (.setLevel (Logger/getLogger "") Level/FINEST)
     (timbre/merge-config!
       {:min-level min-level
-       :output-fn (fn [data] (local-console-format-fn data))
+       :output-fn (fn [data] data)
        :appenders {:println {:enabled?   true
                              :async?     false
                              :min-level  nil
                              :rate-limit nil
                              :output-fn  :inherit
                              :fn         (fn [data]
-                                           (let [{:keys [output_]} data]
-                                             (atomic-println log-file (force output_) data)))}}})
+                                           (atomic-log log-file (assoc data :uptime-ms (jvm-uptime-ms))))}}})
     (when (some? log-file)
       (log/debug "logging to file" log-file))))
