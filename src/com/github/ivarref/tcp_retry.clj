@@ -11,8 +11,11 @@
     [nrepl.server :as nrepl]
     [taoensso.timbre :as timbre])
   (:import
+    (java.lang ProcessHandle)
     (java.net Socket)
-    (java.sql Connection)))
+    (java.sql Connection)
+    (java.time Duration)
+    (java.util.concurrent CountDownLatch)))
 
 ; sudo bash -c 'echo 6 > /proc/sys/net/ipv4/tcp_retries2'
 
@@ -25,6 +28,8 @@
 ; sdk default java 20.ea.34-open
 
 (defonce conn-pool (atom nil))
+
+(defonce datomic-conn (atom nil))
 
 (defn do-test! [{:keys [block?] :as opts}]
   (try
@@ -92,6 +97,21 @@
                             :remote-port 5432
                             :port        54321}))
 
+; cat logs/forever.log.json | jq -r -c '.thread' | sort | uniq
+;CLI-agent-send-off-pool-7
+;client-socket-watcher
+;Datomic Metrics Reporter
+;main
+;proxy-socket-watcher
+;ThreadGroup-1-recv
+;ThreadGroup-1-send
+;ThreadGroup-2-recv
+;ThreadGroup-3-recv
+;ThreadGroup-4-recv
+; cat logs/forever.log.json | jq -r -c 'select( .thread == "CLI-agent-send-off-pool-7")'
+; cat logs/forever.log.json | jq -r -c 'select( .thread == "proxy-socket-watcher") | .uptime + " " + .message'
+; cat logs/forever.log.json | jq -r -c 'select( .thread == "client-socket-watcher") | .uptime + " " + .message'
+
 (defn forever [{:keys [block?]}]
   (try
     (log-init/init-logging! {:log-file  "forever"
@@ -100,6 +120,7 @@
                                          [#{"*"} :info]]})
     (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
       (log/info tcp-retry-file "is" (str/trim (slurp tcp-retry-file))))
+    (log/info "PID is:" (.pid (ProcessHandle/current)))
     (nft/accept!)
     (hookd/install-return-consumer!
       "org.apache.tomcat.jdbc.pool.ConnectionPool"
@@ -127,7 +148,7 @@
         proxy-state
         (fn [{:keys [op dst]}]
           (when (= op :recv)
-            (Thread/sleep 500) ; make sure ACKs have arrived at the other side
+            (Thread/sleep 500)                              ; make sure ACKs have arrived at the other side
             (nft/drop-sock! dst)
             (u/watch-socket! "proxy" running? dst)
             :pop)))
@@ -156,3 +177,148 @@
       (monkey/stop! proxy-state)
       (nft/accept! :throw? false)
       (log/info "Exiting"))))
+
+(defonce blocked-thread (atom nil))
+
+(defn brick [{:keys [block?]}]
+  (try
+    (log-init/init-logging! {:log-file  "brick"
+                             :min-level [[#{"datomic.*"} :warn]
+                                         [#{"com.github.ivarref.*"} :info]
+                                         [#{"*"} :info]]})
+    (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
+      (log/info tcp-retry-file "is" (str/trim (slurp tcp-retry-file))))
+    (log/info "PID is:" (.pid (ProcessHandle/current)))
+    (nft/accept!)
+    (hookd/install-return-consumer!
+      "org.apache.tomcat.jdbc.pool.ConnectionPool"
+      "::Constructor"
+      (partial reset! conn-pool))
+    (log/info "Starting nREPL server ....")
+    (nrepl/start-server :bind "127.0.0.1" :port 7777)
+    (when-let [e (monkey/start! proxy-state)]
+      (log/error e "Could not start proxy:" (ex-message e))
+      (System/exit 1))
+    (let [conn (u/get-conn :port 54321)]
+      (reset! datomic-conn conn)
+      (hookd/install-return-consumer!
+        "org.apache.tomcat.jdbc.pool.ConnectionPool"
+        "getConnection"
+        (fn [^Connection conn]
+          (let [^Socket sock (u/conn->socket conn)]
+            #_(when (<= 10 (swap! get-conn-count inc)))
+            (log/info "ConnectionPool/getConnection returning socket" (nft/sock->readable sock))
+            #_(u/watch-socket! "client" running? sock))))
+      (let [dropped-sockets (atom #{})]
+        (monkey/add-handler!
+          proxy-state
+          (fn [{:keys [op dst]}]
+            (try
+              (locking dropped-sockets
+                (when (and (= op :recv)
+                           (= 0 (count @dropped-sockets)))
+                  (Thread/sleep 500)                        ; make sure ACKs have arrived at the other side
+                  (let [new-blocked (swap! dropped-sockets conj dst)]
+                    (nft/drop-sockets! new-blocked)
+                    #_(log/info "Blocked socket count:" (count new-blocked)))
+                  #_(u/watch-socket! "proxy" running? dst)))
+              (catch Throwable t
+                (log/error "unexpected error:" (ex-message t))))))
+        (timbre/merge-config! {:min-level [[#{"datomic.kv-cluster"} :debug]
+                                           [#{"datomic.process-monitor"} :warn]
+                                           [#{"datomic.*"} :info]
+                                           [#{"com.github.ivarref.nft"} :warn]
+                                           [#{"com.github.ivarref.*"} :info]
+                                           [#{"*"} :info]]})
+        (future
+          (try
+            (log/info "Starting query on dropped connection ...")
+            ; blocks/drops on kv-cluster/val 6436706a-911c-4547-b305-a7c82d49620e
+            (let [result (d/q '[:find ?e ?doc
+                                :in $
+                                :where
+                                [?e :db/doc ?doc]]
+                              (d/db conn))]
+              (log/info "Got query result" result))
+            (Thread/sleep 1000)
+            (catch Throwable t
+              (log/error "an exception at last:" (ex-message t)))
+            (finally
+              nil)))
+        (loop []
+          (Thread/sleep 1000)
+          (when (= 0 (count @dropped-sockets))
+            (log/info "Waiting for drop")
+            (recur)))
+        (log/info (count @dropped-sockets) "dropped socket(s)")
+        (let [start-time (System/currentTimeMillis)
+              fut (future
+                    (reset! blocked-thread (Thread/currentThread))
+                    (try
+                      (let [db (d/db conn)]
+                        (d/q '[:find ?tx
+                               :in $
+                               :where
+                               [?e :db/txInstant ?tx]]
+                             db))
+                      (catch Throwable t
+                        (log/error "Error:" (ex-message t)))))]
+          (loop []
+            (Thread/sleep 15000)
+            (when (not (realized? fut))
+              (log/info "Waited for non-dropped query for" (str (Duration/ofMillis (- (System/currentTimeMillis)
+                                                                                      start-time))))
+              (recur)))
+          (log/info "future was" @fut)))
+      (when block?
+        @(promise)))
+    (catch Throwable t
+      (log/error t "Unexpected exception:" (ex-message t)))
+    (finally
+      (monkey/stop! proxy-state)
+      (nft/accept! :throw? false)
+      (log/info "Exiting"))))
+
+(defmacro maybe-timeout [& body]
+  `(let [thread# (atom nil)
+         fut# (future (try
+                        (reset! thread# (Thread/currentThread))
+                        ~@body
+                        (catch Throwable t#
+                          (log/error t# "Unexpected error:" (ex-message t#)))))]
+     (let [v# (deref fut# 5000 ::timeout)]
+       (if (= v# ::timeout)
+         [fut# @thread#]
+         [v# nil]))))
+
+(comment
+  (let [v (first (maybe-timeout
+                   (d/pull (d/db @datomic-conn) [:*] :db/txInstant)))]
+    v))
+
+(comment
+  (doseq [id (sort (d/q '[:find [?id ...]
+                          :in $
+                          :where
+                          [?e :db/ident ?id]]
+                        (d/db @datomic-conn)))]
+    (println id)
+    (println (d/pull (d/db @datomic-conn) [:*] id))))
+
+(comment
+  (maybe-timeout (d/q '[:find ?tx
+                        :in $
+                        :where
+                        [?e :db/txInstant ?tx]]
+                      (d/db @datomic-conn))))
+
+(def ^:private current-dir-prefix
+  "Convert the current directory (via property 'user.dir') into a prefix to be omitted from file names."
+  (delay (str (System/getProperty "user.dir") "/")))
+
+(def expand-stack-trace-element (resolve 'io.aviso.exception/expand-stack-trace-element))
+
+(comment
+  (+ 1 2))
+(comment
+  (take 5 (map (partial expand-stack-trace-element @current-dir-prefix) (.getStackTrace @blocked-thread))))

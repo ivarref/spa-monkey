@@ -170,7 +170,7 @@ is rather hard to both spot and troubleshoot using Datomic.
 ## Case 2: a query that hangs forever?
 
 In case 1 we saw what happened when the TCP send buffer had unacknowledged data on a dropped connection: 
-the kernel saved us and Datomic retried the query, albeit taking ~16 minutes.
+the kernel saved us and Datomic successfully retried the query, albeit taking ~16 minutes.
 
 What happens if the connection becomes blocked _after_ the send buffer is acknowledged,
 but before a response is received?
@@ -179,87 +179,268 @@ We will introduce an in-process TCP proxy that forwards packets to and from the 
 This allows for dropping packets to the peer
 upon receival of data from the database.
 We've seen that the initial re-transmission timeout
-is 200 ms. Waiting this amount and verifying that `tcpi_backoff`
-is (still) zero should guarantee that all previous
+is 200 ms. Waiting double this amount
+should guarantee that all previous
 packets have been ACK-ed before we start to drop packets.
 
-Let find out by executing `clojure -X:case2`:
-
-### Analysis
-
-On the surface it appears that a read attempt times out after 16 minutes, and
-that after 3 consecutive attempts an exception is thrown.
-
-What actually happened was that the TCP packets were dropped, and thus
-the TCP send buffer had unacknowledged data. After
-retrying a number of times
-and the data still not acknowledged, the connection was closed by the kernel.
-
-There are a few more things to note:
-
-* Only a single warning is logged before the final timeout.
-This is logged by PooledConnection of tomcat-jdbc.
-
-* For 48 minutes `process-monitor` reports that everything is fine.
-After 49 minutes `process-monitor` finally logs that `StorageGetMsec` took `2900000`
-milliseconds or 48.3 minutes. This is logged at the `INFO`-level.
-
-* The last message from `process-monitor` seems to indicate that
-`:StorageGetMsec` succeeded, albeit taking a very long time.
-It did in fact not succeed.
-
-* You will want to monitor `:StorageGetMsec/hi` to see if there are network anomalies.
-
-## Case 2: a connection becomes blocked by a firewall after the TCP send buffer is acknowledged
-
-In case 1 we saw what happened when the TCP send buffer had unacknowledged data.
-
-What happens if the connection becomes blocked after the send buffer is acknowledged,
-but before a response is received? Let find out by executing `clojure -X:case2`:
+Let find out what happens by executing `./forever.sh`:
 
 ```
-00:00:06 INFO case-2 Starting read-segment on single blocked connection
-00:00:06 DEBUG kv-cluster {:event :kv-cluster/get-val, :val-key "854f8149-7116-45dc-b3df-5b57a5cd1e4e", :phase :begin, :pid 199703, :tid 39}
-00:00:06 WARN spa-monkey Start dropping bytes. Id: #uuid "2e23ee78-6d08-43d8-9846-74efb9f0a80c"
-...
-00:02:06 INFO case-2 Still waiting for read segment
-...
-00:56:06 INFO case-2 Still waiting for read segment
-...
-13:37:05 INFO process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7630.0, :ObjectCacheCount 20, :event :metrics, :pid 199703, :tid 29}
-13:37:07 INFO case-2 Still waiting for read segment
+0001 00:00:03 [INFO] /proc/sys/net/ipv4/tcp_retries2 is 6
+0002 00:00:03 [INFO] Clear all packet filters ...
+0003 00:00:03 [INFO] Executing sudo nft -f accept.txt ...
+0004 00:00:03 [INFO] Executing sudo nft -f accept.txt ... OK!
+0005 00:00:03 [INFO] Starting spa-monkey on 127.0.0.1:54321
+0006 00:00:04 [INFO] Thread group 1 proxying new incoming connection from 54321:44746 => 57062:5432
+0007 00:00:04 [INFO] Thread group 2 proxying new incoming connection from 54321:44756 => 57068:5432
+0008 00:00:08 [INFO] Thread group 3 proxying new incoming connection from 54321:44760 => 57074:5432
+0009 00:00:08 [INFO] Thread group 4 proxying new incoming connection from 54321:44768 => 57082:5432
 ```
 
-After 13 hours, Datomic is still patiently waiting for a response.
+Our proxy is up and running at port 54321. This is also the port that
+we are telling Datomic to connect to. Then we start a query that will
+be blocked:
 
-We can nREPL into `localhost:7777` to verify that only a single connection
-is blocked:
-
-```clojure
-(let [conn @conn-atom
-      start-time (System/currentTimeMillis)
-      _segment (u/read-segment conn "854f8149-aaaa-45dc-b3df-5b57a5cd1e4e")]
-  (log/info "Got segment after" (- (System/currentTimeMillis) start-time) "milliseconds"))
-13:39:05 DEBUG kv-cluster {:event :kv-cluster/get-val, :val-key "854f8149-aaaa-45dc-b3df-5b57a5cd1e4e", :phase :begin, :pid 199703, :tid 45}
-13:39:05 DEBUG kv-cluster {:event :kv-cluster/get-val, :val-key "854f8149-aaaa-45dc-b3df-5b57a5cd1e4e", :msec 46.8, :phase :end, :pid 199703, :tid 45}
-13:39:05 INFO case-2 Got segment after 49 milliseconds
+```
+0010 00:00:08 [INFO] Starting query on blocked connection ...
+0012 00:00:08 [INFO] ConnectionPool/getConnection returning socket 44746:54321
+0013 00:00:08 [INFO] client fd 82 44746:54321 initial state is {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_rcv_mss 576, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 1279, tcpi_rttvar 2395, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
+0014 00:00:09 [INFO] Dropping TCP packets for 54321:44746 fd 81
+...
+0018 00:00:09 [INFO] proxy fd 81 54321:44746 initial state is {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_rcv_mss 536, tcpi_rcv_rtt 0, tcpi_rcv_space 65483, tcpi_rcv_ssthresh 65483, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 216666, tcpi_rtt 16117, tcpi_rttvar 21442, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
 ```
 
-### Analysis
+Notice here that we are starting two socket watchers, one for the SQL client
+and one for the proxy.
+Please also notice that we are dropping packets coming _from_ the proxy to
+the client.
+After this you will see the familiar tcp backoff, but this time for
+the proxy side, i.e. our fake database:
 
-Datomic, or rather the PostgreSQL driver, is content with waiting forever
-for a reply. This may happen if the connection is blocked by a firewall
-(or the remote server goes down without properly closing the TCP connection)
-and the TCP send buffer is acknowledged.
+```
+0019 00:00:09 [INFO] proxy fd 81 54321:44746 tcpi_backoff 0 => 1 (In 241 ms)
+0020 00:00:10 [INFO] proxy fd 81 54321:44746 tcpi_backoff 1 => 2 (In 449 ms)
+0021 00:00:11 [INFO] proxy fd 81 54321:44746 tcpi_backoff 2 => 3 (In 879 ms)
+0022 00:00:12 [INFO] proxy fd 81 54321:44746 tcpi_backoff 3 => 4 (In 1868 ms)
+...
+0030 00:00:38 [INFO] proxy fd 81 54321:44746 tcpi_state ESTABLISHED => CLOSE (In 29464 ms)
+...
+0035 00:00:38 [INFO] proxy fd 81 54321:44746 watcher exiting
+```
 
-There is nothing in the logs indicating that two threads have been waiting for
-over 13 hours.
+So now our TCP connection, as seen by the proxy, is dropped and closed. However
+the Datomic SQL client is perfectly happy:
+```
+00:01:58 [INFO] client fd 82 44746:54321 no changes last PT1M50.016S
+...
+24:00:10 [INFO] client fd 82 44746:54321 no changes last PT24H1.11S
+```
 
-Is it a good idea to wait without a timeout? It might be reasonable in some cases.
-What's more important is that if you are *potentially* waiting forever,
-you should at least be aware of it.
-I am unable to find any indication of
-this in the Datomic logs, particularly for case 2.
+The peer or SQL client is still waiting after 24 hours, and no warning nor error is issued
+by Datomic:
+
+```
+$ cat logs/forever.log.json | jq -r -c 'select( .level == "WARN" or .level == "ERROR" ) | .uptime + " " + .level + " " + .logger + " " + .message'
+00:00:38 WARN com.github.ivarref.spa-monkey Thread group 1 :send src 54321:44746 => 57062:5432 Exception while reading socket: Connection timed out of type java.net.SocketException
+00:00:38 WARN com.github.ivarref.spa-monkey Thread group 1 :recv src 57062:5432 => 54321:44746 Exception while reading socket: Socket closed of type java.net.SocketException
+00:00:38 WARN com.github.ivarref.utils proxy fd 81 54321:44746 error in socket watcher. Message: getsockopt error: -1
+```
+
+Datomic Metrics Reporter does not give any hints about a stuck request either:
+```
+$ cat logs/forever.log.json | jq -r -c 'select( .thread == "'"Datomic Metrics Reporter"'") | .message' | grep "{:MetricsReport" | sort | uniq
+{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7760.0, :ObjectCacheCount 20, :event :metrics, :pid 439611, :tid 54}
+... (Variations on :AvailableMB elided.)
+```
+
+If we peek at the JVM stacktrace using `kill -3 <java-pid>`, we will see something
+like this:
+```
+"main" #1 [536663] prio=5 os_prio=0 cpu=4394.78ms elapsed=56.83s tid=0x00007f177002b780 nid=536663 waiting on condition  [0x00007f1774f3a000]
+   java.lang.Thread.State: WAITING (parking)
+        at jdk.internal.misc.Unsafe.park(java.base@20-ea/Native Method)
+        - parking to wait for  <0x000000060f002a00> (a java.util.concurrent.FutureTask)
+        at java.util.concurrent.locks.LockSupport.park(java.base@20-ea/LockSupport.java:221)
+        at java.util.concurrent.FutureTask.awaitDone(java.base@20-ea/FutureTask.java:500)
+        at java.util.concurrent.FutureTask.get(java.base@20-ea/FutureTask.java:190)
+        at clojure.core$deref_future.invokeStatic(core.clj:2317)
+        at clojure.core$deref.invokeStatic(core.clj:2337)
+        at clojure.core$deref.invoke(core.clj:2323)
+        at clojure.core$mapv$fn__8535.invoke(core.clj:6979)
+        at clojure.lang.PersistentVector.reduce(PersistentVector.java:343)
+        at clojure.core$reduce.invokeStatic(core.clj:6885)
+        at clojure.core$mapv.invokeStatic(core.clj:6970)
+        at clojure.core$mapv.invoke(core.clj:6970)
+        at datomic.common$pooled_mapv.invokeStatic(common.clj:689)
+        at datomic.common$pooled_mapv.invoke(common.clj:684)
+        at datomic.datalog$qmapv.invokeStatic(datalog.clj:51)
+        at datomic.datalog$qmapv.invoke(datalog.clj:46)
+        at datomic.datalog$fn__6335.invokeStatic(datalog.clj:608)
+        at datomic.datalog$fn__6335.invoke(datalog.clj:342)
+        at datomic.datalog$fn__6191$G__6165__6206.invoke(datalog.clj:64)
+        at datomic.datalog$join_project_coll.invokeStatic(datalog.clj:129)
+        at datomic.datalog$join_project_coll.invoke(datalog.clj:127)
+        at datomic.datalog$fn__6260.invokeStatic(datalog.clj:232)
+        at datomic.datalog$fn__6260.invoke(datalog.clj:228)
+        at datomic.datalog$fn__6170$G__6163__6185.invoke(datalog.clj:64)
+        at datomic.datalog$eval_clause$fn__6797.invoke(datalog.clj:1385)
+        at datomic.datalog$eval_clause.invokeStatic(datalog.clj:1380)
+        at datomic.datalog$eval_clause.invoke(datalog.clj:1346)
+        at datomic.datalog$eval_rule$fn__6823.invoke(datalog.clj:1466)
+        at datomic.datalog$eval_rule.invokeStatic(datalog.clj:1451)
+        at datomic.datalog$eval_rule.invoke(datalog.clj:1430)
+        at datomic.datalog$eval_query.invokeStatic(datalog.clj:1494)
+        at datomic.datalog$eval_query.invoke(datalog.clj:1477)
+        at datomic.datalog$qsqr.invokeStatic(datalog.clj:1583)
+        at datomic.datalog$qsqr.invoke(datalog.clj:1522)
+        at datomic.datalog$qsqr.invokeStatic(datalog.clj:1540)
+        at datomic.datalog$qsqr.invoke(datalog.clj:1522)
+        at datomic.query$q_STAR_.invokeStatic(query.clj:756)
+        at datomic.query$q_STAR_.invoke(query.clj:743)
+        at datomic.query$q.invokeStatic(query.clj:795)
+        at datomic.query$q.invoke(query.clj:792)
+        at datomic.api$q.invokeStatic(api.clj:44)
+        at datomic.api$q.doInvoke(api.clj:42)
+        at clojure.lang.RestFn.invoke(RestFn.java:423)
+        at com.github.ivarref.tcp_retry$forever.invokeStatic(tcp_retry.clj:155)
+        at com.github.ivarref.tcp_retry$forever.invoke(tcp_retry.clj:111)
+        at clojure.lang.AFn.applyToHelper(AFn.java:154)
+        at clojure.lang.AFn.applyTo(AFn.java:144)
+        at clojure.lang.Var.applyTo(Var.java:705)
+        at clojure.core$apply.invokeStatic(core.clj:667)
+        at clojure.core$apply.invoke(core.clj:662)
+        at clojure.run.exec$exec.invokeStatic(exec.clj:48)
+        at clojure.run.exec$exec.doInvoke(exec.clj:39)
+        at clojure.lang.RestFn.invoke(RestFn.java:423)
+        at clojure.run.exec$_main$fn__205.invoke(exec.clj:180)
+        at clojure.run.exec$_main.invokeStatic(exec.clj:176)
+        at clojure.run.exec$_main.doInvoke(exec.clj:139)
+        at clojure.lang.RestFn.invoke(RestFn.java:397)
+        at clojure.lang.AFn.applyToHelper(AFn.java:152)
+        at clojure.lang.RestFn.applyTo(RestFn.java:132)
+        at clojure.lang.Var.applyTo(Var.java:705)
+        at clojure.core$apply.invokeStatic(core.clj:667)
+        at clojure.main$main_opt.invokeStatic(main.clj:514)
+        at clojure.main$main_opt.invoke(main.clj:510)
+        at clojure.main$main.invokeStatic(main.clj:664)
+        at clojure.main$main.doInvoke(main.clj:616)
+        at clojure.lang.RestFn.applyTo(RestFn.java:137)
+        at clojure.lang.Var.applyTo(Var.java:705)
+        at clojure.main.main(main.java:40)
+
+"CLI-agent-send-off-pool-7" #58 [536760] daemon prio=5 os_prio=0 cpu=14.40ms elapsed=48.94s tid=0x00007f1694001140 nid=536760 runnable  [0x00007f173d2cc000]
+   java.lang.Thread.State: RUNNABLE
+        at sun.nio.ch.Net.poll(java.base@20-ea/Native Method)
+        at sun.nio.ch.NioSocketImpl.park(java.base@20-ea/NioSocketImpl.java:186)
+        at sun.nio.ch.NioSocketImpl.park(java.base@20-ea/NioSocketImpl.java:196)
+        at sun.nio.ch.NioSocketImpl.implRead(java.base@20-ea/NioSocketImpl.java:304)
+        at sun.nio.ch.NioSocketImpl.read(java.base@20-ea/NioSocketImpl.java:340)
+        at sun.nio.ch.NioSocketImpl$1.read(java.base@20-ea/NioSocketImpl.java:789)
+        at java.net.Socket$SocketInputStream.read(java.base@20-ea/Socket.java:1025)
+        at org.postgresql.core.VisibleBufferedInputStream.readMore(VisibleBufferedInputStream.java:161)
+        at org.postgresql.core.VisibleBufferedInputStream.ensureBytes(VisibleBufferedInputStream.java:128)
+        at org.postgresql.core.VisibleBufferedInputStream.ensureBytes(VisibleBufferedInputStream.java:113)
+        at org.postgresql.core.VisibleBufferedInputStream.read(VisibleBufferedInputStream.java:73)
+        at org.postgresql.core.PGStream.receiveChar(PGStream.java:453)
+        at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2120)
+        at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:356)
+        - locked <0x00000007ff512c90> (a org.postgresql.core.v3.QueryExecutorImpl)
+        at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:496)
+        at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:413)
+        - locked <0x000000060f0037b0> (a org.postgresql.jdbc.PgPreparedStatement)
+        at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:190)
+        - locked <0x000000060f0037b0> (a org.postgresql.jdbc.PgPreparedStatement)
+        at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:134)
+        - locked <0x000000060f0037b0> (a org.postgresql.jdbc.PgPreparedStatement)
+        at java.lang.invoke.LambdaForm$DMH/0x0000000801251400.invokeInterface(java.base@20-ea/LambdaForm$DMH)
+        at java.lang.invoke.LambdaForm$MH/0x0000000801377800.invoke(java.base@20-ea/LambdaForm$MH)
+        at java.lang.invoke.Invokers$Holder.invokeExact_MT(java.base@20-ea/Invokers$Holder)
+        at jdk.internal.reflect.DirectMethodHandleAccessor.invokeImpl(java.base@20-ea/DirectMethodHandleAccessor.java:154)
+        at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(java.base@20-ea/DirectMethodHandleAccessor.java:104)
+        at java.lang.reflect.Method.invoke(java.base@20-ea/Method.java:578)
+        at org.apache.tomcat.jdbc.pool.StatementFacade$StatementProxy.invoke(StatementFacade.java:114)
+        at jdk.proxy2.$Proxy3.executeQuery(jdk.proxy2/Unknown Source)
+        at datomic.sql$select.invokeStatic(sql.clj:80)
+        at datomic.sql$select.invoke(sql.clj:75)
+        at datomic.kv_sql.KVSql.get(kv_sql.clj:60)
+        at datomic.kv_cluster.KVCluster$fn__9307$fn__9311$fn__9312.invoke(kv_cluster.clj:181)
+        at datomic.kv_cluster$retry_fn$fn__9272.invoke(kv_cluster.clj:83)
+        at datomic.kv_cluster$retry_fn.invokeStatic(kv_cluster.clj:83)
+        at datomic.kv_cluster$retry_fn.invoke(kv_cluster.clj:58)
+        at clojure.lang.AFn.applyToHelper(AFn.java:178)
+        at clojure.lang.AFn.applyTo(AFn.java:144)
+        at clojure.core$apply.invokeStatic(core.clj:673)
+        at clojure.core$partial$fn__5914.doInvoke(core.clj:2660)
+        at clojure.lang.RestFn.invoke(RestFn.java:421)
+        at datomic.kv_cluster.KVCluster$fn__9307$fn__9311.invoke(kv_cluster.clj:180)
+        at datomic.kv_cluster.KVCluster$fn__9307.invoke(kv_cluster.clj:178)
+        at clojure.core$binding_conveyor_fn$fn__5823.invoke(core.clj:2047)
+        at clojure.lang.AFn.call(AFn.java:18)
+        at java.util.concurrent.FutureTask.run(java.base@20-ea/FutureTask.java:317)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(java.base@20-ea/ThreadPoolExecutor.java:1144)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(java.base@20-ea/ThreadPoolExecutor.java:642)
+        at java.lang.Thread.runWith(java.base@20-ea/Thread.java:1636)
+        at java.lang.Thread.run(java.base@20-ea/Thread.java:1623)
+
+"query-1" #70 [536783] daemon prio=5 os_prio=0 cpu=0.58ms elapsed=48.12s tid=0x00007f17725a2ec0 nid=536783 waiting on condition  [0x00007f1690df8000]
+   java.lang.Thread.State: WAITING (parking)
+        at jdk.internal.misc.Unsafe.park(java.base@20-ea/Native Method)
+        - parking to wait for  <0x000000060f013e38> (a java.util.concurrent.FutureTask)
+        at java.util.concurrent.locks.LockSupport.park(java.base@20-ea/LockSupport.java:221)
+        at java.util.concurrent.FutureTask.awaitDone(java.base@20-ea/FutureTask.java:500)
+        at java.util.concurrent.FutureTask.get(java.base@20-ea/FutureTask.java:190)
+        at clojure.core$deref_future.invokeStatic(core.clj:2317)
+        at clojure.core$future_call$reify__8544.deref(core.clj:7041)
+        at clojure.core$deref.invokeStatic(core.clj:2337)
+        at clojure.core$deref.invoke(core.clj:2323)
+        at datomic.cluster$uncached_val_lookup$reify__1631.valAt(cluster.clj:192)
+        at clojure.lang.RT.get(RT.java:791)
+        at datomic.cache$double_lookup$reify__4537.valAt(cache.clj:225)
+        at clojure.lang.RT.get(RT.java:791)
+        at datomic.cache$lookup_transformer$reify__4522.valAt(cache.clj:93)
+        at clojure.lang.RT.get(RT.java:791)
+        at datomic.cache$lookup_with_inflight_cache$reify__4528$fn__4529.invoke(cache.clj:171)
+        at clojure.lang.Delay.deref(Delay.java:42)
+        - locked <0x000000060f0246e8> (a clojure.lang.Delay)
+        at clojure.core$deref.invokeStatic(core.clj:2337)
+        at clojure.core$deref.invoke(core.clj:2323)
+        at datomic.cache$lookup_with_inflight_cache$reify__4528.valAt(cache.clj:169)
+        at clojure.lang.RT.get(RT.java:791)
+        at datomic.cache$lookup_cache$reify__4525.valAt(cache.clj:138)
+        at clojure.lang.RT.get(RT.java:791)
+        at datomic.common$getx.invokeStatic(common.clj:207)
+        at datomic.common$getx.invoke(common.clj:203)
+        at datomic.index.Index.seek(index.clj:561)
+        at datomic.btset$seek.invokeStatic(btset.clj:399)
+        at datomic.btset$seek.invoke(btset.clj:394)
+        at datomic.db.Db.seekAEVT(db.clj:2368)
+        at datomic.datalog$fn__6335$fn__6398.invoke(datalog.clj:482)
+        at datomic.datalog$fn__6335$join__6432.invoke(datalog.clj:591)
+        at datomic.datalog$fn__6335$fn__6435.invoke(datalog.clj:608)
+        at datomic.common$pooled_mapv$fn__467$fn__468.invoke(common.clj:688)
+        at clojure.lang.AFn.applyToHelper(AFn.java:152)
+        at clojure.lang.AFn.applyTo(AFn.java:144)
+        at clojure.core$apply.invokeStatic(core.clj:667)
+        at clojure.core$with_bindings_STAR_.invokeStatic(core.clj:1990)
+        at clojure.core$with_bindings_STAR_.doInvoke(core.clj:1990)
+        at clojure.lang.RestFn.invoke(RestFn.java:425)
+        at clojure.lang.AFn.applyToHelper(AFn.java:156)
+        at clojure.lang.RestFn.applyTo(RestFn.java:132)
+        at clojure.core$apply.invokeStatic(core.clj:671)
+        at clojure.core$bound_fn_STAR_$fn__5818.doInvoke(core.clj:2020)
+        at clojure.lang.RestFn.invoke(RestFn.java:397)
+        at clojure.lang.AFn.call(AFn.java:18)
+        at java.util.concurrent.FutureTask.run(java.base@20-ea/FutureTask.java:317)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(java.base@20-ea/ThreadPoolExecutor.java:1144)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(java.base@20-ea/ThreadPoolExecutor.java:642)
+        at java.lang.Thread.runWith(java.base@20-ea/Thread.java:1636)
+        at java.lang.Thread.run(java.base@20-ea/Thread.java:1623)
+```
+
+Thus, a single dropped connection causes two, maybe three, stale threads.
+
+## Case 3: a bricked application?
+
 
 # A quick fix
 

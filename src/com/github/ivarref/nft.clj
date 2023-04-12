@@ -82,3 +82,19 @@
                              "}"])]
     (log/info "Dropping TCP packets for" (sock->readable sock) "fd" (GetSockOpt/getFd sock))
     (drop-str! drop-file)))
+
+(defn drop-sockets! [sockets]
+  (let [sockets (into [] sockets)
+        drop-txt (str/join " " (mapv sock->drop sockets))
+        drop-file (str/join "\n"
+                            ["flush ruleset"
+                             "table ip filter {"
+                             "chain output {"
+                             "type filter hook output priority filter;"
+                             "policy accept;"
+                             drop-txt
+                             "}"
+                             "}"])]
+    (doseq [sock sockets]
+      (log/info "Dropping TCP packets for" (sock->readable sock) "fd" (GetSockOpt/getFd sock)))
+    (drop-str! drop-file)))
