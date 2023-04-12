@@ -180,10 +180,10 @@
 
 (defonce blocked-thread (atom nil))
 
-(defn brick [{:keys [block?]}]
+(defn brick [{:keys [block? brick?]}]
   (try
     (log-init/init-logging! {:log-file  "brick"
-                             :min-level [[#{"datomic.*"} :warn]
+                             :min-level [[#{"datomic.*" "com.github.ivarref.spa-monkey"} :warn]
                                          [#{"com.github.ivarref.*"} :info]
                                          [#{"*"} :info]]})
     (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
@@ -219,52 +219,58 @@
                            (= 0 (count @dropped-sockets)))
                   (Thread/sleep 500)                        ; make sure ACKs have arrived at the other side
                   (let [new-blocked (swap! dropped-sockets conj dst)]
-                    (nft/drop-sockets! new-blocked)
+                    (if brick?
+                      (nft/drop-sockets! new-blocked)
+                      (log/info "not dropping socket"))
                     #_(log/info "Blocked socket count:" (count new-blocked)))
                   #_(u/watch-socket! "proxy" running? dst)))
               (catch Throwable t
                 (log/error "unexpected error:" (ex-message t))))))
         (timbre/merge-config! {:min-level [[#{"datomic.kv-cluster"} :debug]
-                                           [#{"datomic.process-monitor"} :warn]
+                                           [#{"datomic.process-monitor"
+                                              "com.github.ivarref.spa-monkey"} :warn]
                                            [#{"datomic.*"} :info]
                                            [#{"com.github.ivarref.nft"} :warn]
                                            [#{"com.github.ivarref.*"} :info]
                                            [#{"*"} :info]]})
-        (future
-          (try
-            (log/info "Starting query on dropped connection ...")
-            ; blocks/drops on kv-cluster/val 6436706a-911c-4547-b305-a7c82d49620e
-            (let [result (d/q '[:find ?e ?doc
-                                :in $
-                                :where
-                                [?e :db/doc ?doc]]
-                              (d/db conn))]
-              (log/info "Got query result" result))
+        (when brick?
+          (future
+            (try
+              (log/info "Starting query on dropped connection ...")
+              ; blocks/drops on kv-cluster/val 6436706a-911c-4547-b305-a7c82d49620e
+              (let [result (d/q '[:find ?e ?doc
+                                  :in $
+                                  :where
+                                  [?e :db/doc ?doc]]
+                                (d/db conn))]
+                (log/info "Got query result" result))
+              (Thread/sleep 1000)
+              (catch Throwable t
+                (log/error "an exception at last:" (ex-message t)))
+              (finally
+                nil)))
+          (loop []
             (Thread/sleep 1000)
-            (catch Throwable t
-              (log/error "an exception at last:" (ex-message t)))
-            (finally
-              nil)))
-        (loop []
-          (Thread/sleep 1000)
-          (when (= 0 (count @dropped-sockets))
-            (log/info "Waiting for drop")
-            (recur)))
+            (when (= 0 (count @dropped-sockets))
+              (log/info "Waiting for drop")
+              (recur))))
         (log/info (count @dropped-sockets) "dropped socket(s)")
         (let [start-time (System/currentTimeMillis)
               fut (future
                     (reset! blocked-thread (Thread/currentThread))
                     (try
                       (let [db (d/db conn)]
-                        (d/q '[:find ?tx
-                               :in $
-                               :where
-                               [?e :db/txInstant ?tx]]
-                             db))
+                        ; [13194139533378 13194139533366 13194139533368 13194139533375 13194139533312 13194139533376]
+                        (d/pull db [:*] 13194139533375)
+                        #_(d/q '[:find [?e ...]
+                                 :in $
+                                 :where
+                                 [?e :db/txInstant ?tx]]
+                               db))
                       (catch Throwable t
                         (log/error "Error:" (ex-message t)))))]
           (loop []
-            (Thread/sleep 15000)
+            (Thread/sleep (if brick? 15000 1000))
             (when (not (realized? fut))
               (log/info "Waited for non-dropped query for" (str (Duration/ofMillis (- (System/currentTimeMillis)
                                                                                       start-time))))
