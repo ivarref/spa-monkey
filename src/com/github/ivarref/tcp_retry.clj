@@ -180,7 +180,26 @@
 
 (defonce blocked-thread (atom nil))
 
-(defn brick [{:keys [block? brick?]}]
+(defn brick-init! [{:keys []}]
+  (try
+    (log-init/init-logging! {:log-file  "brick"
+                             :min-level [[#{"datomic.*" "com.github.ivarref.spa-monkey"} :warn]
+                                         [#{"com.github.ivarref.*"} :info]
+                                         [#{"*"} :info]]})
+    (let [^datomic.Connection conn (u/get-conn :db-name "brick" :port 5432 :delete? true)]
+      (log/info "got connection" conn)
+      @(d/transact conn [#:db{:ident :e/id, :cardinality :db.cardinality/one, :valueType :db.type/string, :unique :db.unique/identity}
+                         #:db{:ident :e/info, :cardinality :db.cardinality/one, :valueType :db.type/string}])
+      @(d/transact conn [{:e/id "demo1" :e/info "info1"}])
+      @(d/transact conn [{:e/id "demo2" :e/info "info2"}])
+      (.close conn))
+    (catch Throwable t
+      (log/error t "Unexpected error:" (ex-message t))
+      (System/exit 1))
+    (finally
+      (log/info "brick-init exiting"))))
+
+(defn brick [{:keys [block? brick? tick-rate-ms]}]
   (try
     (log-init/init-logging! {:log-file  "brick"
                              :min-level [[#{"datomic.*" "com.github.ivarref.spa-monkey"} :warn]
@@ -199,7 +218,7 @@
     (when-let [e (monkey/start! proxy-state)]
       (log/error e "Could not start proxy:" (ex-message e))
       (System/exit 1))
-    (let [conn (u/get-conn :port 54321)]
+    (let [conn (u/get-conn :db-name "brick" :port 54321)]
       (reset! datomic-conn conn)
       (hookd/install-return-consumer!
         "org.apache.tomcat.jdbc.pool.ConnectionPool"
@@ -238,11 +257,7 @@
             (try
               (log/info "Starting query on dropped connection ...")
               ; blocks/drops on kv-cluster/val 6436706a-911c-4547-b305-a7c82d49620e
-              (let [result (d/q '[:find ?e ?doc
-                                  :in $
-                                  :where
-                                  [?e :db/doc ?doc]]
-                                (d/db conn))]
+              (let [result (d/pull (d/db conn) [:*] [:e/id "demo1"])]
                 (log/info "Got query result" result))
               (Thread/sleep 1000)
               (catch Throwable t
@@ -254,23 +269,21 @@
             (when (= 0 (count @dropped-sockets))
               (log/info "Waiting for drop")
               (recur))))
-        (log/info (count @dropped-sockets) "dropped socket(s)")
+        (log/info (count @dropped-sockets) "dropped socket")
         (let [start-time (System/currentTimeMillis)
               fut (future
                     (reset! blocked-thread (Thread/currentThread))
                     (try
-                      (let [db (d/db conn)]
-                        ; [13194139533378 13194139533366 13194139533368 13194139533375 13194139533312 13194139533376]
-                        (d/pull db [:*] 13194139533375)
-                        #_(d/q '[:find [?e ...]
-                                 :in $
-                                 :where
-                                 [?e :db/txInstant ?tx]]
-                               db))
+                      #_(d/q '[:find (pull ?e [:*])
+                               :in $
+                               :where
+                               [?e :db/doc ?doc]]
+                             (d/db conn))
+                      (d/pull (d/db conn) [:*] [:e/id "demo2"])
                       (catch Throwable t
                         (log/error "Error:" (ex-message t)))))]
           (loop []
-            (Thread/sleep (if brick? 15000 1000))
+            (Thread/sleep ^long (or tick-rate-ms (if brick? 15000 1000)))
             (when (not (realized? fut))
               (log/info "Waited for non-dropped query for" (str (Duration/ofMillis (- (System/currentTimeMillis)
                                                                                       start-time))))

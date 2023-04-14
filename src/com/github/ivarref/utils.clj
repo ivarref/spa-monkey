@@ -11,16 +11,21 @@
            (org.postgresql.core PGStream QueryExecutor QueryExecutorBase)
            (org.postgresql.jdbc PgConnection)))
 
-(defn get-conn [& {:keys [port]
-                   :or   {port 5432}}]
+(defn get-conn [& {:keys [db-name port delete?]
+                   :or   {db-name "agent"
+                          delete? false
+                          port 5432}}]
   (let [start-time (System/currentTimeMillis)
-        uri (str "datomic:sql://agent?"
+        uri (str "datomic:sql://" db-name
+                 "?"
                  "jdbc:postgresql://"
                  "localhost:" port
                  "/postgres?user=postgres&password="
                  (System/getenv "POSTGRES_PASSWORD")
                  (System/getenv "CONN_EXTRA"))
         conn (do
+               (when delete?
+                 (d/delete-database uri))
                (d/create-database uri)
                (d/connect uri))
         spent-time (- (System/currentTimeMillis) start-time)]

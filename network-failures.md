@@ -439,8 +439,9 @@ like this:
 
 Thus, a single dropped connection causes two, maybe three, stale threads.
 
-## Case 3: a bricked application?
+## Case 3: a partially bricked application?
 
+How does a dropped connection affect the rest of the application?
 
 # A quick fix
 
