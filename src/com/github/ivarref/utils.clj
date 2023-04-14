@@ -3,7 +3,8 @@
             [clojure.tools.logging :as log]
             [com.github.ivarref.log-init :as log-init]
             [com.github.ivarref.nft :as nft]
-            [datomic.api :as d])
+            [datomic.api :as d]
+            [dom-top.core :refer [with-retry]])
   (:import (com.github.ivarref GetSockOpt)
            (java.net Socket)
            (java.time Duration)
@@ -14,23 +15,35 @@
 (defn get-conn [& {:keys [db-name port delete?]
                    :or   {db-name "agent"
                           delete? false
-                          port 5432}}]
-  (let [start-time (System/currentTimeMillis)
-        uri (str "datomic:sql://" db-name
-                 "?"
-                 "jdbc:postgresql://"
-                 "localhost:" port
-                 "/postgres?user=postgres&password="
-                 (System/getenv "POSTGRES_PASSWORD")
-                 (System/getenv "CONN_EXTRA"))
-        conn (do
-               (when delete?
-                 (d/delete-database uri))
-               (d/create-database uri)
-               (d/connect uri))
-        spent-time (- (System/currentTimeMillis) start-time)]
-    (log/debug "Got datomic connection in" spent-time "milliseconds")
-    conn))
+                          port    5432}}]
+  (let [start-time (System/currentTimeMillis)]
+    (with-retry [attempts 0]
+      (try
+        (let [uri (str "datomic:sql://" db-name
+                       "?"
+                       "jdbc:postgresql://"
+                       "localhost:" port
+                       "/postgres?user=postgres&password="
+                       (System/getenv "POSTGRES_PASSWORD")
+                       (System/getenv "CONN_EXTRA"))
+              conn (do
+                     (when delete?
+                       (d/delete-database uri))
+                     (d/create-database uri)
+                     (d/connect uri))
+              spent-time (- (System/currentTimeMillis) start-time)]
+          (log/debug "Got datomic connection in" spent-time "milliseconds")
+          conn)
+        (catch Throwable t
+          (if (< attempts 60)
+            (do
+              (log/info "Error" (ex-message t))
+              (log/info "Retrying. Attempts:" (inc attempts))
+              (Thread/sleep 5000)
+              (retry (inc attempts)))
+            (do
+              (log/error t "Error" (ex-message t))
+              (throw t))))))))
 
 (defn start-tick-thread [sock-promise done?]
   (future
@@ -141,8 +154,8 @@
                 (recur prev-log prev-state)))))
         (catch Throwable t
           (if (.isClosed sock)
-            (log/warn nam "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "error in socket watcher. Message:"  (ex-message t))
-            (log/error nam "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "error in socket watcher. Message:"  (ex-message t))))
+            (log/warn nam "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock) "error in socket watcher. Message:" (ex-message t))
+            (log/error nam "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock) "error in socket watcher. Message:" (ex-message t))))
         (finally
-          (log/info nam "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock)  "watcher exiting")
+          (log/info nam "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock) "watcher exiting")
           (.setName (Thread/currentThread) org-name))))))
