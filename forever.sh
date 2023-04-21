@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-rm src/com/github/ivarref/GetSockOpt.class || true
-rm src/com/github/ivarref/GetSockOpt*.class || true
+rm src/com/github/ivarref/GetSockOpt.class 2> /dev/null || true
+rm src/com/github/ivarref/GetSockOpt*.class 2> /dev/null || true
 
 javac \
 --release 20 \
