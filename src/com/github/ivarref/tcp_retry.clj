@@ -183,7 +183,9 @@
 (defn brick-init! [{:keys []}]
   (try
     (log-init/init-logging! {:log-file  "brick"
-                             :min-level [[#{"datomic.*" "com.github.ivarref.spa-monkey"} :warn]
+                             :min-level [[#{"datomic.*"
+                                            "com.github.ivarref.spa-monkey"
+                                            "com.github.ivarref.nft"} :warn]
                                          [#{"com.github.ivarref.*"} :info]
                                          [#{"*"} :info]]})
     (let [^datomic.Connection conn (u/get-conn :db-name "brick" :port 5432 :delete? true)]
@@ -192,7 +194,7 @@
                          #:db{:ident :e/info, :cardinality :db.cardinality/one, :valueType :db.type/string}])
       @(d/transact conn [{:e/id "demo1" :e/info "info1"}])
       @(d/transact conn [{:e/id "demo2" :e/info "info2"}])
-      (.close conn))
+      (.release conn))
     (catch Throwable t
       (log/error t "Unexpected error:" (ex-message t))
       (System/exit 1))
@@ -255,10 +257,10 @@
         (when brick?
           (future
             (try
-              (log/info "Starting query on dropped connection ...")
+              (log/info "Starting pull" [:e/id "demo1"] "on dropped connection ...")
               ; blocks/drops on kv-cluster/val 6436706a-911c-4547-b305-a7c82d49620e
               (let [result (d/pull (d/db conn) [:*] [:e/id "demo1"])]
-                (log/info "Got query result" result))
+                (log/info "Got pull result" result))
               (Thread/sleep 1000)
               (catch Throwable t
                 (log/error "an exception at last:" (ex-message t)))
@@ -274,19 +276,23 @@
               fut (future
                     (reset! blocked-thread (Thread/currentThread))
                     (try
-                      #_(d/q '[:find (pull ?e [:*])
-                               :in $
-                               :where
-                               [?e :db/doc ?doc]]
-                             (d/db conn))
-                      (d/pull (d/db conn) [:*] [:e/id "demo2"])
+                      (d/q '[:find (pull ?e [:*])
+                             :in $
+                             :where
+                             [?e :db/doc ?doc]]
+                           (d/db conn))
+                      (log/info "OK :db/doc query")
+                      (log/info "Start pull" [:e/id "demo2"])
+                      (let [v (d/pull (d/db conn) [:*] [:e/id "demo2"])]
+                        (log/info "Done pull" [:e/id "demo2"])
+                        v)
                       (catch Throwable t
                         (log/error "Error:" (ex-message t)))))]
           (loop []
             (Thread/sleep ^long (or tick-rate-ms (if brick? 15000 1000)))
             (when (not (realized? fut))
-              (log/info "Waited for non-dropped query for" (str (Duration/ofMillis (- (System/currentTimeMillis)
-                                                                                      start-time))))
+              (log/info "Waited for pull" [:e/id "demo2"] "for" (str (Duration/ofMillis (- (System/currentTimeMillis)
+                                                                                           start-time))))
               (recur)))
           (log/info "future was" @fut)))
       (when block?
