@@ -66,7 +66,7 @@
 
 (defn sock->readable [^Socket sock]
   (str "" (.getLocalPort sock)
-       ":"
+       "->"
        #_"localhost:" (.getPort sock)))
 
 (defn drop-sock! [sock]
