@@ -39,14 +39,13 @@ You will also want to:
 * add `/usr/bin/nft` to sudoers for your user
 * or run the scripts using `sudo -E`.
 
-Running this code requires running Linux and  
-Java 20 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
+Running this code requires running Linux and Java 20 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
 
 ## Case 1: TCP retry saves the day
 
 Running `sudo -E ./tcp-retry.sh` you will see:
 
-```{txt, attr.source='.numberLines'}
+```
 0001 00:00:03 [INFO] /proc/sys/net/ipv4/tcp_retries2 is 15
 0002 00:00:03 [INFO] Clear all packet filters ...
 0003 00:00:03 [INFO] Executing sudo nft -f accept.txt ...
@@ -71,7 +70,9 @@ We're starting to drop packets just before
 returns a connection, and thus also before any packet is sent.
 After this we simply wait and watch for TCP_INFO socket changes:
 ```
-0010 00:00:05 [INFO] Initial state for fd 152 {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_last_ack_recv 120, tcpi_last_ack_sent 0, tcpi_last_data_recv 120, tcpi_last_data_sent 0, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_probes 0, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 200, tcpi_rttvar 110, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state 1, tcpi_state_str ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
+0010 00:00:05 [INFO] Initial state for fd 152 {open? true,
+ tcpi_rto 203333,
+ tcpi_state 1, tcpi_state_str ESTABLISHED}
 0011 00:00:06 [INFO] fd 152 tcpi_backoff 0 => 1 (In 192 ms)
 0012 00:00:06 [INFO] fd 152 tcpi_backoff 1 => 2 (In 430 ms)
 0013 00:00:07 [INFO] fd 152 tcpi_backoff 2 => 3 (In 825 ms)
@@ -95,7 +96,7 @@ This field, `icsk_backoff`, is copied verbatim into `tcpi_backoff` in the [kerne
 `<<` is bit shift left and thus an increment of the backoff field yields
 a doubling of the re-transmission timeout value.
 
-The `isck_rto` field is handled differently. `rto` stands for `Re-transmission Time Out`.
+Then there is the `isck_rto` field. `rto` stands for `Re-transmission Time Out`.
 In `getsockopt` `isck_rto` is converted from [jiffies](https://man7.org/linux/man-pages/man7/time.7.html) to microseconds into the `tcpi_rto` field.
 We can see that `tcpi_rto` is initialized at 203333 microseconds,
 i.e. just over 200 milliseconds.
@@ -103,7 +104,7 @@ These values correspond reasonably well to the observed
 durations of each transition of `tcpi_backoff` in the log:
 it starts at ~200 milliseconds, then doubles, doubles again, etc..
 
-Then finally we see:
+Back in the console we can finally we see:
 
 ```
 0087 00:15:53 [WARN] CLI-agent-send-off-pool-3 org.apache.tomcat.jdbc.pool.PooledConnection Unable to clear Warnings, connection will be closed.
