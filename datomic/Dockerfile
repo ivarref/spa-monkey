@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.5_8-jdk-focal
+FROM eclipse-temurin:17.0.7_7-jdk-focal
 
 WORKDIR /opt
 RUN apt-get update && apt-get --yes install wget unzip curl postgresql-client
