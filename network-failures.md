@@ -13,11 +13,14 @@ PostgreSQL is used as the underlying storage.
 
 More specifically we will be testing:
 ```
-com.datomic/datomic-pro 1.0.6527 ; Released 2022-10-21
+com.datomic/peer 1.0.6726 ; Released 2023-04-27
 org.apache.tomcat/tomcat-jdbc 7.0.109 (bundled by datomic-pro)
-org.postgresql/postgresql 42.5.0
+org.postgresql/postgresql 42.5.1
 OpenJDK 64-Bit Server VM (build 20-ea+34-2340, mixed mode, sharing)
 ```
+
+[//]: # (unzip -l datomic-pro.zip | grep postg)
+[//]: # (unzip -l datomic-pro.zip | grep tomcat)
 
 We will be using [nftables](http://nftables.org/projects/nftables/index.html) to simulate network errors.
 
@@ -29,9 +32,6 @@ All commands require that `./db-up.sh` is running.
 Running `./db-up.sh` will start a Datomic and PostgreSQL instance locally.
 The following environment variables needs to be set:
 
-* `DATOMIC_HTTP_USERNAME`: Username used to fetch datomic on prem transactor zip file.
-* `DATOMIC_HTTP_PASSWORD`: Password used to fetch datomic on prem transactor zip file.
-* `DATOMIC_LICENSE_KEY`: Datomic license key.
 * `POSTGRES_PASSWORD`: Password to be used for PostgreSQL.
 
 You will also want to: 
@@ -46,14 +46,14 @@ Java 20 or later as it uses [JEP 434: Foreign Function & Memory API](https://ope
 
 Running `sudo -E ./tcp-retry.sh` you will see:
 
-```
+```{txt, attr.source='.numberLines'}
 0001 00:00:03 [INFO] /proc/sys/net/ipv4/tcp_retries2 is 15
 0002 00:00:03 [INFO] Clear all packet filters ...
 0003 00:00:03 [INFO] Executing sudo nft -f accept.txt ...
 0004 00:00:03 [INFO] Executing sudo nft -f accept.txt ... OK!
 0005 00:00:05 [INFO] Starting query on blocked connection ...
-0006 00:00:05 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :phase :begin, :pid 382404, :tid 59}
-0007 00:00:05 [INFO] Dropping TCP packets for 127.0.0.1:45492->127.0.0.1:5432 fd 152
+0006 00:00:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "64639b0c-bde3-444c-8e06-b950a817f3c0", :phase :begin, :pid 401431, :tid 29}
+0007 00:00:05 [INFO] Dropping TCP packets for 54288->5432 fd 154
 0008 00:00:05 [INFO] Executing sudo nft -f drop.txt ...
 0009 00:00:05 [INFO] Executing sudo nft -f drop.txt ... OK!
 ...
@@ -91,7 +91,9 @@ gives this definition of `isck_backoff`:
 actual re-transmission timeout value is icsk_rto <<
 icsk_backoff
 
-This field, `iscv_backoff`, is copied verbatim into `tcpi_backoff` in the [kernel](https://github.com/torvalds/linux/blob/5b7c4cabbb65f5c469464da6c5f614cbd7f730f2/net/ipv4/tcp.c#L3829).
+This field, `icsk_backoff`, is copied verbatim into `tcpi_backoff` in the [kernel](https://github.com/torvalds/linux/blob/5b7c4cabbb65f5c469464da6c5f614cbd7f730f2/net/ipv4/tcp.c#L3829).
+`<<` is bit shift left and thus an increment of the backoff field yields
+a doubling of the re-transmission timeout value.
 
 The `isck_rto` field is handled differently. `rto` stands for `Re-transmission Time Out`.
 In `getsockopt` `isck_rto` is converted from [jiffies](https://man7.org/linux/man-pages/man7/time.7.html) to microseconds into the `tcpi_rto` field.
@@ -441,8 +443,23 @@ Thus, a single dropped connection causes two, maybe three, stale threads.
 
 ## Case 3: a partially bricked application?
 
-How does a dropped connection affect the rest of the application?
+We've seen in case 2 that the default PostgreSQL driver and TCP stack is happy to wait
+forever for a packet. Datomic does not improve on this situation.
 
+How does such a situation affect the rest of the application?
+We will now issue one query that will be dropped, and then issue two more queries
+while the dropped query is running.
+
+
+```
+
+"pull-demo-1" #59 [129516] daemon prio=5 os_prio=0 cpu=16.32ms elapsed=30.06s tid=0x00007f7b8c6e3fb0 nid=129516 waiting on condition  [0x00007f7bcd3e1000]
+   java.lang.Thread.State: WAITING (parking)
+
+"pull-demo-2" #71 [129538] daemon prio=5 os_prio=0 cpu=47.34ms elapsed=28.37s tid=0x00007f7b5c001d30 nid=129538 waiting for monitor entry  [0x00007f7bcc1fd000]
+   java.lang.Thread.State: BLOCKED (on object monitor)
+
+```
 # A quick fix
 
 It is possible to instruct the PostgreSQL driver to time out on reads.
