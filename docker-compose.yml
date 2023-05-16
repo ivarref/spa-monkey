@@ -12,9 +12,6 @@ services:
   datomic:
     build:
       context: datomic
-      args:
-        DATOMIC_HTTP_USERNAME: ${DATOMIC_HTTP_USERNAME:?Please set DATOMIC_HTTP_USERNAME}
-        DATOMIC_HTTP_PASSWORD: ${DATOMIC_HTTP_PASSWORD:?Please set DATOMIC_HTTP_PASSWORD}
     container_name: datomic
     image: spa-monkey_datomic:latest
     restart: unless-stopped
@@ -24,4 +21,3 @@ services:
       - "4334:4334"
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Please set POSTGRES_PASSWORD}
-      DATOMIC_LICENSE_KEY: ${DATOMIC_LICENSE_KEY:?Please set DATOMIC_LICENSE_KEY}
