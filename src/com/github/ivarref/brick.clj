@@ -51,6 +51,7 @@
 (defonce blocked-thread (atom nil))
 
 ; is the lock block per segment, or global somehow?
+; appears to be per segment (or similar)
 
 (defn brick [{:keys [block? brick? tick-rate-ms]}]
   (try
@@ -65,12 +66,12 @@
     (nft/accept!)
     ;(log/info "Starting nREPL server ....")
     ;(nrepl/start-server :bind "127.0.0.1" :port 7777)
-    #_(when-let [e (monkey/start! proxy-state)]
-        (log/error e "Could not start proxy:" (ex-message e))
-        (System/exit 1))
-    (let [conn (u/get-conn :db-name "brick" :port 5432)]
-      (log/info "Got connection")
-
+    (when-let [e (monkey/start! proxy-state)]
+      (log/error e "Could not start proxy:" (ex-message e))
+      (System/exit 1))
+    (timbre/merge-config! {:min-level [[#{"datomic.kv-cluster"} :warn]]})
+    (let [conn (u/get-conn :db-name "brick" :port 54321)]
+      (timbre/merge-config! {:min-level [[#{"datomic.kv-cluster"} :warn]]})
       ;0094 00:00:06 [INFO] Starting pull 1
       ;0095 00:00:06 [DEBUG] {:event :kv-cluster/get-val, :val-key "64666731-3dff-4f65-b577-2be9b91471df", :phase :begin, :pid 410195, :tid 31}
       ;0097 00:00:06 [DEBUG] {:event :kv-cluster/get-val, :val-key "6466671b-521b-4b46-8d24-d9608c1f6e34", :phase :begin, :pid 410195, :tid 31}
@@ -89,100 +90,82 @@
 
       (log/info "Starting pull 1")
       (d/pull (d/db conn) [:*] [:e/id "1"])
+      (log/info "Pull 1 done")
 
-      (log/info "Starting pull 250000")
-      (d/pull (d/db conn) [:*] [:e/id "250000"])
+      ;(log/info "Starting pull 250000")
+      ;(d/pull (d/db conn) [:*] [:e/id "250000"])
       ;0103 00:00:06 [DEBUG] {:event :kv-cluster/get-val, :val-key "64666720-94c1-4427-bbee-6d4d257ecbf6", :phase :begin, :pid 410978, :tid 31}
       ;0105 00:00:06 [DEBUG] {:event :kv-cluster/get-val, :val-key "64666720-9fee-4713-b532-1ada76a62edb", :phase :begin, :pid 410978, :tid 31}
 
-      (log/info "Starting pull 500000")
-      (d/pull (d/db conn) [:*] [:e/id "500000"])
+      ;(log/info "Starting pull 500000")
+      ;(d/pull (d/db conn) [:*] [:e/id "500000"])
       ;0103 00:00:06 [DEBUG] {:event :kv-cluster/get-val, :val-key "64666725-a0e8-4f44-baf9-0ce3257dfec0", :phase :begin, :pid 410844, :tid 31}
       ;0105 00:00:06 [DEBUG] {:event :kv-cluster/get-val, :val-key "64666725-4a18-4f75-ad59-651677eb9438", :phase :begin, :pid 410844, :tid 31}
 
-      (log/info "Done")
-      #_(doseq [id ids]
-          (d/pull (d/db conn) [:*] [:e/id id])
-          #_(log/info "Pulled" id))
-      #_(reset! datomic-conn conn)
-      #_(hookd/install-return-consumer!
-          "org.apache.tomcat.jdbc.pool.ConnectionPool"
-          "getConnection"
-          (fn [^Connection conn]
-            (let [^Socket sock (u/conn->socket conn)]
-              #_(when (<= 10 (swap! get-conn-count inc)))
-              (log/info "ConnectionPool/getConnection returning socket" (nft/sock->readable sock))
-              #_(u/watch-socket! "client" running? sock))))
-      #_(let [dropped-sockets (atom #{})]
-          (monkey/add-handler!
-            proxy-state
-            (fn [{:keys [op dst]}]
-              (try
-                (locking dropped-sockets
-                  (when (and (= op :recv)
-                             (= 0 (count @dropped-sockets)))
-                    (Thread/sleep 500)                      ; make sure ACKs have arrived at the other side
-                    (let [new-blocked (swap! dropped-sockets conj dst)]
-                      (if brick?
-                        (nft/drop-sockets! new-blocked)
-                        (log/info "not dropping socket"))
-                      #_(log/info "Blocked socket count:" (count new-blocked)))
-                    #_(u/watch-socket! "proxy" running? dst)))
-                (catch Throwable t
-                  (log/error "unexpected error:" (ex-message t))))))
-          (timbre/merge-config! {:min-level [[#{"datomic.kv-cluster"} :debug]
-                                             [#{"datomic.process-monitor"
-                                                "com.github.ivarref.spa-monkey"} :warn]
-                                             [#{"datomic.*"} :info]
-                                             [#{"com.github.ivarref.nft"} :warn]
-                                             [#{"com.github.ivarref.*"} :info]
-                                             [#{"*"} :info]]})
-          (when brick?
-            (u/named-future "pull-demo-1"
-                            (try
-                              (log/info "Starting pull" [:e/id "demo1"] "on dropped connection ...")
-                              ; blocks/drops on kv-cluster/val 6436706a-911c-4547-b305-a7c82d49620e
-                              (let [result (d/pull (d/db conn) [:*] [:e/id "demo1"])]
-                                (log/info "Got pull result" result))
-                              (Thread/sleep 1000)
-                              (catch Throwable t
-                                (log/error "an exception at last:" (ex-message t)))
-                              (finally
-                                nil)))
-            (loop []
-              (Thread/sleep 1000)
-              (when (= 0 (count @dropped-sockets))
-                (log/info "Waiting for drop")
-                (recur))))
-          (log/info (count @dropped-sockets) "dropped socket")
-          (let [start-time (System/currentTimeMillis)
-                fut (u/named-future "pull-demo-2"
-                                    (reset! blocked-thread (Thread/currentThread))
-                                    (try
-                                      (d/q '[:find (pull ?e [:*])
-                                             :in $
-                                             :where
-                                             [?e :db/doc ?doc]]
-                                           (d/db conn))
-                                      (log/info "OK :db/doc query")
-                                      (log/info "Start pull" [:e/id "demo2"])
-                                      (let [v (d/pull (d/db conn) [:*] [:e/id "demo2"])]
-                                        (log/info "Done pull" [:e/id "demo2"])
-                                        v)
-                                      (catch Throwable t
-                                        (log/error "Error:" (ex-message t)))))]
-            (loop []
-              (Thread/sleep ^long (or tick-rate-ms (if brick? 15000 1000)))
-              (when (not (realized? fut))
-                (log/info "Waited for pull" [:e/id "demo2"] "for" (str (Duration/ofMillis (- (System/currentTimeMillis)
-                                                                                             start-time))))
-                (recur)))
-            (log/info "future was" @fut)))
-      (when block?
-        @(promise)))
+      (let [dropping? (promise)]
+        (monkey/add-handler!
+          proxy-state
+          (fn [{:keys [op dst]}]
+            (try
+              (locking dropping?
+                (when (and (= op :recv)
+                           (false? (realized? dropping?)))
+                  (Thread/sleep 500)                        ; make sure ACKs have arrived at the other side
+                  (nft/drop-sock! dst)
+                  (Thread/sleep 500)
+                  (deliver dropping? true)))
+              (catch Throwable t
+                (log/error "unexpected error:" (ex-message t))))))
+        (timbre/merge-config! {:min-level [[#{"datomic.kv-cluster"} :debug]
+                                           [#{"datomic.process-monitor"
+                                              "com.github.ivarref.spa-monkey"} :warn]
+                                           [#{"datomic.*"} :info]
+                                           [#{"com.github.ivarref.nft"} :info]
+                                           [#{"com.github.ivarref.*"} :info]
+                                           [#{"*"} :info]]})
+        (u/named-future "pull-250000"
+                        (try
+                          (log/info "Starting pull 250000 on dropped connection ...")
+                          ; blocks/drops on kv-cluster/val 6436706a-911c-4547-b305-a7c82d49620e
+                          (let [result (d/pull (d/db conn) [:*] [:e/id "250000"])]
+                            (log/info "Got pull result" result))
+                          (Thread/sleep 1000)
+                          (catch Throwable t
+                            (log/error "An exception at last:" (ex-message t)))
+                          (finally
+                            nil)))
+        (log/info "Waiting for dropping to start ...")
+        @dropping?
+        (log/info "Dropping started, starting new query")
+        (let [fut (u/named-future "pull-500000"
+                                  (try
+                                    (d/q '[:find (pull ?e [:*])
+                                           :in $
+                                           :where
+                                           [?e :db/doc ?doc]]
+                                         (d/db conn))
+                                    (log/info "OK :db/doc query")
+                                    (log/info "Start pull" [:e/id "500000"])
+                                    (let [v (d/pull (d/db conn) [:*] [:e/id "500000"])]
+                                      (log/info "Done pull" [:e/id "500000"] v)
+                                      (log/info "Start pull" [:e/id "250000"])
+                                      (d/pull (d/db conn) [:*] [:e/id "250000"])
+                                      (log/info "Done pull" [:e/id "250000"]))
+                                    (catch Throwable t
+                                      (log/error "Unexpected error:" (ex-message t)))))
+              start-time (System/currentTimeMillis)]
+          (loop []
+            (Thread/sleep ^long (or tick-rate-ms (if brick? 15000 1000)))
+            (when (not (realized? fut))
+              (log/info "Waited for pull" [:e/id "250000"] "for" (str (Duration/ofMillis (- (System/currentTimeMillis)
+                                                                                            start-time))))
+              (recur)))
+          (log/info "future was" @fut))
+        (when block?
+          @(promise))))
     (catch Throwable t
       (log/error t "Unexpected exception:" (ex-message t)))
     (finally
-      #_(monkey/stop! proxy-state)
+      (monkey/stop! proxy-state)
       (nft/accept! :throw? false)
       (log/info "Exiting"))))
