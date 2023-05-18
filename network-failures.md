@@ -157,7 +157,7 @@ that something went wrong.
 And this message is only included because the
 [jul to slf4j bridge](https://stackoverflow.com/questions/9117030/jul-to-slf4j-bridge) was installed,
 otherwise this message would only have made it to stdout,
-which you may or may not be collecting into your logging
+which you may or may not be collecting in your logging
 infrastructure.
 
 Despite the fact that the query took approximately 16
@@ -239,7 +239,7 @@ the Datomic SQL client is perfectly happy:
 24:00:10 [INFO] client fd 82 44746:54321 no changes last PT24H1.11S
 ```
 
-The peer or SQL client is still waiting after 24 hours, and no warning nor error is issued
+The peer or SQL client is still patiently waiting after 24 hours, and no warning nor error is issued
 by Datomic:
 
 ```
