@@ -159,3 +159,12 @@
         (finally
           (log/info nam "fd" (GetSockOpt/getFd sock) (nft/sock->readable sock) "watcher exiting")
           (.setName (Thread/currentThread) org-name))))))
+
+(defmacro named-future [nam & body]
+  `(future
+     (let [org-name# (.getName (Thread/currentThread))]
+       (try
+         (.setName (Thread/currentThread) ~nam)
+         ~@body
+         (finally
+           (.setName (Thread/currentThread) org-name#))))))

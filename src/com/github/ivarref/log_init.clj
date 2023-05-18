@@ -3,6 +3,7 @@
     [cheshire.core :as json]
     [clojure.string :as str]
     [clojure.tools.logging :as log]
+    [io.aviso.repl :as repl]
     [taoensso.timbre :as timbre])
   (:import (java.lang.management ManagementFactory)
            (java.time Duration)
@@ -77,6 +78,7 @@
                       :or   {min-level [[#{"datomic.*"} :warn]
                                         [#{"com.github.ivarref.*"} :debug]
                                         [#{"*"} :info]]}}]
+  (repl/install-pretty-exceptions)
   (let [log-file (when (some? log-file)
                    (str "logs/"
                         log-file

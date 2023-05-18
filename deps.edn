@@ -23,7 +23,7 @@
                                       "--enable-native-access=ALL-UNNAMED"
                                       "--add-opens" "java.base/java.net=ALL-UNNAMED"
                                       "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
-             :brick-init {:exec-fn   com.github.ivarref.tcp-retry/brick-init!
+             :brick-init {:exec-fn   com.github.ivarref.brick/brick-init!
                           :exec-args {}
                           :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
                                       "-XX:-OmitStackTraceInFastThrow"
@@ -31,7 +31,7 @@
                                       "--enable-native-access=ALL-UNNAMED"
                                       "--add-opens" "java.base/java.net=ALL-UNNAMED"
                                       "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
-             :brick      {:exec-fn   com.github.ivarref.tcp-retry/brick
+             :brick      {:exec-fn   com.github.ivarref.brick/brick
                           :exec-args {:block? false :brick? true}
                           :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
                                       "-XX:-OmitStackTraceInFastThrow"
