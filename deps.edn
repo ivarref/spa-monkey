@@ -14,7 +14,8 @@
              com.github.ivarref/hookd   {:mvn/version "0.1.20"}
              cheshire/cheshire          {:mvn/version "5.11.0"}
              io.aviso/pretty            {:mvn/version "1.4"}
-             dom-top/dom-top            {:mvn/version "1.0.8"}}
+             dom-top/dom-top            {:mvn/version "1.0.8"}
+             wiretap/wiretap            {:git/url "https://github.com/beoliver/wiretap/" :git/sha "de8814d6d46eed26f15c3878e59927552eee904c"}}
  :aliases   {:forever    {:exec-fn   com.github.ivarref.tcp-retry/forever
                           :exec-args {:block? false}
                           :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"

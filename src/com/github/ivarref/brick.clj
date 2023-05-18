@@ -8,7 +8,8 @@
             [com.github.ivarref.utils :as u]
             [datomic.api :as d]
             [nrepl.server :as nrepl]
-            [taoensso.timbre :as timbre])
+            [taoensso.timbre :as timbre]
+            [wiretap.wiretap :as w])
   (:import (datomic Connection)
            (java.lang ProcessHandle)
            (java.net Socket)
@@ -41,6 +42,8 @@
                             :remote-port 5432
                             :port        54321}))
 (defonce blocked-thread (atom nil))
+
+; is the lock block per segment, or global somehow?
 
 (defn brick [{:keys [block? brick? tick-rate-ms]}]
   (try
