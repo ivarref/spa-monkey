@@ -1,18 +1,14 @@
 (ns com.github.ivarref.brick
   (:require [clojure.string :as str]
             [clojure.tools.logging :as log]
-            [com.github.ivarref.hookd :as hookd]
             [com.github.ivarref.log-init :as log-init]
             [com.github.ivarref.nft :as nft]
             [com.github.ivarref.spa-monkey :as monkey]
             [com.github.ivarref.utils :as u]
             [datomic.api :as d]
-            [nrepl.server :as nrepl]
-            [taoensso.timbre :as timbre]
-            [wiretap.wiretap :as w])
+            [taoensso.timbre :as timbre])
   (:import (datomic Connection)
            (java.lang ProcessHandle)
-           (java.net Socket)
            (java.time Duration)))
 
 (def n 1000000)
@@ -33,9 +29,14 @@
                    ids)]
       @(d/transact conn [#:db{:ident :e/id, :cardinality :db.cardinality/one, :valueType :db.type/string, :unique :db.unique/identity}
                          #:db{:ident :e/info, :cardinality :db.cardinality/one, :valueType :db.type/string}])
-      (doseq [tx-chunk (partition-all 10000 tx)]
+      (doseq [[idx tx-chunk] (map-indexed (fn [idx e] [(inc idx) e]) (partition-all 10000 tx))]
         @(d/transact conn (vec tx-chunk))
-        (log/info "Inserted 10000 items"))
+        (log/info "Inserted" (* idx 10000) "items,"
+                  (str
+                    (int (* 100
+                            (/ (* idx 10000)
+                               n)))
+                    "% done")))
       (.release conn))
     (catch Throwable t
       (log/error t "Unexpected error:" (ex-message t))
@@ -48,7 +49,6 @@
 (defonce proxy-state (atom {:remote-host "localhost"
                             :remote-port 5432
                             :port        54321}))
-(defonce blocked-thread (atom nil))
 
 ; is the lock block per segment, or global somehow?
 ; appears to be per segment (or similar)
@@ -123,7 +123,7 @@
                                            [#{"com.github.ivarref.nft"} :info]
                                            [#{"com.github.ivarref.*"} :info]
                                            [#{"*"} :info]]})
-        (u/named-future "pull-250000"
+        (u/named-future "pull-250000-dropped"
                         (try
                           (log/info "Starting pull 250000 on dropped connection ...")
                           ; blocks/drops on kv-cluster/val 6436706a-911c-4547-b305-a7c82d49620e
@@ -137,7 +137,7 @@
         (log/info "Waiting for dropping to start ...")
         @dropping?
         (log/info "Dropping started, starting new query")
-        (let [fut (u/named-future "pull-500000"
+        (let [fut (u/named-future "pull-250000-monitor-entry"
                                   (try
                                     (d/q '[:find (pull ?e [:*])
                                            :in $
