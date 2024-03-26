@@ -1,5 +1,6 @@
 (ns com.github.ivarref.tcp-retry
   (:require
+    [clojure.java.io :as jio]
     [clojure.string :as str]
     [clojure.tools.logging :as log]
     [com.github.ivarref.hookd :as hookd]
@@ -156,12 +157,27 @@
                                          [#{"com.github.ivarref.*"} :info]
                                          [#{"*"} :info]]})
       (log/info "Starting query on blocked connection ...")
-      (let [result (d/q '[:find ?e ?doc
-                          :in $
-                          :where
-                          [?e :db/doc ?doc]]
-                        (d/db conn))]
-        (log/debug "Got query result" result))
+      (spit "forever.txt" "start-query\n")
+      (try
+        (let [result (future (try
+                               (d/q '[:find ?e ?doc
+                                      :in $
+                                      :where
+                                      [?e :db/doc ?doc]]
+                                    (d/db conn))
+                               (catch Throwable t
+                                 t)))]
+          (while (= ::timeout (deref result 10000 ::timeout))
+            (log/info "Waited for query result for"
+                      (str (Duration/ofMillis (- (System/currentTimeMillis) start-time))))
+            (spit "forever.txt" (str "waited "
+                                     (str (Duration/ofMillis (- (System/currentTimeMillis) start-time)))
+                                     "\n")
+                  :append true))
+          (spit "forever.txt" "got result\n" :append true)
+          (log/debug "Got query result" @result))
+        (finally
+          (spit "forever.txt" "done\n" :append true)))
       (Thread/sleep 100)
       (reset! running? false)
       (let [stop-time (System/currentTimeMillis)]
@@ -170,6 +186,7 @@
         (log/info "Waiting 70 seconds for datomic.process-monitor")
         (Thread/sleep 70000)))                              ; Give datomic time to report StorageGetMsec
     (when block?
+      (log/info "blocking ...")
       @(promise))
     (catch Throwable t
       (log/error t "Unexpected exception:" (ex-message t)))

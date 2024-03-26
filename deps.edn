@@ -1,60 +1,59 @@
-{:paths     ["src"]
- :deps      {org.clojure/clojure        {:mvn/version "1.11.1"}
-             org.postgresql/postgresql  {:mvn/version "42.5.1"}
-             org.clojure/tools.logging  {:mvn/version "1.2.4"}
-             babashka/process           {:mvn/version "0.4.16"}
-             nrepl/nrepl                {:mvn/version "1.0.0"}
-             com.taoensso/encore        {:mvn/version "3.24.0"}
-             ; https://docs.datomic.com/pro/releases.html
-             com.datomic/peer           {:mvn/version "1.0.7075"}
-             com.taoensso/timbre        {:mvn/version "5.2.1"}
-             com.fzakaria/slf4j-timbre  {:mvn/version "0.3.21"}
-             org.slf4j/log4j-over-slf4j {:mvn/version "1.7.30"}
-             org.slf4j/jul-to-slf4j     {:mvn/version "1.7.30"}
-             org.slf4j/jcl-over-slf4j   {:mvn/version "1.7.30"}
-             com.github.ivarref/hookd   {:mvn/version "0.1.20"}
-             cheshire/cheshire          {:mvn/version "5.11.0"}
-             io.aviso/pretty            {:mvn/version "1.4"}
-             dom-top/dom-top            {:mvn/version "1.0.8"}
-             wiretap/wiretap            {:git/url "https://github.com/beoliver/wiretap/" :git/sha "de8814d6d46eed26f15c3878e59927552eee904c"}}
- :aliases   {:forever    {:exec-fn   com.github.ivarref.tcp-retry/forever
-                          :exec-args {:block? false}
-                          :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
-                                      "-XX:-OmitStackTraceInFastThrow"
-                                      "--enable-preview"
-                                      "--enable-native-access=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.net=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
-             :brick-init {:exec-fn   com.github.ivarref.brick/brick-init!
-                          :exec-args {}
-                          :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
-                                      "-XX:-OmitStackTraceInFastThrow"
-                                      "--enable-preview"
-                                      "--enable-native-access=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.net=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
-             :brick      {:exec-fn   com.github.ivarref.brick/brick
-                          :exec-args {:block? false :brick? true}
-                          :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
-                                      "-XX:-OmitStackTraceInFastThrow"
-                                      "--enable-preview"
-                                      "--enable-native-access=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.net=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
-             :tcp-retry  {:exec-fn   com.github.ivarref.tcp-retry/do-test!
-                          :exec-args {:block?   false
-                                      :log-file "tcp_retry"}
-                          :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
-                                      "-XX:-OmitStackTraceInFastThrow"
-                                      "--enable-preview"
-                                      "--enable-native-access=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.net=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
-             :getsockopt {:exec-fn   com.github.ivarref.break-single-conn-once/getsockopt-demo
-                          :exec-args {}
-                          :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
-                                      "-XX:-OmitStackTraceInFastThrow"
-                                      "--enable-preview"
-                                      "--enable-native-access=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.net=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}}}
+{:paths   ["src"]
+ :deps    {org.clojure/clojure        {:mvn/version "1.11.1"}
+           org.postgresql/postgresql  {:mvn/version "42.5.1"}
+           org.clojure/tools.logging  {:mvn/version "1.2.4"}
+           babashka/process           {:mvn/version "0.4.16"}
+           nrepl/nrepl                {:mvn/version "1.0.0"}
+           com.taoensso/encore        {:mvn/version "3.24.0"}
+           com.datomic/peer           {:mvn/version "1.0.7075"} ; https://docs.datomic.com/pro/releases.html
+           com.taoensso/timbre        {:mvn/version "5.2.1"}
+           com.fzakaria/slf4j-timbre  {:mvn/version "0.3.21"}
+           org.slf4j/log4j-over-slf4j {:mvn/version "1.7.30"}
+           org.slf4j/jul-to-slf4j     {:mvn/version "1.7.30"}
+           org.slf4j/jcl-over-slf4j   {:mvn/version "1.7.30"}
+           com.github.ivarref/hookd   {:mvn/version "0.1.20"}
+           cheshire/cheshire          {:mvn/version "5.11.0"}
+           io.aviso/pretty            {:mvn/version "1.4"}
+           dom-top/dom-top            {:mvn/version "1.0.8"}
+           wiretap/wiretap            {:git/url "https://github.com/beoliver/wiretap/" :git/sha "de8814d6d46eed26f15c3878e59927552eee904c"}}
+ :aliases {:forever    {:exec-fn   com.github.ivarref.tcp-retry/forever
+                        :exec-args {:block? false}
+                        :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                    "-XX:-OmitStackTraceInFastThrow"
+                                    "--enable-preview"
+                                    "--enable-native-access=ALL-UNNAMED"
+                                    "--add-opens" "java.base/java.net=ALL-UNNAMED"
+                                    "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
+           :brick-init {:exec-fn   com.github.ivarref.brick/brick-init!
+                        :exec-args {}
+                        :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                    "-XX:-OmitStackTraceInFastThrow"
+                                    "--enable-preview"
+                                    "--enable-native-access=ALL-UNNAMED"
+                                    "--add-opens" "java.base/java.net=ALL-UNNAMED"
+                                    "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
+           :brick      {:exec-fn   com.github.ivarref.brick/brick
+                        :exec-args {:block? false :brick? true}
+                        :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                    "-XX:-OmitStackTraceInFastThrow"
+                                    "--enable-preview"
+                                    "--enable-native-access=ALL-UNNAMED"
+                                    "--add-opens" "java.base/java.net=ALL-UNNAMED"
+                                    "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
+           :tcp-retry  {:exec-fn   com.github.ivarref.tcp-retry/do-test!
+                        :exec-args {:block?   false
+                                    :log-file "tcp_retry"}
+                        :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                    "-XX:-OmitStackTraceInFastThrow"
+                                    "--enable-preview"
+                                    "--enable-native-access=ALL-UNNAMED"
+                                    "--add-opens" "java.base/java.net=ALL-UNNAMED"
+                                    "--add-opens" "java.base/java.io=ALL-UNNAMED"]}
+           :getsockopt {:exec-fn   com.github.ivarref.break-single-conn-once/getsockopt-demo
+                        :exec-args {}
+                        :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                    "-XX:-OmitStackTraceInFastThrow"
+                                    "--enable-preview"
+                                    "--enable-native-access=ALL-UNNAMED"
+                                    "--add-opens" "java.base/java.net=ALL-UNNAMED"
+                                    "--add-opens" "java.base/java.io=ALL-UNNAMED"]}}}

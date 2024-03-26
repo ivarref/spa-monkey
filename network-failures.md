@@ -13,12 +13,14 @@ PostgreSQL is used as the underlying storage.
 
 More specifically we will be testing:
 ```
-com.datomic/peer 1.0.6726 ; Released 2023-04-27
+com.datomic/peer 1.0.7075 ; Released 2023-04-27
 org.apache.tomcat/tomcat-jdbc 7.0.109 (bundled by datomic-pro)
 org.postgresql/postgresql 42.5.1
 OpenJDK 64-Bit Server VM (build 20-ea+34-2340, mixed mode, sharing)
 ```
 
+[//]: # (export DATOMIC_VERSION=1.0.7075)
+[//]: # (wget https://datomic-pro-downloads.s3.amazonaws.com/${DATOMIC_VERSION}/datomic-pro-${DATOMIC_VERSION}.zip -O datomic-pro.zip)
 [//]: # (unzip -l datomic-pro.zip | grep postg)
 [//]: # (unzip -l datomic-pro.zip | grep tomcat)
 
@@ -448,8 +450,8 @@ We've seen in case 2 that the default PostgreSQL driver and TCP stack is happy t
 forever for a packet. Datomic does not improve on this situation.
 
 How does such a situation affect the rest of the application?
-We will now issue one query that will be dropped, and then issue two more queries
-while the dropped query is running.
+We will now issue one query that will be dropped, and then issue more queries
+in a different thread while the dropped query is running.
 
 
 ```
