@@ -5,7 +5,8 @@
              babashka/process           {:mvn/version "0.4.16"}
              nrepl/nrepl                {:mvn/version "1.0.0"}
              com.taoensso/encore        {:mvn/version "3.24.0"}
-             com.datomic/peer           {:mvn/version "1.0.6726"}
+             ; https://docs.datomic.com/pro/releases.html
+             com.datomic/peer           {:mvn/version "1.0.7075"}
              com.taoensso/timbre        {:mvn/version "5.2.1"}
              com.fzakaria/slf4j-timbre  {:mvn/version "0.3.21"}
              org.slf4j/log4j-over-slf4j {:mvn/version "1.7.30"}
@@ -56,5 +57,4 @@
                                       "--enable-preview"
                                       "--enable-native-access=ALL-UNNAMED"
                                       "--add-opens" "java.base/java.net=ALL-UNNAMED"
-                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}}
- :mvn/repos {"my.datomic.com" {:url "https://my.datomic.com/repo"}}}
+                                      "--add-opens" "java.base/java.io=ALL-UNNAMED"]}}}
