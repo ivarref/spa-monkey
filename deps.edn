@@ -19,6 +19,7 @@
  :aliases {:forever    {:exec-fn   com.github.ivarref.tcp-retry/forever
                         :exec-args {:block? false}
                         :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                    "-XX:+EnableDynamicAgentLoading"
                                     "-XX:-OmitStackTraceInFastThrow"
                                     "--enable-preview"
                                     "--enable-native-access=ALL-UNNAMED"
@@ -44,6 +45,7 @@
                         :exec-args {:block?   false
                                     :log-file "tcp_retry"}
                         :jvm-opts  ["-Djdk.attach.allowAttachSelf=true"
+                                    "-XX:+EnableDynamicAgentLoading"
                                     "-XX:-OmitStackTraceInFastThrow"
                                     "--enable-preview"
                                     "--enable-native-access=ALL-UNNAMED"

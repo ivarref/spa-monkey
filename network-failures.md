@@ -16,7 +16,7 @@ More specifically we will be testing:
 com.datomic/peer 1.0.7075 ; Released 2023-04-27
 org.apache.tomcat/tomcat-jdbc 7.0.109 (bundled by datomic-pro)
 org.postgresql/postgresql 42.5.1
-OpenJDK 64-Bit Server VM (build 20-ea+34-2340, mixed mode, sharing)
+OpenJDK 64-Bit Server VM Temurin-22+36 (build 22+36, mixed mode, sharing)
 ```
 
 [//]: # (export DATOMIC_VERSION=1.0.7075)
@@ -37,15 +37,14 @@ The following environment variables needs to be set:
 * `POSTGRES_PASSWORD`: Password to be used for PostgreSQL.
 
 You will also want to: 
-* be prepared to enter your root password,
 * add `/usr/bin/nft` to sudoers for your user
-* or run the scripts using `sudo -E`.
+* or be prepared to enter your root password.
 
-Running this code requires running Linux and Java 20 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
+Running this code requires running Linux and Java 22 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
 
 ## Case 1: TCP retry saves the day
 
-Running `sudo -E ./tcp-retry.sh` you will see:
+Running `./tcp-retry.sh` you will see:
 
 ```
 0001 00:00:03 [INFO] /proc/sys/net/ipv4/tcp_retries2 is 15
