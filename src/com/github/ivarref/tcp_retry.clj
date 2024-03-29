@@ -122,6 +122,7 @@
     (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
       (log/info tcp-retry-file "is" (str/trim (slurp tcp-retry-file))))
     (log/info "PID is:" (.pid (ProcessHandle/current)))
+    (log/info "Java version is:" (System/getProperty "java.version"))
     (nft/accept!)
     (hookd/install-return-consumer!
       "org.apache.tomcat.jdbc.pool.ConnectionPool"

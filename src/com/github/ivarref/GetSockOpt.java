@@ -2,6 +2,7 @@ package com.github.ivarref;
 
 import java.io.FileDescriptor;
 import java.lang.foreign.*;
+import java.lang.foreign.ValueLayout.OfByte;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static java.lang.foreign.MemoryLayout.PathElement.groupElement;
+import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 
 public class GetSockOpt {
 
@@ -144,54 +146,56 @@ struct tcp_info
     uint32_t      tcpi_total_retrans;
 };
      */
-    static final GroupLayout tcpInfoStruct = MemoryLayout.structLayout(
-            ValueLayout.JAVA_BYTE.withName("tcpi_state"),
-            ValueLayout.JAVA_BYTE.withName("tcpi_ca_state"),
-            ValueLayout.JAVA_BYTE.withName("tcpi_retransmits"),
-            ValueLayout.JAVA_BYTE.withName("tcpi_probes"),
-            ValueLayout.JAVA_BYTE.withName("tcpi_backoff"),
-            ValueLayout.JAVA_BYTE.withName("tcpi_options"),
-            MemoryLayout.structLayout(
-                    MemoryLayout.paddingLayout(4).withName("tcpi_snd_wscale"),
-                    MemoryLayout.paddingLayout(4).withName("tcpi_rcv_wscale"),
-                    MemoryLayout.paddingLayout(8)
-            ),
-            ValueLayout.JAVA_INT.withName("tcpi_rto"),
-            ValueLayout.JAVA_INT.withName("tcpi_ato"),
-            ValueLayout.JAVA_INT.withName("tcpi_snd_mss"),
-            ValueLayout.JAVA_INT.withName("tcpi_rcv_mss"),
-            ValueLayout.JAVA_INT.withName("tcpi_unacked"),
-            ValueLayout.JAVA_INT.withName("tcpi_sacked"),
-            ValueLayout.JAVA_INT.withName("tcpi_lost"),
-            ValueLayout.JAVA_INT.withName("tcpi_retrans"),
-            ValueLayout.JAVA_INT.withName("tcpi_fackets"),
-            ValueLayout.JAVA_INT.withName("tcpi_last_data_sent"),
-            ValueLayout.JAVA_INT.withName("tcpi_last_ack_sent"),
-            ValueLayout.JAVA_INT.withName("tcpi_last_data_recv"),
-            ValueLayout.JAVA_INT.withName("tcpi_last_ack_recv"),
-            ValueLayout.JAVA_INT.withName("tcpi_pmtu"),
-            ValueLayout.JAVA_INT.withName("tcpi_rcv_ssthresh"),
-            ValueLayout.JAVA_INT.withName("tcpi_rtt"),
-            ValueLayout.JAVA_INT.withName("tcpi_rttvar"),
-            ValueLayout.JAVA_INT.withName("tcpi_snd_ssthresh"),
-            ValueLayout.JAVA_INT.withName("tcpi_snd_cwnd"),
-            ValueLayout.JAVA_INT.withName("tcpi_advmss"),
-            ValueLayout.JAVA_INT.withName("tcpi_reordering"),
-            ValueLayout.JAVA_INT.withName("tcpi_rcv_rtt"),
-            ValueLayout.JAVA_INT.withName("tcpi_rcv_space"),
-            ValueLayout.JAVA_INT.withName("tcpi_total_retrans")
+    public static final OfByte C_CHAR = ValueLayout.JAVA_BYTE;
+    public static final ValueLayout.OfInt C_INT = ValueLayout.JAVA_INT;
+    public static final AddressLayout C_POINTER = ValueLayout.ADDRESS
+            .withTargetLayout(MemoryLayout.sequenceLayout(java.lang.Long.MAX_VALUE, JAVA_BYTE));
+
+    private static final GroupLayout tcpInfoStruct = MemoryLayout.structLayout(
+            C_CHAR.withName("tcpi_state"),
+            C_CHAR.withName("tcpi_ca_state"),
+            C_CHAR.withName("tcpi_retransmits"),
+            C_CHAR.withName("tcpi_probes"),
+            C_CHAR.withName("tcpi_backoff"),
+            C_CHAR.withName("tcpi_options"),
+            MemoryLayout.paddingLayout(2),
+            C_INT.withName("tcpi_rto"),
+            C_INT.withName("tcpi_ato"),
+            C_INT.withName("tcpi_snd_mss"),
+            C_INT.withName("tcpi_rcv_mss"),
+            C_INT.withName("tcpi_unacked"),
+            C_INT.withName("tcpi_sacked"),
+            C_INT.withName("tcpi_lost"),
+            C_INT.withName("tcpi_retrans"),
+            C_INT.withName("tcpi_fackets"),
+            C_INT.withName("tcpi_last_data_sent"),
+            C_INT.withName("tcpi_last_ack_sent"),
+            C_INT.withName("tcpi_last_data_recv"),
+            C_INT.withName("tcpi_last_ack_recv"),
+            C_INT.withName("tcpi_pmtu"),
+            C_INT.withName("tcpi_rcv_ssthresh"),
+            C_INT.withName("tcpi_rtt"),
+            C_INT.withName("tcpi_rttvar"),
+            C_INT.withName("tcpi_snd_ssthresh"),
+            C_INT.withName("tcpi_snd_cwnd"),
+            C_INT.withName("tcpi_advmss"),
+            C_INT.withName("tcpi_reordering"),
+            C_INT.withName("tcpi_rcv_rtt"),
+            C_INT.withName("tcpi_rcv_space"),
+            C_INT.withName("tcpi_total_retrans")
     ).withName("tcp_info");
 
-    private final static Linker linker = Linker.nativeLinker();
-    private final static SymbolLookup stdlib = linker.defaultLookup();
-
-    private final static MethodHandle getsockopt = linker.downcallHandle(stdlib.find("getsockopt").get(),
-            FunctionDescriptor.of(ValueLayout.JAVA_INT,
-                    ValueLayout.JAVA_INT, // sockfd
-                    ValueLayout.JAVA_INT, // level
-                    ValueLayout.JAVA_INT, // optname
-                    ValueLayout.ADDRESS, // optval
-                    ValueLayout.ADDRESS  /* optlen */));
+    private final static MethodHandle getsockopt() {
+        final Linker linker = Linker.nativeLinker();
+        final SymbolLookup stdlib = linker.defaultLookup();
+        return linker.downcallHandle(stdlib.find("getsockopt").get(),
+                FunctionDescriptor.of(ValueLayout.JAVA_INT,
+                        C_INT, // sockfd
+                        C_INT, // level
+                        C_INT, // optname
+                        C_POINTER, // optval
+                        C_POINTER  /* optlen */));
+    }
 
     public static int socketImplToFd(SocketImpl sock) throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
         Method getFileDescriptor = SocketImpl.class.getDeclaredMethod("getFileDescriptor");
@@ -233,44 +237,43 @@ struct tcp_info
 
     public static Map<String, Object> tcpInfo(int fd) throws Throwable {
         Map<String, Object> res = new TreeMap<>();
-        try (Arena offHeap = Arena.openConfined()) {
+        try (Arena offHeap = Arena.ofConfined()) {
             MemorySegment tcpInfo = offHeap.allocate(tcpInfoStruct);
-            MemorySegment lenPointer = offHeap.allocateArray(ValueLayout.JAVA_INT, 1);
+            MemorySegment lenPointer = offHeap.allocate(ValueLayout.JAVA_INT, 1);
             lenPointer.setAtIndex(ValueLayout.JAVA_INT, 0, (int) tcpInfo.byteSize());
-            int retval = (int) getsockopt.invoke(fd, SOL_TCP(), TCP_INFO(), tcpInfo, lenPointer);
+            MethodHandle methodHandle = getsockopt();
+            Object retValObj = methodHandle.invoke(fd, SOL_TCP(), TCP_INFO(), tcpInfo, lenPointer);
+            int retval = (int) retValObj;
             if (retval != 0) {
 //                System.err.println("getsockopt error: " + retval);
                 throw new RuntimeException("getsockopt error: " + retval);
             } else {
-                int bufLen = lenPointer.getAtIndex(ValueLayout.JAVA_INT, 0);
+                int bufLen = lenPointer.getAtIndex(C_INT, 0);
                 if (bufLen != tcpInfo.byteSize()) {
                     System.err.println("New bufLen: " + bufLen + " vs original: " + tcpInfo.byteSize());
                 }
-                List<MemoryLayout> memoryLayouts = tcpInfoStruct.memberLayouts();
-                extractMembers(tcpInfoStruct, res, tcpInfo, memoryLayouts);
+                extractMembers(res, tcpInfo);
             }
         }
         return res;
     }
 
-    private static void extractMembers(GroupLayout root, Map<String, Object> res, MemorySegment tcpInfo, List<MemoryLayout> memoryLayouts) {
-        for (MemoryLayout layout : memoryLayouts) {
-            if (layout.name().isPresent()) {
-                String name = layout.name().get();
-                if (name.startsWith("IGNORE_")) {
-                    continue;
-                }
-                VarHandle varHandle = root.varHandle(groupElement(name));
-                Object val = varHandle.get(tcpInfo);
-                res.put(name, val);
-                if ("tcpi_state".equalsIgnoreCase(name)) {
-                    byte b = (byte) val;
-                    res.put("tcpi_state_str", tcpi_state_str((int) b));
-                }
-            } else if (layout instanceof GroupLayout) {
-                // TOOD implement
+    private static final OfByte tcpi_state$LAYOUT = (OfByte)tcpInfoStruct.select(groupElement("tcpi_state"));
+    private static final long tcpi_state$OFFSET = 0;
+    public static byte tcpi_state(MemorySegment struct) {
+        return struct.get(tcpi_state$LAYOUT, tcpi_state$OFFSET);
+    }
+
+    private static void extractMembers(Map<String, Object> res, MemorySegment tcpInfo) {
+        for (MemoryLayout fld : tcpInfoStruct.memberLayouts()) {
+            if (fld.name().isPresent()) {
+                String fldName = fld.name().get();
+                VarHandle varHandle = tcpInfoStruct.varHandle(groupElement(fldName));
+                Object val = varHandle.get(tcpInfo, 0);
+                res.put(fldName, val);
             }
         }
+        res.put("tcpi_state_str", tcpi_state_str(tcpi_state(tcpInfo)));
     }
 
     public static void main(String[] args) throws Throwable {
