@@ -7,6 +7,8 @@
             [com.github.ivarref.spa-monkey :as monkey]
             [com.github.ivarref.utils :as u]
             [datomic.api :as d]
+            [io.aviso.exception :as exception]
+            [nrepl.server :as nrepl]
             [taoensso.timbre :as timbre])
   (:import (java.lang ProcessHandle)
            (java.net Socket)
@@ -37,13 +39,22 @@
 
 
 (def expand-stack-trace-element (resolve 'io.aviso.exception/expand-stack-trace-element))
+(defn transform-stack-trace-elements
+  [x]
+  (binding [exception/*fonts* nil]
+    ((resolve 'io.aviso.exception/transform-stack-trace-elements) x {:stacktrace-fonts nil})))
 
 (def ^:private current-dir-prefix
   "Convert the current directory (via property 'user.dir') into a prefix to be omitted from file names."
   (delay (str (System/getProperty "user.dir") "/")))
 
-#_(comment
-    (take 5 (map (partial expand-stack-trace-element @current-dir-prefix) (.getStackTrace @blocked-thread))))
+(defn stacktrace->str [st]
+  (str/join "\n" (->>
+                   st
+                   (mapv (partial expand-stack-trace-element @current-dir-prefix))
+                   (transform-stack-trace-elements)
+                   (mapv (fn [{:keys [formatted-name line]}]
+                           (str formatted-name ":" line))))))
 
 (defn forever [_]
   (try
@@ -51,6 +62,7 @@
                              :min-level [[#{"datomic.*"} :warn]
                                          [#{"com.github.ivarref.*"} :info]
                                          [#{"*"} :info]]})
+    (nrepl/start-server :bind "127.0.0.1" :port 7777)
     (let [tcp-retry-file "/proc/sys/net/ipv4/tcp_retries2"]
       (log/info tcp-retry-file "is" (str/trim (slurp tcp-retry-file))))
     (log/info "PID is:" (.pid (ProcessHandle/current)))
@@ -99,8 +111,12 @@
                                     (d/db conn))
                                (catch Throwable t
                                  t)))]
-          (while (= ::timeout (deref result 1000 ::timeout))
-            (println (str/join "\n" (mapv (partial expand-stack-trace-element @current-dir-prefix) (.getStackTrace @blocked-thread))))
+          (while (= ::timeout (deref result 10000 ::timeout))
+            (try
+              (spit "forever.stacktrace.log" (stacktrace->str (.getStackTrace @blocked-thread)))
+              (catch Throwable t
+                (log/error "Failed to dump stacktrace:" (ex-message t))))
+
             (log/info "Waited for query result for"
                       (str (Duration/ofMillis (- (System/currentTimeMillis) start-time)))))
           (log/debug "Got query result" @result))
