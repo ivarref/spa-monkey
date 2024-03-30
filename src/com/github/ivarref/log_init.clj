@@ -54,7 +54,7 @@
 (defonce line-count (atom 0))
 
 (defn format-line-number [line-number]
-  (format "%04d" line-number))
+  (format "%d" line-number))
 
 (defn atomic-log [log-file {:keys [uptime-ms level ?err msg_ ?ns-str] :as data}]
   (locking lock
