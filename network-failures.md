@@ -40,7 +40,7 @@ You will also want to:
 * add `/usr/bin/nft` to sudoers for your user
 * or be prepared to enter your root password.
 
-Running this code requires running Linux and Java 22 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
+Running this code requires Linux and Java 22 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
 
 ## Case 1: TCP retry saves the day
 
@@ -68,7 +68,10 @@ From line 7 we can see that we're starting to drop packets
 destined for PostgreSQL, which is running at port 5432.
 We're starting to drop packets just before
 `org.apache.tomcat.jdbc.pool.ConnectionPool/getConnection`
-returns a connection, and thus also before any packet is sent.
+returns a connection, and thus also _before_ any packet is sent.
+
+[//]: # (explain emphasis on before...)
+
 After this we simply wait and watch for TCP_INFO socket changes:
 ```
 0010 00:00:05 [INFO] Initial state for fd 152 {open? true,
@@ -122,7 +125,7 @@ If you then re-run `./tcp-retry.sh` you will see
 a much shorter timeout.
 
 The default value of `/proc/sys/net/ipv4/tcp_retries2` is 15, i.e.
-an unacknowledged packet is re-sent 15 times
+an unacknowledged packet will be re-sent 15 times
 before the connection is considered broken
 and then closed by the kernel.
 From the [kernel ip-sysctl documentation](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt):
@@ -169,7 +172,7 @@ This is logged at an INFO-level, making it hard
 to spot.
 
 In summary: a network issue like this
-is rather hard to both spot and troubleshoot using Datomic.
+is rather hard to both spot and troubleshoot when using Datomic.
 
 ## Case 2: a query that hangs forever?
 
@@ -257,191 +260,6 @@ $ cat logs/forever.log.json | jq -r -c 'select( .thread == "'"Datomic Metrics Re
 ... (Variations on :AvailableMB elided.)
 ```
 
-If we peek at the JVM stacktrace using `kill -3 <java-pid>`, we will see something
-like this:
-```
-"main" #1 [536663] prio=5 os_prio=0 cpu=4394.78ms elapsed=56.83s tid=0x00007f177002b780 nid=536663 waiting on condition  [0x00007f1774f3a000]
-   java.lang.Thread.State: WAITING (parking)
-        at jdk.internal.misc.Unsafe.park(java.base@20-ea/Native Method)
-        - parking to wait for  <0x000000060f002a00> (a java.util.concurrent.FutureTask)
-        at java.util.concurrent.locks.LockSupport.park(java.base@20-ea/LockSupport.java:221)
-        at java.util.concurrent.FutureTask.awaitDone(java.base@20-ea/FutureTask.java:500)
-        at java.util.concurrent.FutureTask.get(java.base@20-ea/FutureTask.java:190)
-        at clojure.core$deref_future.invokeStatic(core.clj:2317)
-        at clojure.core$deref.invokeStatic(core.clj:2337)
-        at clojure.core$deref.invoke(core.clj:2323)
-        at clojure.core$mapv$fn__8535.invoke(core.clj:6979)
-        at clojure.lang.PersistentVector.reduce(PersistentVector.java:343)
-        at clojure.core$reduce.invokeStatic(core.clj:6885)
-        at clojure.core$mapv.invokeStatic(core.clj:6970)
-        at clojure.core$mapv.invoke(core.clj:6970)
-        at datomic.common$pooled_mapv.invokeStatic(common.clj:689)
-        at datomic.common$pooled_mapv.invoke(common.clj:684)
-        at datomic.datalog$qmapv.invokeStatic(datalog.clj:51)
-        at datomic.datalog$qmapv.invoke(datalog.clj:46)
-        at datomic.datalog$fn__6335.invokeStatic(datalog.clj:608)
-        at datomic.datalog$fn__6335.invoke(datalog.clj:342)
-        at datomic.datalog$fn__6191$G__6165__6206.invoke(datalog.clj:64)
-        at datomic.datalog$join_project_coll.invokeStatic(datalog.clj:129)
-        at datomic.datalog$join_project_coll.invoke(datalog.clj:127)
-        at datomic.datalog$fn__6260.invokeStatic(datalog.clj:232)
-        at datomic.datalog$fn__6260.invoke(datalog.clj:228)
-        at datomic.datalog$fn__6170$G__6163__6185.invoke(datalog.clj:64)
-        at datomic.datalog$eval_clause$fn__6797.invoke(datalog.clj:1385)
-        at datomic.datalog$eval_clause.invokeStatic(datalog.clj:1380)
-        at datomic.datalog$eval_clause.invoke(datalog.clj:1346)
-        at datomic.datalog$eval_rule$fn__6823.invoke(datalog.clj:1466)
-        at datomic.datalog$eval_rule.invokeStatic(datalog.clj:1451)
-        at datomic.datalog$eval_rule.invoke(datalog.clj:1430)
-        at datomic.datalog$eval_query.invokeStatic(datalog.clj:1494)
-        at datomic.datalog$eval_query.invoke(datalog.clj:1477)
-        at datomic.datalog$qsqr.invokeStatic(datalog.clj:1583)
-        at datomic.datalog$qsqr.invoke(datalog.clj:1522)
-        at datomic.datalog$qsqr.invokeStatic(datalog.clj:1540)
-        at datomic.datalog$qsqr.invoke(datalog.clj:1522)
-        at datomic.query$q_STAR_.invokeStatic(query.clj:756)
-        at datomic.query$q_STAR_.invoke(query.clj:743)
-        at datomic.query$q.invokeStatic(query.clj:795)
-        at datomic.query$q.invoke(query.clj:792)
-        at datomic.api$q.invokeStatic(api.clj:44)
-        at datomic.api$q.doInvoke(api.clj:42)
-        at clojure.lang.RestFn.invoke(RestFn.java:423)
-        at com.github.ivarref.tcp_retry$forever.invokeStatic(tcp_retry.clj:155)
-        at com.github.ivarref.tcp_retry$forever.invoke(tcp_retry.clj:111)
-        at clojure.lang.AFn.applyToHelper(AFn.java:154)
-        at clojure.lang.AFn.applyTo(AFn.java:144)
-        at clojure.lang.Var.applyTo(Var.java:705)
-        at clojure.core$apply.invokeStatic(core.clj:667)
-        at clojure.core$apply.invoke(core.clj:662)
-        at clojure.run.exec$exec.invokeStatic(exec.clj:48)
-        at clojure.run.exec$exec.doInvoke(exec.clj:39)
-        at clojure.lang.RestFn.invoke(RestFn.java:423)
-        at clojure.run.exec$_main$fn__205.invoke(exec.clj:180)
-        at clojure.run.exec$_main.invokeStatic(exec.clj:176)
-        at clojure.run.exec$_main.doInvoke(exec.clj:139)
-        at clojure.lang.RestFn.invoke(RestFn.java:397)
-        at clojure.lang.AFn.applyToHelper(AFn.java:152)
-        at clojure.lang.RestFn.applyTo(RestFn.java:132)
-        at clojure.lang.Var.applyTo(Var.java:705)
-        at clojure.core$apply.invokeStatic(core.clj:667)
-        at clojure.main$main_opt.invokeStatic(main.clj:514)
-        at clojure.main$main_opt.invoke(main.clj:510)
-        at clojure.main$main.invokeStatic(main.clj:664)
-        at clojure.main$main.doInvoke(main.clj:616)
-        at clojure.lang.RestFn.applyTo(RestFn.java:137)
-        at clojure.lang.Var.applyTo(Var.java:705)
-        at clojure.main.main(main.java:40)
-
-"CLI-agent-send-off-pool-7" #58 [536760] daemon prio=5 os_prio=0 cpu=14.40ms elapsed=48.94s tid=0x00007f1694001140 nid=536760 runnable  [0x00007f173d2cc000]
-   java.lang.Thread.State: RUNNABLE
-        at sun.nio.ch.Net.poll(java.base@20-ea/Native Method)
-        at sun.nio.ch.NioSocketImpl.park(java.base@20-ea/NioSocketImpl.java:186)
-        at sun.nio.ch.NioSocketImpl.park(java.base@20-ea/NioSocketImpl.java:196)
-        at sun.nio.ch.NioSocketImpl.implRead(java.base@20-ea/NioSocketImpl.java:304)
-        at sun.nio.ch.NioSocketImpl.read(java.base@20-ea/NioSocketImpl.java:340)
-        at sun.nio.ch.NioSocketImpl$1.read(java.base@20-ea/NioSocketImpl.java:789)
-        at java.net.Socket$SocketInputStream.read(java.base@20-ea/Socket.java:1025)
-        at org.postgresql.core.VisibleBufferedInputStream.readMore(VisibleBufferedInputStream.java:161)
-        at org.postgresql.core.VisibleBufferedInputStream.ensureBytes(VisibleBufferedInputStream.java:128)
-        at org.postgresql.core.VisibleBufferedInputStream.ensureBytes(VisibleBufferedInputStream.java:113)
-        at org.postgresql.core.VisibleBufferedInputStream.read(VisibleBufferedInputStream.java:73)
-        at org.postgresql.core.PGStream.receiveChar(PGStream.java:453)
-        at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2120)
-        at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:356)
-        - locked <0x00000007ff512c90> (a org.postgresql.core.v3.QueryExecutorImpl)
-        at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:496)
-        at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:413)
-        - locked <0x000000060f0037b0> (a org.postgresql.jdbc.PgPreparedStatement)
-        at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:190)
-        - locked <0x000000060f0037b0> (a org.postgresql.jdbc.PgPreparedStatement)
-        at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:134)
-        - locked <0x000000060f0037b0> (a org.postgresql.jdbc.PgPreparedStatement)
-        at java.lang.invoke.LambdaForm$DMH/0x0000000801251400.invokeInterface(java.base@20-ea/LambdaForm$DMH)
-        at java.lang.invoke.LambdaForm$MH/0x0000000801377800.invoke(java.base@20-ea/LambdaForm$MH)
-        at java.lang.invoke.Invokers$Holder.invokeExact_MT(java.base@20-ea/Invokers$Holder)
-        at jdk.internal.reflect.DirectMethodHandleAccessor.invokeImpl(java.base@20-ea/DirectMethodHandleAccessor.java:154)
-        at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(java.base@20-ea/DirectMethodHandleAccessor.java:104)
-        at java.lang.reflect.Method.invoke(java.base@20-ea/Method.java:578)
-        at org.apache.tomcat.jdbc.pool.StatementFacade$StatementProxy.invoke(StatementFacade.java:114)
-        at jdk.proxy2.$Proxy3.executeQuery(jdk.proxy2/Unknown Source)
-        at datomic.sql$select.invokeStatic(sql.clj:80)
-        at datomic.sql$select.invoke(sql.clj:75)
-        at datomic.kv_sql.KVSql.get(kv_sql.clj:60)
-        at datomic.kv_cluster.KVCluster$fn__9307$fn__9311$fn__9312.invoke(kv_cluster.clj:181)
-        at datomic.kv_cluster$retry_fn$fn__9272.invoke(kv_cluster.clj:83)
-        at datomic.kv_cluster$retry_fn.invokeStatic(kv_cluster.clj:83)
-        at datomic.kv_cluster$retry_fn.invoke(kv_cluster.clj:58)
-        at clojure.lang.AFn.applyToHelper(AFn.java:178)
-        at clojure.lang.AFn.applyTo(AFn.java:144)
-        at clojure.core$apply.invokeStatic(core.clj:673)
-        at clojure.core$partial$fn__5914.doInvoke(core.clj:2660)
-        at clojure.lang.RestFn.invoke(RestFn.java:421)
-        at datomic.kv_cluster.KVCluster$fn__9307$fn__9311.invoke(kv_cluster.clj:180)
-        at datomic.kv_cluster.KVCluster$fn__9307.invoke(kv_cluster.clj:178)
-        at clojure.core$binding_conveyor_fn$fn__5823.invoke(core.clj:2047)
-        at clojure.lang.AFn.call(AFn.java:18)
-        at java.util.concurrent.FutureTask.run(java.base@20-ea/FutureTask.java:317)
-        at java.util.concurrent.ThreadPoolExecutor.runWorker(java.base@20-ea/ThreadPoolExecutor.java:1144)
-        at java.util.concurrent.ThreadPoolExecutor$Worker.run(java.base@20-ea/ThreadPoolExecutor.java:642)
-        at java.lang.Thread.runWith(java.base@20-ea/Thread.java:1636)
-        at java.lang.Thread.run(java.base@20-ea/Thread.java:1623)
-
-"query-1" #70 [536783] daemon prio=5 os_prio=0 cpu=0.58ms elapsed=48.12s tid=0x00007f17725a2ec0 nid=536783 waiting on condition  [0x00007f1690df8000]
-   java.lang.Thread.State: WAITING (parking)
-        at jdk.internal.misc.Unsafe.park(java.base@20-ea/Native Method)
-        - parking to wait for  <0x000000060f013e38> (a java.util.concurrent.FutureTask)
-        at java.util.concurrent.locks.LockSupport.park(java.base@20-ea/LockSupport.java:221)
-        at java.util.concurrent.FutureTask.awaitDone(java.base@20-ea/FutureTask.java:500)
-        at java.util.concurrent.FutureTask.get(java.base@20-ea/FutureTask.java:190)
-        at clojure.core$deref_future.invokeStatic(core.clj:2317)
-        at clojure.core$future_call$reify__8544.deref(core.clj:7041)
-        at clojure.core$deref.invokeStatic(core.clj:2337)
-        at clojure.core$deref.invoke(core.clj:2323)
-        at datomic.cluster$uncached_val_lookup$reify__1631.valAt(cluster.clj:192)
-        at clojure.lang.RT.get(RT.java:791)
-        at datomic.cache$double_lookup$reify__4537.valAt(cache.clj:225)
-        at clojure.lang.RT.get(RT.java:791)
-        at datomic.cache$lookup_transformer$reify__4522.valAt(cache.clj:93)
-        at clojure.lang.RT.get(RT.java:791)
-        at datomic.cache$lookup_with_inflight_cache$reify__4528$fn__4529.invoke(cache.clj:171)
-        at clojure.lang.Delay.deref(Delay.java:42)
-        - locked <0x000000060f0246e8> (a clojure.lang.Delay)
-        at clojure.core$deref.invokeStatic(core.clj:2337)
-        at clojure.core$deref.invoke(core.clj:2323)
-        at datomic.cache$lookup_with_inflight_cache$reify__4528.valAt(cache.clj:169)
-        at clojure.lang.RT.get(RT.java:791)
-        at datomic.cache$lookup_cache$reify__4525.valAt(cache.clj:138)
-        at clojure.lang.RT.get(RT.java:791)
-        at datomic.common$getx.invokeStatic(common.clj:207)
-        at datomic.common$getx.invoke(common.clj:203)
-        at datomic.index.Index.seek(index.clj:561)
-        at datomic.btset$seek.invokeStatic(btset.clj:399)
-        at datomic.btset$seek.invoke(btset.clj:394)
-        at datomic.db.Db.seekAEVT(db.clj:2368)
-        at datomic.datalog$fn__6335$fn__6398.invoke(datalog.clj:482)
-        at datomic.datalog$fn__6335$join__6432.invoke(datalog.clj:591)
-        at datomic.datalog$fn__6335$fn__6435.invoke(datalog.clj:608)
-        at datomic.common$pooled_mapv$fn__467$fn__468.invoke(common.clj:688)
-        at clojure.lang.AFn.applyToHelper(AFn.java:152)
-        at clojure.lang.AFn.applyTo(AFn.java:144)
-        at clojure.core$apply.invokeStatic(core.clj:667)
-        at clojure.core$with_bindings_STAR_.invokeStatic(core.clj:1990)
-        at clojure.core$with_bindings_STAR_.doInvoke(core.clj:1990)
-        at clojure.lang.RestFn.invoke(RestFn.java:425)
-        at clojure.lang.AFn.applyToHelper(AFn.java:156)
-        at clojure.lang.RestFn.applyTo(RestFn.java:132)
-        at clojure.core$apply.invokeStatic(core.clj:671)
-        at clojure.core$bound_fn_STAR_$fn__5818.doInvoke(core.clj:2020)
-        at clojure.lang.RestFn.invoke(RestFn.java:397)
-        at clojure.lang.AFn.call(AFn.java:18)
-        at java.util.concurrent.FutureTask.run(java.base@20-ea/FutureTask.java:317)
-        at java.util.concurrent.ThreadPoolExecutor.runWorker(java.base@20-ea/ThreadPoolExecutor.java:1144)
-        at java.util.concurrent.ThreadPoolExecutor$Worker.run(java.base@20-ea/ThreadPoolExecutor.java:642)
-        at java.lang.Thread.runWith(java.base@20-ea/Thread.java:1636)
-        at java.lang.Thread.run(java.base@20-ea/Thread.java:1623)
-```
-
-Thus, a single dropped connection causes two, maybe three, stale threads.
 
 ## Case 3: a partially bricked application?
 
