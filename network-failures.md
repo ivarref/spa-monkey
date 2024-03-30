@@ -47,15 +47,15 @@ Running this code requires Linux and Java 22 or later as it uses [JEP 434: Forei
 Running `./tcp-retry.sh` you will see:
 
 ```
-0001 00:00:03 [INFO] /proc/sys/net/ipv4/tcp_retries2 is 15
-0002 00:00:03 [INFO] Clear all packet filters ...
-0003 00:00:03 [INFO] Executing sudo nft -f accept.txt ...
-0004 00:00:03 [INFO] Executing sudo nft -f accept.txt ... OK!
-0005 00:00:05 [INFO] Starting query on blocked connection ...
-0006 00:00:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "64639b0c-bde3-444c-8e06-b950a817f3c0", :phase :begin, :pid 401431, :tid 29}
-0007 00:00:05 [INFO] Dropping TCP packets for 54288->5432 fd 154
-0008 00:00:05 [INFO] Executing sudo nft -f drop.txt ...
-0009 00:00:05 [INFO] Executing sudo nft -f drop.txt ... OK!
+1 00:00:03 [INFO] /proc/sys/net/ipv4/tcp_retries2 is 15
+2 00:00:03 [INFO] Clear all packet filters ...
+3 00:00:03 [INFO] Executing sudo nft -f accept.txt ...
+4 00:00:03 [INFO] Executing sudo nft -f accept.txt ... OK!
+5 00:00:06 [INFO] Starting query on blocked connection ...
+6 00:00:06 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-bb0b-4227-98f7-d7034c4de30b", :phase :begin, :pid 140891, :tid 33}
+7 00:00:06 [INFO] Dropping TCP packets for 47474:5432 fd 91
+8 00:00:06 [INFO] Executing sudo nft -f drop.txt ...
+9 00:00:06 [INFO] Executing sudo nft -f drop.txt ... OK!
 ...
 ```
 
@@ -72,7 +72,7 @@ returns a connection, and thus also _before_ any packet is sent.
 
 [//]: # (explain emphasis on before...)
 
-After this we simply wait and watch for TCP_INFO socket changes:
+After this we simply wait and watch for `TCP_INFO.tcpi_backoff` socket changes:
 ```
 0010 00:00:05 [INFO] Initial state for fd 152 {open? true,
  tcpi_rto 203333,
@@ -111,8 +111,8 @@ it starts at ~200 milliseconds, then doubles, doubles again, etc..
 Back in the console we can finally we see:
 
 ```
-0087 00:15:53 [WARN] CLI-agent-send-off-pool-3 org.apache.tomcat.jdbc.pool.PooledConnection Unable to clear Warnings, connection will be closed.
-0088 00:15:53 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 382404, :tid 59}
+0087 00:15:53 [WARN] Unable to clear Warnings, connection will be closed.
+0088 00:15:53 [INFO] {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 141171, :tid 33}
 ```
 
 After approximately 16 minutes the kernel gives up
@@ -138,15 +138,15 @@ After the connection is closed by the kernel,
 Datomic finally retries fetching the data:
 
 ```
-0088 00:15:53 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 382404, :tid 59}
+0088 00:15:53 [INFO] {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 382404, :tid 59}
 0089 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
-0090 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :msec 948000.0, :phase :end, :pid 382404, :tid 59}
-0091 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :phase :begin, :pid 382404, :tid 59}
+0090 00:15:53 [DEBUG] {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :msec 948000.0, :phase :end, :pid 382404, :tid 59}
+0091 00:15:53 [DEBUG] {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :phase :begin, :pid 382404, :tid 59}
 0092 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
-0093 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :msec 2.47, :phase :end, :pid 382404, :tid 59}
-0094 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :phase :begin, :pid 382404, :tid 59}
+0093 00:15:53 [DEBUG] {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :msec 2.47, :phase :end, :pid 382404, :tid 59}
+0094 00:15:53 [DEBUG] {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :phase :begin, :pid 382404, :tid 59}
 0095 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
-0096 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :msec 1.53, :phase :end, :pid 382404, :tid 59}
+0096 00:15:53 [DEBUG] {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :msec 1.53, :phase :end, :pid 382404, :tid 59}
 0097 00:15:53 [INFO] Query on blocked connection ... Done in 00:15:47 aka 947996 milliseconds
 ```
 
