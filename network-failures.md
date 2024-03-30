@@ -1,6 +1,6 @@
 ---
 title: "Datomic's handling of network failures — and how to improve it"
-date: 2022-09-16T11:46:36+02:00
+date: 2024-03-30T11:46:36+02:00
 draft: true
 ---
 
@@ -8,7 +8,7 @@ draft: true
 This post will examine how the [Datomic on-premise peer library](https://www.datomic.com/on-prem.html)
 handles and responds to network failures.
 
-Datomic uses the [Apache Tomcat JDBC Connection Pool](https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html) for connection management.
+Datomic uses the [Apache Tomcat JDBC Connection Pool](https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html) for SQL connection management.
 PostgreSQL is used as the underlying storage.
 
 More specifically we will be testing:
