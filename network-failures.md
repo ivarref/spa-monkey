@@ -9,7 +9,7 @@ This post will examine how the [Datomic on-premise peer library](https://www.dat
 handles and responds to network failures.
 
 Datomic uses the [Apache Tomcat JDBC Connection Pool](https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html) for SQL connection management.
-PostgreSQL is used as the underlying storage.
+PostgreSQL is used as the underlying storage in this test.
 
 More specifically we will be testing:
 ```
