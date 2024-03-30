@@ -53,6 +53,7 @@
                    st
                    (mapv (partial expand-stack-trace-element @current-dir-prefix))
                    (transform-stack-trace-elements)
+                   (filterv :line)
                    (mapv (fn [{:keys [formatted-name line]}]
                            (str formatted-name ":" line))))))
 
