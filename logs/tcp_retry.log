@@ -1,107 +1,188 @@
-0001 00:00:03 [INFO] /proc/sys/net/ipv4/tcp_retries2 is 15
-0002 00:00:03 [INFO] Clear all packet filters ...
-0003 00:00:03 [INFO] Executing sudo nft -f accept.txt ...
-0004 00:00:03 [INFO] Executing sudo nft -f accept.txt ... OK!
-0005 00:00:05 [INFO] Starting query on blocked connection ...
-0006 00:00:05 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :phase :begin, :pid 382404, :tid 59}
-0007 00:00:05 [INFO] Dropping TCP packets for 127.0.0.1:45492->127.0.0.1:5432 fd 152
-0008 00:00:05 [INFO] Executing sudo nft -f drop.txt ...
-0009 00:00:05 [INFO] Executing sudo nft -f drop.txt ... OK!
-0010 00:00:05 [INFO] Initial state for fd 152 {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_last_ack_recv 120, tcpi_last_ack_sent 0, tcpi_last_data_recv 120, tcpi_last_data_sent 0, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_probes 0, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 200, tcpi_rttvar 110, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state 1, tcpi_state_str ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
-0011 00:00:06 [INFO] fd 152 tcpi_backoff 0 => 1 (In 192 ms)
-0012 00:00:06 [INFO] fd 152 tcpi_backoff 1 => 2 (In 430 ms)
-0013 00:00:07 [INFO] fd 152 tcpi_backoff 2 => 3 (In 825 ms)
-0014 00:00:08 [INFO] fd 152 tcpi_backoff 3 => 4 (In 1653 ms)
-0015 00:00:12 [INFO] fd 152 tcpi_backoff 4 => 5 (In 3466 ms)
-0016 00:00:19 [INFO] fd 152 tcpi_backoff 5 => 6 (In 6613 ms)
-0017 00:00:32 [INFO] fd 152 tcpi_backoff 6 => 7 (In 13227 ms)
-0018 00:00:59 [INFO] fd 152 tcpi_backoff 7 => 8 (In 27093 ms)
-0019 00:01:00 [INFO] Tick
-0020 00:01:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:tid 51, :ObjectCacheCount 20, :AvailableMB 7830.0, :StorageGetMsec {:lo 0, :hi 6, :sum 24, :count 20}, :pid 382404, :event :metrics, :ObjectCache {:lo 0, :hi 1, :sum 37, :count 64}, :LogIngestMsec {:lo 0, :hi 7, :sum 7, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :DbAddFulltextMsec {:lo 0, :hi 0, :sum 0, :count 2}, :PodGetMsec {:lo 1, :hi 4, :sum 8, :count 3}, :LogIngestBytes {:lo 0, :hi 0, :sum 0, :count 2}, :StorageGetBytes {:lo 31, :hi 3105, :sum 6205, :count 20}, :DirLoads {:lo 1, :hi 1, :sum 2, :count 2}}
-0021 00:01:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0022 00:01:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0276, :phase :end, :pid 382404, :tid 51}
-0023 00:01:52 [INFO] fd 152 tcpi_backoff 8 => 9 (In 52907 ms)
-0024 00:02:00 [INFO] Tack
-0025 00:02:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7850.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0026 00:02:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0027 00:02:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.059, :phase :end, :pid 382404, :tid 51}
-0028 00:03:00 [INFO] Tick
-0029 00:03:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0030 00:03:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0031 00:03:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0572, :phase :end, :pid 382404, :tid 51}
-0032 00:03:38 [INFO] fd 152 tcpi_backoff 9 => 10 (In 105814 ms)
-0033 00:04:00 [INFO] Tack
-0034 00:04:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0035 00:04:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0036 00:04:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.023, :phase :end, :pid 382404, :tid 51}
-0037 00:05:00 [INFO] Tick
-0038 00:05:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7810.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0039 00:05:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0040 00:05:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0707, :phase :end, :pid 382404, :tid 51}
-0041 00:05:39 [INFO] fd 152 tcpi_backoff 10 => 11 (In 121173 ms)
-0042 00:06:00 [INFO] Tack
-0043 00:06:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7800.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0044 00:06:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0045 00:06:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0528, :phase :end, :pid 382404, :tid 51}
-0046 00:07:00 [INFO] Tick
-0047 00:07:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7890.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0048 00:07:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0049 00:07:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.055, :phase :end, :pid 382404, :tid 51}
-0050 00:07:42 [INFO] fd 152 tcpi_backoff 11 => 12 (In 122880 ms)
-0051 00:08:00 [INFO] Tack
-0052 00:08:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7850.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0053 00:08:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0054 00:08:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0335, :phase :end, :pid 382404, :tid 51}
-0055 00:09:00 [INFO] Tick
-0056 00:09:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0057 00:09:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0058 00:09:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.081, :phase :end, :pid 382404, :tid 51}
-0059 00:09:44 [INFO] fd 152 tcpi_backoff 12 => 13 (In 122880 ms)
-0060 00:10:00 [INFO] Tack
-0061 00:10:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7820.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0062 00:10:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0063 00:10:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0872, :phase :end, :pid 382404, :tid 51}
-0064 00:11:00 [INFO] Tick
-0065 00:11:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7800.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0066 00:11:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0067 00:11:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0192, :phase :end, :pid 382404, :tid 51}
-0068 00:11:47 [INFO] fd 152 tcpi_backoff 13 => 14 (In 122880 ms)
-0069 00:12:00 [INFO] Tack
-0070 00:12:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0071 00:12:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0072 00:12:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0237, :phase :end, :pid 382404, :tid 51}
-0073 00:13:00 [INFO] Tick
-0074 00:13:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7810.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0075 00:13:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0076 00:13:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0346, :phase :end, :pid 382404, :tid 51}
-0077 00:13:50 [INFO] fd 152 tcpi_backoff 14 => 15 (In 122880 ms)
-0078 00:14:00 [INFO] Tack
-0079 00:14:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0080 00:14:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0081 00:14:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0382, :phase :end, :pid 382404, :tid 51}
-0082 00:15:00 [INFO] Tick
-0083 00:15:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 382404, :tid 51}
-0084 00:15:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0085 00:15:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0363, :phase :end, :pid 382404, :tid 51}
-0086 00:15:53 [WARN] Error in socket watcher for fd 152 , message: getsockopt error: -1
-0087 00:15:53 [WARN] CLI-agent-send-off-pool-3 org.apache.tomcat.jdbc.pool.PooledConnection Unable to clear Warnings, connection will be closed.
-0088 00:15:53 [INFO] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 382404, :tid 59}
-0089 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
-0090 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :msec 948000.0, :phase :end, :pid 382404, :tid 59}
-0091 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :phase :begin, :pid 382404, :tid 59}
-0092 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
-0093 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :msec 2.47, :phase :end, :pid 382404, :tid 59}
-0094 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :phase :begin, :pid 382404, :tid 59}
-0095 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
-0096 00:15:53 [DEBUG] CLI-agent-send-off-pool-3 datomic.kv-cluster {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :msec 1.53, :phase :end, :pid 382404, :tid 59}
-0097 00:15:53 [INFO] Query on blocked connection ... Done in 00:15:47 aka 947996 milliseconds
-0098 00:15:53 [INFO] Waiting 90 seconds for datomic.process-monitor
-0099 00:16:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:tid 51, :ObjectCacheCount 23, :AvailableMB 7860.0, :StorageGetMsec {:lo 1, :hi 948000, :sum 948003, :count 3}, :pid 382404, :event :metrics, :ObjectCache {:lo 0, :hi 0, :sum 0, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :StorageGetBytes {:lo 65, :hi 2114, :sum 2269, :count 3}, :StorageGetBackoffMsec {:lo 0, :hi 0, :sum 0, :count 1}}
-0100 00:16:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0101 00:16:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0369, :phase :end, :pid 382404, :tid 51}
-0102 00:17:05 [INFO] Datomic Metrics Reporter datomic.process-monitor {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 23, :event :metrics, :pid 382404, :tid 51}
-0103 00:17:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :phase :begin, :pid 382404, :tid 51}
-0104 00:17:05 [DEBUG] Datomic Metrics Reporter datomic.process-monitor {:event :metrics/report, :msec 0.0467, :phase :end, :pid 382404, :tid 51}
-0105 00:17:23 [INFO] Clear all packet filters ...
-0106 00:17:23 [INFO] Executing sudo nft -f accept.txt ...
-0107 00:17:23 [INFO] Executing sudo nft -f accept.txt ... OK!
+1 00:00:03 [INFO] /proc/sys/net/ipv4/tcp_retries2 is 15
+2 00:00:03 [INFO] Clear all packet filters ...
+3 00:00:03 [INFO] Executing sudo nft -f accept.txt ...
+4 00:00:03 [INFO] Executing sudo nft -f accept.txt ... OK!
+5 00:00:06 [INFO] Starting query on blocked connection ...
+6 00:00:06 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-bb0b-4227-98f7-d7034c4de30b", :phase :begin, :pid 143279, :tid 33}
+7 00:00:06 [INFO] Dropping TCP packets for 46364:5432 fd 166
+8 00:00:06 [INFO] Executing sudo nft -f drop.txt ...
+9 00:00:06 [INFO] Executing sudo nft -f drop.txt ... OK!
+10 00:00:06 [INFO] client fd 166 46364:5432 initial state is {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 233, tcpi_rttvar 111, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
+11 00:00:06 [INFO] client fd 166 46364:5432 tcpi_backoff 0 => 1 (In 118 ms)
+12 00:00:06 [INFO] client fd 166 46364:5432 tcpi_backoff 1 => 2 (In 424 ms)
+13 00:00:07 [INFO] client fd 166 46364:5432 tcpi_backoff 2 => 3 (In 823 ms)
+14 00:00:09 [INFO] client fd 166 46364:5432 tcpi_backoff 3 => 4 (In 1654 ms)
+15 00:00:12 [INFO] client fd 166 46364:5432 tcpi_backoff 4 => 5 (In 3386 ms)
+16 00:00:19 [INFO] client fd 166 46364:5432 tcpi_backoff 5 => 6 (In 6615 ms)
+17 00:00:29 [INFO] client fd 166 46364:5432 no changes last PT10.002S
+18 00:00:32 [INFO] client fd 166 46364:5432 tcpi_backoff 6 => 7 (In 13227 ms)
+19 00:00:42 [INFO] client fd 166 46364:5432 no changes last PT10.001S
+20 00:00:52 [INFO] client fd 166 46364:5432 no changes last PT20.002S
+21 00:00:59 [INFO] client fd 166 46364:5432 tcpi_backoff 7 => 8 (In 27093 ms)
+22 00:01:05 [INFO] {:tid 56, :ObjectCacheCount 20, :AvailableMB 7900.0, :StorageGetMsec {:lo 0, :hi 7, :sum 28, :count 20}, :PoolReadAheadActive {:lo 1, :hi 2, :sum 8, :count 5}, :pid 143279, :event :metrics, :ObjectCache {:lo 0, :hi 1, :sum 37, :count 64}, :LogIngestMsec {:lo 0, :hi 14, :sum 14, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :DbAddFulltextMsec {:lo 0, :hi 0, :sum 0, :count 2}, :PodGetMsec {:lo 1, :hi 6, :sum 10, :count 3}, :LogIngestBytes {:lo 0, :hi 0, :sum 0, :count 2}, :StorageGetBytes {:lo 31, :hi 3105, :sum 6202, :count 20}, :DirLoads {:lo 1, :hi 1, :sum 2, :count 2}, :PoolReadAheadQueued {:lo 0, :hi 0, :sum 0, :count 5}}
+23 00:01:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+24 00:01:05 [DEBUG] {:event :metrics/report, :msec 0.109, :phase :end, :pid 143279, :tid 56}
+25 00:01:09 [INFO] client fd 166 46364:5432 no changes last PT10.002S
+26 00:01:19 [INFO] client fd 166 46364:5432 no changes last PT20.003S
+27 00:01:29 [INFO] client fd 166 46364:5432 no changes last PT30.005S
+28 00:01:39 [INFO] client fd 166 46364:5432 no changes last PT40.007S
+29 00:01:49 [INFO] client fd 166 46364:5432 no changes last PT50.008S
+30 00:01:52 [INFO] client fd 166 46364:5432 tcpi_backoff 8 => 9 (In 52905 ms)
+31 00:02:02 [INFO] client fd 166 46364:5432 no changes last PT10.002S
+32 00:02:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7910.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+33 00:02:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+34 00:02:05 [DEBUG] {:event :metrics/report, :msec 0.051, :phase :end, :pid 143279, :tid 56}
+35 00:02:12 [INFO] client fd 166 46364:5432 no changes last PT20.003S
+36 00:02:22 [INFO] client fd 166 46364:5432 no changes last PT30.005S
+37 00:02:32 [INFO] client fd 166 46364:5432 no changes last PT40.007S
+38 00:02:42 [INFO] client fd 166 46364:5432 no changes last PT50.009S
+39 00:02:52 [INFO] client fd 166 46364:5432 no changes last PT1M0.01S
+40 00:03:02 [INFO] client fd 166 46364:5432 no changes last PT1M10.012S
+41 00:03:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+42 00:03:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+43 00:03:05 [DEBUG] {:event :metrics/report, :msec 0.116, :phase :end, :pid 143279, :tid 56}
+44 00:03:06 [WARN] {:event :datomic.future/unfilled, :seconds 180, :context {:line 168, :column 7, :file "datomic/kv_cluster.clj"}, :pid 143279, :tid 62}
+45 00:03:12 [INFO] client fd 166 46364:5432 no changes last PT1M20.013S
+46 00:03:22 [INFO] client fd 166 46364:5432 no changes last PT1M30.014S
+47 00:03:32 [INFO] client fd 166 46364:5432 no changes last PT1M40.015S
+48 00:03:38 [INFO] client fd 166 46364:5432 tcpi_backoff 9 => 10 (In 105813 ms)
+49 00:03:48 [INFO] client fd 166 46364:5432 no changes last PT10.002S
+50 00:03:58 [INFO] client fd 166 46364:5432 no changes last PT20.003S
+51 00:04:05 [INFO] {:FutureBoundExceeded {:lo 1, :hi 1, :sum 1, :count 1}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+52 00:04:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+53 00:04:05 [DEBUG] {:event :metrics/report, :msec 0.0257, :phase :end, :pid 143279, :tid 56}
+54 00:04:08 [INFO] client fd 166 46364:5432 no changes last PT30.005S
+55 00:04:18 [INFO] client fd 166 46364:5432 no changes last PT40.006S
+56 00:04:28 [INFO] client fd 166 46364:5432 no changes last PT50.008S
+57 00:04:38 [INFO] client fd 166 46364:5432 no changes last PT1M0.009S
+58 00:04:48 [INFO] client fd 166 46364:5432 no changes last PT1M10.01S
+59 00:04:58 [INFO] client fd 166 46364:5432 no changes last PT1M20.012S
+60 00:05:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+61 00:05:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+62 00:05:05 [DEBUG] {:event :metrics/report, :msec 0.0431, :phase :end, :pid 143279, :tid 56}
+63 00:05:08 [INFO] client fd 166 46364:5432 no changes last PT1M30.013S
+64 00:05:18 [INFO] client fd 166 46364:5432 no changes last PT1M40.014S
+65 00:05:28 [INFO] client fd 166 46364:5432 no changes last PT1M50.017S
+66 00:05:38 [INFO] client fd 166 46364:5432 no changes last PT2M0.018S
+67 00:05:48 [INFO] client fd 166 46364:5432 no changes last PT2M10.019S
+68 00:05:51 [INFO] client fd 166 46364:5432 tcpi_backoff 10 => 11 (In 133122 ms)
+69 00:06:01 [INFO] client fd 166 46364:5432 no changes last PT10.002S
+70 00:06:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+71 00:06:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+72 00:06:05 [DEBUG] {:event :metrics/report, :msec 0.0326, :phase :end, :pid 143279, :tid 56}
+73 00:06:11 [INFO] client fd 166 46364:5432 no changes last PT20.004S
+74 00:06:21 [INFO] client fd 166 46364:5432 no changes last PT30.005S
+75 00:06:31 [INFO] client fd 166 46364:5432 no changes last PT40.007S
+76 00:06:41 [INFO] client fd 166 46364:5432 no changes last PT50.008S
+77 00:06:51 [INFO] client fd 166 46364:5432 no changes last PT1M0.009S
+78 00:07:01 [INFO] client fd 166 46364:5432 no changes last PT1M10.01S
+79 00:07:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7850.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+80 00:07:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+81 00:07:05 [DEBUG] {:event :metrics/report, :msec 0.033, :phase :end, :pid 143279, :tid 56}
+82 00:07:11 [INFO] client fd 166 46364:5432 no changes last PT1M20.012S
+83 00:07:21 [INFO] client fd 166 46364:5432 no changes last PT1M30.013S
+84 00:07:31 [INFO] client fd 166 46364:5432 no changes last PT1M40.015S
+85 00:07:41 [INFO] client fd 166 46364:5432 no changes last PT1M50.016S
+86 00:07:51 [INFO] client fd 166 46364:5432 no changes last PT2M0.017S
+87 00:07:54 [INFO] client fd 166 46364:5432 tcpi_backoff 11 => 12 (In 122880 ms)
+88 00:08:04 [INFO] client fd 166 46364:5432 no changes last PT10.002S
+89 00:08:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+90 00:08:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+91 00:08:05 [DEBUG] {:event :metrics/report, :msec 0.0707, :phase :end, :pid 143279, :tid 56}
+92 00:08:14 [INFO] client fd 166 46364:5432 no changes last PT20.003S
+93 00:08:24 [INFO] client fd 166 46364:5432 no changes last PT30.005S
+94 00:08:34 [INFO] client fd 166 46364:5432 no changes last PT40.007S
+95 00:08:44 [INFO] client fd 166 46364:5432 no changes last PT50.008S
+96 00:08:54 [INFO] client fd 166 46364:5432 no changes last PT1M0.01S
+97 00:09:04 [INFO] client fd 166 46364:5432 no changes last PT1M10.012S
+98 00:09:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7910.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+99 00:09:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+100 00:09:05 [DEBUG] {:event :metrics/report, :msec 0.0294, :phase :end, :pid 143279, :tid 56}
+101 00:09:14 [INFO] client fd 166 46364:5432 no changes last PT1M20.013S
+102 00:09:24 [INFO] client fd 166 46364:5432 no changes last PT1M30.015S
+103 00:09:34 [INFO] client fd 166 46364:5432 no changes last PT1M40.017S
+104 00:09:44 [INFO] client fd 166 46364:5432 no changes last PT1M50.018S
+105 00:09:54 [INFO] client fd 166 46364:5432 no changes last PT2M0.02S
+106 00:09:57 [INFO] client fd 166 46364:5432 tcpi_backoff 12 => 13 (In 122878 ms)
+107 00:10:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+108 00:10:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+109 00:10:05 [DEBUG] {:event :metrics/report, :msec 0.0433, :phase :end, :pid 143279, :tid 56}
+110 00:10:07 [INFO] client fd 166 46364:5432 no changes last PT10.002S
+111 00:10:17 [INFO] client fd 166 46364:5432 no changes last PT20.004S
+112 00:10:27 [INFO] client fd 166 46364:5432 no changes last PT30.005S
+113 00:10:37 [INFO] client fd 166 46364:5432 no changes last PT40.007S
+114 00:10:47 [INFO] client fd 166 46364:5432 no changes last PT50.009S
+115 00:10:57 [INFO] client fd 166 46364:5432 no changes last PT1M0.011S
+116 00:11:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+117 00:11:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+118 00:11:05 [DEBUG] {:event :metrics/report, :msec 0.0522, :phase :end, :pid 143279, :tid 56}
+119 00:11:07 [INFO] client fd 166 46364:5432 no changes last PT1M10.012S
+120 00:11:17 [INFO] client fd 166 46364:5432 no changes last PT1M20.013S
+121 00:11:27 [INFO] client fd 166 46364:5432 no changes last PT1M30.014S
+122 00:11:37 [INFO] client fd 166 46364:5432 no changes last PT1M40.015S
+123 00:11:47 [INFO] client fd 166 46364:5432 no changes last PT1M50.017S
+124 00:11:57 [INFO] client fd 166 46364:5432 no changes last PT2M0.018S
+125 00:12:00 [INFO] client fd 166 46364:5432 tcpi_backoff 13 => 14 (In 122880 ms)
+126 00:12:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+127 00:12:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+128 00:12:05 [DEBUG] {:event :metrics/report, :msec 0.0412, :phase :end, :pid 143279, :tid 56}
+129 00:12:10 [INFO] client fd 166 46364:5432 no changes last PT10.002S
+130 00:12:20 [INFO] client fd 166 46364:5432 no changes last PT20.004S
+131 00:12:30 [INFO] client fd 166 46364:5432 no changes last PT30.005S
+132 00:12:40 [INFO] client fd 166 46364:5432 no changes last PT40.007S
+133 00:12:50 [INFO] client fd 166 46364:5432 no changes last PT50.008S
+134 00:13:00 [INFO] client fd 166 46364:5432 no changes last PT1M0.009S
+135 00:13:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7810.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+136 00:13:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+137 00:13:05 [DEBUG] {:event :metrics/report, :msec 0.0572, :phase :end, :pid 143279, :tid 56}
+138 00:13:10 [INFO] client fd 166 46364:5432 no changes last PT1M10.01S
+139 00:13:20 [INFO] client fd 166 46364:5432 no changes last PT1M20.012S
+140 00:13:30 [INFO] client fd 166 46364:5432 no changes last PT1M30.014S
+141 00:13:40 [INFO] client fd 166 46364:5432 no changes last PT1M40.015S
+142 00:13:50 [INFO] client fd 166 46364:5432 no changes last PT1M50.017S
+143 00:14:00 [INFO] client fd 166 46364:5432 no changes last PT2M0.018S
+144 00:14:02 [INFO] client fd 166 46364:5432 tcpi_backoff 14 => 15 (In 122881 ms)
+145 00:14:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+146 00:14:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+147 00:14:05 [DEBUG] {:event :metrics/report, :msec 0.0381, :phase :end, :pid 143279, :tid 56}
+148 00:14:12 [INFO] client fd 166 46364:5432 no changes last PT10.001S
+149 00:14:22 [INFO] client fd 166 46364:5432 no changes last PT20.002S
+150 00:14:32 [INFO] client fd 166 46364:5432 no changes last PT30.004S
+151 00:14:42 [INFO] client fd 166 46364:5432 no changes last PT40.005S
+152 00:14:52 [INFO] client fd 166 46364:5432 no changes last PT50.006S
+153 00:15:02 [INFO] client fd 166 46364:5432 no changes last PT1M0.007S
+154 00:15:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7820.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+155 00:15:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+156 00:15:05 [DEBUG] {:event :metrics/report, :msec 0.0365, :phase :end, :pid 143279, :tid 56}
+157 00:15:12 [INFO] client fd 166 46364:5432 no changes last PT1M10.008S
+158 00:15:22 [INFO] client fd 166 46364:5432 no changes last PT1M20.009S
+159 00:15:32 [INFO] client fd 166 46364:5432 no changes last PT1M30.011S
+160 00:15:42 [INFO] client fd 166 46364:5432 no changes last PT1M40.013S
+161 00:15:52 [INFO] client fd 166 46364:5432 no changes last PT1M50.014S
+162 00:16:02 [INFO] client fd 166 46364:5432 no changes last PT2M0.016S
+163 00:16:05 [INFO] client fd 166 46364:5432 tcpi_backoff 15 => 0 (In 122879 ms)
+164 00:16:05 [INFO] client fd 166 46364:5432 tcpi_state ESTABLISHED => CLOSE (In 959578 ms)
+165 00:16:05 [WARN] client fd 166 46364:5432 error in socket watcher. Message: getsockopt error: -1
+166 00:16:05 [INFO] client fd 166 46364:5432 watcher exiting
+167 00:16:05 [WARN] Unable to clear Warnings, connection will be closed.
+168 00:16:05 [INFO] {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 143279, :tid 33}
+169 00:16:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :StorageGetBackoffMsec {:lo 0, :hi 0, :sum 0, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+170 00:16:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+171 00:16:05 [DEBUG] {:event :metrics/report, :msec 0.0276, :phase :end, :pid 143279, :tid 56}
+172 00:16:05 [INFO] Not dropping anything for 41204:5432
+173 00:16:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-bb0b-4227-98f7-d7034c4de30b", :msec 960000.0, :phase :end, :pid 143279, :tid 33}
+174 00:16:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-23a5-4d99-bf73-b8badbe60495", :phase :begin, :pid 143279, :tid 33}
+175 00:16:05 [INFO] Not dropping anything for 41204:5432
+176 00:16:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-23a5-4d99-bf73-b8badbe60495", :msec 2.09, :phase :end, :pid 143279, :tid 33}
+177 00:16:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-6347-4910-9d91-93501966849a", :phase :begin, :pid 143279, :tid 33}
+178 00:16:05 [INFO] Not dropping anything for 41204:5432
+179 00:16:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-6347-4910-9d91-93501966849a", :msec 1.63, :phase :end, :pid 143279, :tid 33}
+180 00:16:06 [INFO] Query on blocked connection ... Done in 00:15:59 aka 959937 milliseconds
+181 00:16:06 [INFO] Waiting 70 seconds for datomic.process-monitor
+182 00:17:05 [INFO] {:tid 56, :ObjectCacheCount 23, :AvailableMB 7850.0, :StorageGetMsec {:lo 1, :hi 960000, :sum 960003, :count 3}, :pid 143279, :event :metrics, :ObjectCache {:lo 0, :hi 0, :sum 0, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :StorageGetBytes {:lo 65, :hi 2114, :sum 2269, :count 3}}
+183 00:17:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+184 00:17:05 [DEBUG] {:event :metrics/report, :msec 0.0364, :phase :end, :pid 143279, :tid 56}
+185 00:17:16 [INFO] Clear all packet filters ...
+186 00:17:16 [INFO] Executing sudo nft -f accept.txt ...
+187 00:17:16 [INFO] Executing sudo nft -f accept.txt ... OK!
+188 00:17:16 [INFO] Exiting
