@@ -1,0 +1,188 @@
+{"level":"INFO","logger":"com.github.ivarref.tcp-retry","thread":"main","uptime":"00:00:03","message":"/proc/sys/net/ipv4/tcp_retries2 is 15"}
+{"level":"INFO","logger":"com.github.ivarref.nft","thread":"main","uptime":"00:00:03","message":"Clear all packet filters ..."}
+{"level":"INFO","logger":"com.github.ivarref.nft","thread":"main","uptime":"00:00:03","message":"Executing sudo nft -f accept.txt ..."}
+{"level":"INFO","logger":"com.github.ivarref.nft","thread":"main","uptime":"00:00:03","message":"Executing sudo nft -f accept.txt ... OK!"}
+{"level":"INFO","logger":"com.github.ivarref.tcp-retry","thread":"main","uptime":"00:00:06","message":"Starting query on blocked connection ..."}
+{"level":"DEBUG","logger":"datomic.kv-cluster","thread":"CLI-agent-send-off-pool-1","uptime":"00:00:06","message":"{:event :kv-cluster/get-val, :val-key \"6602cd9e-bb0b-4227-98f7-d7034c4de30b\", :phase :begin, :pid 143279, :tid 33}"}
+{"level":"INFO","logger":"com.github.ivarref.nft","thread":"CLI-agent-send-off-pool-1","uptime":"00:00:06","message":"Dropping TCP packets for 46364:5432 fd 166"}
+{"level":"INFO","logger":"com.github.ivarref.nft","thread":"CLI-agent-send-off-pool-1","uptime":"00:00:06","message":"Executing sudo nft -f drop.txt ..."}
+{"level":"INFO","logger":"com.github.ivarref.nft","thread":"CLI-agent-send-off-pool-1","uptime":"00:00:06","message":"Executing sudo nft -f drop.txt ... OK!"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:06","message":"client fd 166 46364:5432 initial state is {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_rcv_mss 577, tcpi_rcv_rtt 1000, tcpi_rcv_space 65495, tcpi_rcv_ssthresh 65495, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 203333, tcpi_rtt 233, tcpi_rttvar 111, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:06","message":"client fd 166 46364:5432 tcpi_backoff 0 => 1 (In 118 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:06","message":"client fd 166 46364:5432 tcpi_backoff 1 => 2 (In 424 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:07","message":"client fd 166 46364:5432 tcpi_backoff 2 => 3 (In 823 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:09","message":"client fd 166 46364:5432 tcpi_backoff 3 => 4 (In 1654 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:12","message":"client fd 166 46364:5432 tcpi_backoff 4 => 5 (In 3386 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:19","message":"client fd 166 46364:5432 tcpi_backoff 5 => 6 (In 6615 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:29","message":"client fd 166 46364:5432 no changes last PT10.002S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:32","message":"client fd 166 46364:5432 tcpi_backoff 6 => 7 (In 13227 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:42","message":"client fd 166 46364:5432 no changes last PT10.001S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:52","message":"client fd 166 46364:5432 no changes last PT20.002S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:00:59","message":"client fd 166 46364:5432 tcpi_backoff 7 => 8 (In 27093 ms)"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:01:05","message":"{:tid 56, :ObjectCacheCount 20, :AvailableMB 7900.0, :StorageGetMsec {:lo 0, :hi 7, :sum 28, :count 20}, :PoolReadAheadActive {:lo 1, :hi 2, :sum 8, :count 5}, :pid 143279, :event :metrics, :ObjectCache {:lo 0, :hi 1, :sum 37, :count 64}, :LogIngestMsec {:lo 0, :hi 14, :sum 14, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :DbAddFulltextMsec {:lo 0, :hi 0, :sum 0, :count 2}, :PodGetMsec {:lo 1, :hi 6, :sum 10, :count 3}, :LogIngestBytes {:lo 0, :hi 0, :sum 0, :count 2}, :StorageGetBytes {:lo 31, :hi 3105, :sum 6202, :count 20}, :DirLoads {:lo 1, :hi 1, :sum 2, :count 2}, :PoolReadAheadQueued {:lo 0, :hi 0, :sum 0, :count 5}}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:01:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:01:05","message":"{:event :metrics/report, :msec 0.109, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:01:09","message":"client fd 166 46364:5432 no changes last PT10.002S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:01:19","message":"client fd 166 46364:5432 no changes last PT20.003S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:01:29","message":"client fd 166 46364:5432 no changes last PT30.005S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:01:39","message":"client fd 166 46364:5432 no changes last PT40.007S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:01:49","message":"client fd 166 46364:5432 no changes last PT50.008S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:01:52","message":"client fd 166 46364:5432 tcpi_backoff 8 => 9 (In 52905 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:02:02","message":"client fd 166 46364:5432 no changes last PT10.002S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:02:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7910.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:02:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:02:05","message":"{:event :metrics/report, :msec 0.051, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:02:12","message":"client fd 166 46364:5432 no changes last PT20.003S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:02:22","message":"client fd 166 46364:5432 no changes last PT30.005S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:02:32","message":"client fd 166 46364:5432 no changes last PT40.007S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:02:42","message":"client fd 166 46364:5432 no changes last PT50.009S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:02:52","message":"client fd 166 46364:5432 no changes last PT1M0.01S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:03:02","message":"client fd 166 46364:5432 no changes last PT1M10.012S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:03:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:03:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:03:05","message":"{:event :metrics/report, :msec 0.116, :phase :end, :pid 143279, :tid 56}"}
+{"level":"WARN","logger":"datomic.future","thread":"async-dispatch-8","uptime":"00:03:06","message":"{:event :datomic.future/unfilled, :seconds 180, :context {:line 168, :column 7, :file \"datomic/kv_cluster.clj\"}, :pid 143279, :tid 62}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:03:12","message":"client fd 166 46364:5432 no changes last PT1M20.013S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:03:22","message":"client fd 166 46364:5432 no changes last PT1M30.014S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:03:32","message":"client fd 166 46364:5432 no changes last PT1M40.015S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:03:38","message":"client fd 166 46364:5432 tcpi_backoff 9 => 10 (In 105813 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:03:48","message":"client fd 166 46364:5432 no changes last PT10.002S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:03:58","message":"client fd 166 46364:5432 no changes last PT20.003S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:04:05","message":"{:FutureBoundExceeded {:lo 1, :hi 1, :sum 1, :count 1}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:04:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:04:05","message":"{:event :metrics/report, :msec 0.0257, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:04:08","message":"client fd 166 46364:5432 no changes last PT30.005S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:04:18","message":"client fd 166 46364:5432 no changes last PT40.006S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:04:28","message":"client fd 166 46364:5432 no changes last PT50.008S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:04:38","message":"client fd 166 46364:5432 no changes last PT1M0.009S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:04:48","message":"client fd 166 46364:5432 no changes last PT1M10.01S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:04:58","message":"client fd 166 46364:5432 no changes last PT1M20.012S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:05:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:05:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:05:05","message":"{:event :metrics/report, :msec 0.0431, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:05:08","message":"client fd 166 46364:5432 no changes last PT1M30.013S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:05:18","message":"client fd 166 46364:5432 no changes last PT1M40.014S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:05:28","message":"client fd 166 46364:5432 no changes last PT1M50.017S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:05:38","message":"client fd 166 46364:5432 no changes last PT2M0.018S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:05:48","message":"client fd 166 46364:5432 no changes last PT2M10.019S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:05:51","message":"client fd 166 46364:5432 tcpi_backoff 10 => 11 (In 133122 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:06:01","message":"client fd 166 46364:5432 no changes last PT10.002S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:06:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:06:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:06:05","message":"{:event :metrics/report, :msec 0.0326, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:06:11","message":"client fd 166 46364:5432 no changes last PT20.004S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:06:21","message":"client fd 166 46364:5432 no changes last PT30.005S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:06:31","message":"client fd 166 46364:5432 no changes last PT40.007S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:06:41","message":"client fd 166 46364:5432 no changes last PT50.008S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:06:51","message":"client fd 166 46364:5432 no changes last PT1M0.009S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:07:01","message":"client fd 166 46364:5432 no changes last PT1M10.01S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:07:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7850.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:07:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:07:05","message":"{:event :metrics/report, :msec 0.033, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:07:11","message":"client fd 166 46364:5432 no changes last PT1M20.012S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:07:21","message":"client fd 166 46364:5432 no changes last PT1M30.013S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:07:31","message":"client fd 166 46364:5432 no changes last PT1M40.015S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:07:41","message":"client fd 166 46364:5432 no changes last PT1M50.016S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:07:51","message":"client fd 166 46364:5432 no changes last PT2M0.017S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:07:54","message":"client fd 166 46364:5432 tcpi_backoff 11 => 12 (In 122880 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:08:04","message":"client fd 166 46364:5432 no changes last PT10.002S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:08:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:08:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:08:05","message":"{:event :metrics/report, :msec 0.0707, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:08:14","message":"client fd 166 46364:5432 no changes last PT20.003S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:08:24","message":"client fd 166 46364:5432 no changes last PT30.005S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:08:34","message":"client fd 166 46364:5432 no changes last PT40.007S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:08:44","message":"client fd 166 46364:5432 no changes last PT50.008S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:08:54","message":"client fd 166 46364:5432 no changes last PT1M0.01S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:09:04","message":"client fd 166 46364:5432 no changes last PT1M10.012S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:09:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7910.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:09:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:09:05","message":"{:event :metrics/report, :msec 0.0294, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:09:14","message":"client fd 166 46364:5432 no changes last PT1M20.013S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:09:24","message":"client fd 166 46364:5432 no changes last PT1M30.015S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:09:34","message":"client fd 166 46364:5432 no changes last PT1M40.017S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:09:44","message":"client fd 166 46364:5432 no changes last PT1M50.018S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:09:54","message":"client fd 166 46364:5432 no changes last PT2M0.02S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:09:57","message":"client fd 166 46364:5432 tcpi_backoff 12 => 13 (In 122878 ms)"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:10:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:10:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:10:05","message":"{:event :metrics/report, :msec 0.0433, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:10:07","message":"client fd 166 46364:5432 no changes last PT10.002S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:10:17","message":"client fd 166 46364:5432 no changes last PT20.004S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:10:27","message":"client fd 166 46364:5432 no changes last PT30.005S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:10:37","message":"client fd 166 46364:5432 no changes last PT40.007S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:10:47","message":"client fd 166 46364:5432 no changes last PT50.009S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:10:57","message":"client fd 166 46364:5432 no changes last PT1M0.011S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:11:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:11:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:11:05","message":"{:event :metrics/report, :msec 0.0522, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:11:07","message":"client fd 166 46364:5432 no changes last PT1M10.012S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:11:17","message":"client fd 166 46364:5432 no changes last PT1M20.013S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:11:27","message":"client fd 166 46364:5432 no changes last PT1M30.014S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:11:37","message":"client fd 166 46364:5432 no changes last PT1M40.015S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:11:47","message":"client fd 166 46364:5432 no changes last PT1M50.017S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:11:57","message":"client fd 166 46364:5432 no changes last PT2M0.018S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:12:00","message":"client fd 166 46364:5432 tcpi_backoff 13 => 14 (In 122880 ms)"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:12:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:12:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:12:05","message":"{:event :metrics/report, :msec 0.0412, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:12:10","message":"client fd 166 46364:5432 no changes last PT10.002S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:12:20","message":"client fd 166 46364:5432 no changes last PT20.004S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:12:30","message":"client fd 166 46364:5432 no changes last PT30.005S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:12:40","message":"client fd 166 46364:5432 no changes last PT40.007S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:12:50","message":"client fd 166 46364:5432 no changes last PT50.008S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:13:00","message":"client fd 166 46364:5432 no changes last PT1M0.009S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:13:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7810.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:13:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:13:05","message":"{:event :metrics/report, :msec 0.0572, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:13:10","message":"client fd 166 46364:5432 no changes last PT1M10.01S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:13:20","message":"client fd 166 46364:5432 no changes last PT1M20.012S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:13:30","message":"client fd 166 46364:5432 no changes last PT1M30.014S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:13:40","message":"client fd 166 46364:5432 no changes last PT1M40.015S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:13:50","message":"client fd 166 46364:5432 no changes last PT1M50.017S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:14:00","message":"client fd 166 46364:5432 no changes last PT2M0.018S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:14:02","message":"client fd 166 46364:5432 tcpi_backoff 14 => 15 (In 122881 ms)"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:14:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:14:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:14:05","message":"{:event :metrics/report, :msec 0.0381, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:14:12","message":"client fd 166 46364:5432 no changes last PT10.001S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:14:22","message":"client fd 166 46364:5432 no changes last PT20.002S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:14:32","message":"client fd 166 46364:5432 no changes last PT30.004S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:14:42","message":"client fd 166 46364:5432 no changes last PT40.005S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:14:52","message":"client fd 166 46364:5432 no changes last PT50.006S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:15:02","message":"client fd 166 46364:5432 no changes last PT1M0.007S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:15:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7820.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:15:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:15:05","message":"{:event :metrics/report, :msec 0.0365, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:15:12","message":"client fd 166 46364:5432 no changes last PT1M10.008S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:15:22","message":"client fd 166 46364:5432 no changes last PT1M20.009S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:15:32","message":"client fd 166 46364:5432 no changes last PT1M30.011S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:15:42","message":"client fd 166 46364:5432 no changes last PT1M40.013S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:15:52","message":"client fd 166 46364:5432 no changes last PT1M50.014S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:16:02","message":"client fd 166 46364:5432 no changes last PT2M0.016S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:16:05","message":"client fd 166 46364:5432 tcpi_backoff 15 => 0 (In 122879 ms)"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:16:05","message":"client fd 166 46364:5432 tcpi_state ESTABLISHED => CLOSE (In 959578 ms)"}
+{"level":"WARN","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:16:05","message":"client fd 166 46364:5432 error in socket watcher. Message: getsockopt error: -1"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"00:16:05","message":"client fd 166 46364:5432 watcher exiting"}
+{"level":"WARN","logger":"org.apache.tomcat.jdbc.pool.PooledConnection","thread":"CLI-agent-send-off-pool-1","uptime":"00:16:05","message":"Unable to clear Warnings, connection will be closed."}
+{"level":"INFO","logger":"datomic.kv-cluster","thread":"CLI-agent-send-off-pool-1","uptime":"00:16:05","message":"{:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause \"java.net.SocketException\", :pid 143279, :tid 33}"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:16:05","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :StorageGetBackoffMsec {:lo 0, :hi 0, :sum 0, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:16:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:16:05","message":"{:event :metrics/report, :msec 0.0276, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.tcp-retry","thread":"CLI-agent-send-off-pool-1","uptime":"00:16:05","message":"Not dropping anything for 41204:5432"}
+{"level":"DEBUG","logger":"datomic.kv-cluster","thread":"CLI-agent-send-off-pool-1","uptime":"00:16:05","message":"{:event :kv-cluster/get-val, :val-key \"6602cd9e-bb0b-4227-98f7-d7034c4de30b\", :msec 960000.0, :phase :end, :pid 143279, :tid 33}"}
+{"level":"DEBUG","logger":"datomic.kv-cluster","thread":"CLI-agent-send-off-pool-1","uptime":"00:16:05","message":"{:event :kv-cluster/get-val, :val-key \"6602cd9e-23a5-4d99-bf73-b8badbe60495\", :phase :begin, :pid 143279, :tid 33}"}
+{"level":"INFO","logger":"com.github.ivarref.tcp-retry","thread":"CLI-agent-send-off-pool-1","uptime":"00:16:05","message":"Not dropping anything for 41204:5432"}
+{"level":"DEBUG","logger":"datomic.kv-cluster","thread":"CLI-agent-send-off-pool-1","uptime":"00:16:05","message":"{:event :kv-cluster/get-val, :val-key \"6602cd9e-23a5-4d99-bf73-b8badbe60495\", :msec 2.09, :phase :end, :pid 143279, :tid 33}"}
+{"level":"DEBUG","logger":"datomic.kv-cluster","thread":"CLI-agent-send-off-pool-1","uptime":"00:16:05","message":"{:event :kv-cluster/get-val, :val-key \"6602cd9e-6347-4910-9d91-93501966849a\", :phase :begin, :pid 143279, :tid 33}"}
+{"level":"INFO","logger":"com.github.ivarref.tcp-retry","thread":"CLI-agent-send-off-pool-1","uptime":"00:16:05","message":"Not dropping anything for 41204:5432"}
+{"level":"DEBUG","logger":"datomic.kv-cluster","thread":"CLI-agent-send-off-pool-1","uptime":"00:16:05","message":"{:event :kv-cluster/get-val, :val-key \"6602cd9e-6347-4910-9d91-93501966849a\", :msec 1.63, :phase :end, :pid 143279, :tid 33}"}
+{"level":"INFO","logger":"com.github.ivarref.tcp-retry","thread":"main","uptime":"00:16:06","message":"Query on blocked connection ... Done in 00:15:59 aka 959937 milliseconds"}
+{"level":"INFO","logger":"com.github.ivarref.tcp-retry","thread":"main","uptime":"00:16:06","message":"Waiting 70 seconds for datomic.process-monitor"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:17:05","message":"{:tid 56, :ObjectCacheCount 23, :AvailableMB 7850.0, :StorageGetMsec {:lo 1, :hi 960000, :sum 960003, :count 3}, :pid 143279, :event :metrics, :ObjectCache {:lo 0, :hi 0, :sum 0, :count 2}, :MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :StorageGetBytes {:lo 65, :hi 2114, :sum 2269, :count 3}}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:17:05","message":"{:event :metrics/report, :phase :begin, :pid 143279, :tid 56}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"00:17:05","message":"{:event :metrics/report, :msec 0.0364, :phase :end, :pid 143279, :tid 56}"}
+{"level":"INFO","logger":"com.github.ivarref.nft","thread":"main","uptime":"00:17:16","message":"Clear all packet filters ..."}
+{"level":"INFO","logger":"com.github.ivarref.nft","thread":"main","uptime":"00:17:16","message":"Executing sudo nft -f accept.txt ..."}
+{"level":"INFO","logger":"com.github.ivarref.nft","thread":"main","uptime":"00:17:16","message":"Executing sudo nft -f accept.txt ... OK!"}
+{"level":"INFO","logger":"com.github.ivarref.tcp-retry","thread":"main","uptime":"00:17:16","message":"Exiting"}

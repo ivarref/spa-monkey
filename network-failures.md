@@ -1,5 +1,5 @@
 ---
-title: "Datomic's handling of network failures — and how to improve it"
+title: "Datomic's handling of network failures"
 date: 2024-03-30T11:46:36+02:00
 draft: true
 ---
@@ -56,7 +56,6 @@ Running `./tcp-retry.sh` you will see:
 7 00:00:06 [INFO] Dropping TCP packets for 47474:5432 fd 91
 8 00:00:06 [INFO] Executing sudo nft -f drop.txt ...
 9 00:00:06 [INFO] Executing sudo nft -f drop.txt ... OK!
-...
 ```
 
 At line 5 we have initialized our system and are
@@ -69,6 +68,7 @@ destined for PostgreSQL, which is running at port 5432.
 We're starting to drop packets just before
 `org.apache.tomcat.jdbc.pool.ConnectionPool/getConnection`
 returns a connection, and thus also _before_ any packet is sent.
+We will see later why the emphasis on before is made.
 
 [//]: # (explain emphasis on before...)
 
@@ -76,7 +76,7 @@ After this we simply wait and watch for `TCP_INFO.tcpi_backoff` socket changes:
 ```
 0010 00:00:05 [INFO] Initial state for fd 152 {open? true,
  tcpi_rto 203333,
- tcpi_state 1, tcpi_state_str ESTABLISHED}
+ tcpi_state ESTABLISHED}
 0011 00:00:06 [INFO] fd 152 tcpi_backoff 0 => 1 (In 192 ms)
 0012 00:00:06 [INFO] fd 152 tcpi_backoff 1 => 2 (In 430 ms)
 0013 00:00:07 [INFO] fd 152 tcpi_backoff 2 => 3 (In 825 ms)
@@ -88,6 +88,7 @@ After this we simply wait and watch for `TCP_INFO.tcpi_backoff` socket changes:
 ...
 ```
 
+### Kernel and TCP_INFO struct detour
 `tcpi_backoff` is collected from [getsockopt](https://man7.org/linux/man-pages/man2/getsockopt.2.html) using `TCP_INFO`.
 The [ss man page](https://man7.org/linux/man-pages/man8/ss.8.html)
 gives this definition of `isck_backoff`:
@@ -108,11 +109,16 @@ These values correspond reasonably well to the observed
 durations of each transition of `tcpi_backoff` in the log:
 it starts at ~200 milliseconds, then doubles, doubles again, etc..
 
+### The connection is finally closed
+
 Back in the console we can finally we see:
 
 ```
-0087 00:15:53 [WARN] Unable to clear Warnings, connection will be closed.
-0088 00:15:53 [INFO] {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 141171, :tid 33}
+163 00:16:05 [INFO] client fd 166 46364:5432 tcpi_backoff 15 => 0 (In 122879 ms)
+164 00:16:05 [INFO] client fd 166 46364:5432 tcpi_state ESTABLISHED => CLOSE (In 959578 ms)
+165 00:16:05 [WARN] client fd 166 46364:5432 error in socket watcher. Message: getsockopt error: -1
+166 00:16:05 [INFO] client fd 166 46364:5432 watcher exiting
+167 00:16:05 [WARN] Unable to clear Warnings, connection will be closed.
 ```
 
 After approximately 16 minutes the kernel gives up
@@ -132,27 +138,30 @@ From the [kernel ip-sysctl documentation](https://www.kernel.org/doc/Documentati
 
 > The default value of 15 yields a hypothetical timeout of 924.6 seconds and is a lower bound for the effective timeout.  TCP will effectively time out at the first RTO (Re-transmission Time Out) which exceeds the hypothetical timeout.
 
-In our case the timeout took ~950 seconds.
+In our case the timeout took ~960 seconds.
 
 After the connection is closed by the kernel,
 Datomic finally retries fetching the data:
 
 ```
-0088 00:15:53 [INFO] {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 382404, :tid 59}
-0089 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
-0090 00:15:53 [DEBUG] {:event :kv-cluster/get-val, :val-key "63f626cd-c6ef-4649-9fbd-979acc8dcd45", :msec 948000.0, :phase :end, :pid 382404, :tid 59}
-0091 00:15:53 [DEBUG] {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :phase :begin, :pid 382404, :tid 59}
-0092 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
-0093 00:15:53 [DEBUG] {:event :kv-cluster/get-val, :val-key "63f626cd-d473-4261-a4ca-2f22342817fb", :msec 2.47, :phase :end, :pid 382404, :tid 59}
-0094 00:15:53 [DEBUG] {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :phase :begin, :pid 382404, :tid 59}
-0095 00:15:53 [INFO] Not dropping anything for 127.0.0.1:38848->127.0.0.1:5432
-0096 00:15:53 [DEBUG] {:event :kv-cluster/get-val, :val-key "63f626cd-868b-4247-8f6e-5cae524c712a", :msec 1.53, :phase :end, :pid 382404, :tid 59}
-0097 00:15:53 [INFO] Query on blocked connection ... Done in 00:15:47 aka 947996 milliseconds
+167 00:16:05 [WARN] Unable to clear Warnings, connection will be closed.
+168 00:16:05 [INFO] {:event :kv-cluster/retry, :StorageGetBackoffMsec 0, :attempts 0, :max-retries 9, :cause "java.net.SocketException", :pid 143279, :tid 33}
+169 00:16:05 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :StorageGetBackoffMsec {:lo 0, :hi 0, :sum 0, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 143279, :tid 56}
+170 00:16:05 [DEBUG] {:event :metrics/report, :phase :begin, :pid 143279, :tid 56}
+171 00:16:05 [DEBUG] {:event :metrics/report, :msec 0.0276, :phase :end, :pid 143279, :tid 56}
+173 00:16:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-bb0b-4227-98f7-d7034c4de30b", :msec 960000.0, :phase :end, :pid 143279, :tid 33}
+174 00:16:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-23a5-4d99-bf73-b8badbe60495", :phase :begin, :pid 143279, :tid 33}
+176 00:16:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-23a5-4d99-bf73-b8badbe60495", :msec 2.09, :phase :end, :pid 143279, :tid 33}
+177 00:16:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-6347-4910-9d91-93501966849a", :phase :begin, :pid 143279, :tid 33}
+179 00:16:05 [DEBUG] {:event :kv-cluster/get-val, :val-key "6602cd9e-6347-4910-9d91-93501966849a", :msec 1.63, :phase :end, :pid 143279, :tid 33}
+180 00:16:06 [INFO] Query on blocked connection ... Done in 00:15:59 aka 959937 milliseconds
 ```
+### A needle with a warning
 
 There are a few things to note here.
-One is that there is only a single warning, which
-was issued by `org.apache.tomcat.jdbc.pool.PooledConnection`.
+One is that there is only two warnings.
+
+One was issued by `org.apache.tomcat.jdbc.pool.PooledConnection`.
 Its message reads:
 `Unable to clear Warnings, connection will be closed.`
 
@@ -164,10 +173,13 @@ otherwise this message would only have made it to stdout,
 which you may or may not be collecting in your logging
 infrastructure.
 
-Despite the fact that the query took approximately 16
-minutes, Datomic does not give any warning itself.
-It does however report that `:StorageGetMsec` had a `:hi[gh]`
-of `949000`, i.e. around 16 minutes. 
+The other warning is issued by `datomic.future`,
+and reads
+`{:event :datomic.future/unfilled, :seconds 180, :context {:line 168, :column 7, :file "datomic/kv_cluster.clj"}, :pid 143279, :tid 62}`.
+
+
+Datomic also report that `:StorageGetMsec` had a `:hi[gh]`
+of `960000`, i.e. around 16 minutes. 
 This is logged at an INFO-level, making it hard
 to spot.
 
