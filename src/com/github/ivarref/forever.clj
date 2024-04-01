@@ -104,6 +104,7 @@
       (try
         (let [blocked-thread (promise)
               result (future (try
+                               (.setName (Thread/currentThread) "blocked-query-thread")
                                (deliver blocked-thread (Thread/currentThread))
                                (d/q '[:find ?e ?doc
                                       :in $
