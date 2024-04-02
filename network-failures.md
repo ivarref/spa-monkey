@@ -6,14 +6,14 @@ draft: true
 
 ## Introduction
 This post will examine how the [Datomic on-premise peer library](https://www.datomic.com/on-prem.html)
-handles and responds to network failures. The version tested is `1.0.7075`.
+handles and responds to network failures. The version tested is `1.0.7075`, released `2023-12-18`.
 
 Datomic uses the [Apache Tomcat JDBC Connection Pool](https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html) for SQL connection management.
 PostgreSQL is used as the underlying storage in this test.
 
 More specifically we will be testing:
 ```
-com.datomic/peer 1.0.7075 ; Released 2023-04-27
+com.datomic/peer 1.0.7075 ; Released 2023-12-18
 org.apache.tomcat/tomcat-jdbc 7.0.109 (bundled by datomic-pro)
 org.postgresql/postgresql 42.5.1
 OpenJDK 64-Bit Server VM Temurin-22+36 (build 22+36, mixed mode, sharing)
