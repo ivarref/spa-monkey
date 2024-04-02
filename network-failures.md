@@ -65,6 +65,8 @@ blocked.
 
 From line 7 we can see that we're starting to drop packets
 destined for PostgreSQL, which is running at port 5432.
+The format used in the logs is `local-port:remote-port`.
+
 We're starting to drop packets just before
 `org.apache.tomcat.jdbc.pool.ConnectionPool/getConnection`
 returns a connection, and thus also _before_ any packet is sent.
@@ -107,6 +109,9 @@ These values correspond reasonably well to the observed
 durations of each transition of `tcpi_backoff` in the log:
 it starts at ~200 milliseconds, then doubles, doubles again, etc..
 
+TL-DR: A change in `tcpi_backoff` means that the kernel has sent a packet,
+but did not yet receive any corresponding ACK, and will thus re-send the packet.
+
 ### The kernel to the rescue
 
 Back in the console we can finally we see:
@@ -124,7 +129,7 @@ trying to re-send our packets and waiting for the corresponding
 TCP acknowledgements. The kernel then closes the connection.
 
 It's possible to change the number of TCP retries:
-e.g. `sudo bash -c 'echo 6 > /proc/sys/net/ipv4/tcp_retries2'`
+e.g. `sudo bash -c 'echo 6 > /proc/sys/net/ipv4/tcp_retries2'`.
 If you then re-run `./tcp-retry.sh` you will see
 a much shorter timeout.
 
@@ -232,10 +237,9 @@ be blocked:
 20 00:00:09 [INFO] proxy fd 175 54321:48080 initial state is {open? true, tcpi_advmss 65483, tcpi_ato 40000, tcpi_backoff 0, tcpi_ca_state 0, tcpi_fackets 0, tcpi_lost 0, tcpi_options 7, tcpi_pmtu 65535, tcpi_rcv_mss 536, tcpi_rcv_rtt 0, tcpi_rcv_space 65483, tcpi_rcv_ssthresh 65483, tcpi_reordering 3, tcpi_retrans 0, tcpi_retransmits 0, tcpi_rto 220000, tcpi_rtt 18650, tcpi_rttvar 22457, tcpi_sacked 0, tcpi_snd_cwnd 10, tcpi_snd_mss 32768, tcpi_snd_ssthresh 2147483647, tcpi_state ESTABLISHED, tcpi_total_retrans 0, tcpi_unacked 0}
 ```
 
-Notice here that we are starting two socket watchers, one for the SQL client
-and one for the proxy.
+Notice here that we are starting two socket watchers, one for the SQL client, i.e. Datomic peer, and one for the proxy.
 Please also notice that we are dropping packets coming _from_ the proxy to
-the client.
+the client/peer.
 After this you will see the familiar tcp backoff, but this time for
 the proxy side, i.e. our fake database:
 
@@ -312,9 +316,10 @@ The blocked query thread has a stacktrace like this:
 ...
 ```
 
-There is nothing in particular stopping Datomic from doing a better job at
+The query will ostensibly hang forever, with
+a single and somewhat obscure warning.
+There is however nothing in particular stopping Datomic from doing a better job at
 reporting this as an issue.
-
 
 # A PostgreSQL specific quick fix
 
@@ -327,8 +332,8 @@ in the connection string. Quoting from the [PGProperty](https://jdbc.postgresql.
 It's possible to re-run the tests with `env CONN_EXTRA="&socketTimeout=10"`
 to see how this setting affects the total time used:
 
-* Case 1: from 16 minutes to 1 minute.
-* Case 2: from infinity to ... seconds.
+* Case 1: from 16 minutes to ~10 seconds.
+* Case 2: from infinity to — you may have guessed it — ~10 seconds.
 
 Depending on your DB setup you may go even lower than 10 seconds.
 
@@ -342,4 +347,5 @@ Parts of the retry logic for Datomic up to and including `1.0.7075` is broken.
 Network problems are hard to spot, and are not well handled, nor reported, by Datomic. 
 
 ## Further reading
-[When TCP sockets refuse to die](https://blog.cloudflare.com/when-tcp-sockets-refuse-to-die/)
+* [When TCP sockets refuse to die](https://blog.cloudflare.com/when-tcp-sockets-refuse-to-die/)
+* [HikariCP Rapid Recovery](https://github.com/brettwooldridge/HikariCP/wiki/Rapid-Recovery)
