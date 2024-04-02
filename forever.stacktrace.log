@@ -28,7 +28,7 @@ datomic.query/q*:757
 datomic.query/q:796
 datomic.api/q:44
 datomic.api/q:42
-com.github.ivarref.forever/forever/fn/fn:107
+com.github.ivarref.forever/forever/fn/fn:109
 clojure.core/binding-conveyor-fn/fn:2047
 java.util.concurrent.FutureTask.run:317
 java.util.concurrent.ThreadPoolExecutor.runWorker:1144
