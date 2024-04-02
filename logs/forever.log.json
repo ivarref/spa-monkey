@@ -21762,3 +21762,518 @@
 {"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:02:06","message":"{:event :metrics/report, :msec 0.0148, :phase :end, :pid 159113, :tid 60}"}
 {"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:02:10","message":"client fd 177 48080:54321 no changes last PT24H2M2.332S"}
 {"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:02:15","message":"Waited for query result for PT24H2M8.106S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:02:20","message":"client fd 177 48080:54321 no changes last PT24H2M12.333S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:02:25","message":"Waited for query result for PT24H2M18.108S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:02:30","message":"client fd 177 48080:54321 no changes last PT24H2M22.334S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:02:35","message":"Waited for query result for PT24H2M28.109S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:02:40","message":"client fd 177 48080:54321 no changes last PT24H2M32.335S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:02:45","message":"Waited for query result for PT24H2M38.111S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:02:50","message":"client fd 177 48080:54321 no changes last PT24H2M42.336S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:02:55","message":"Waited for query result for PT24H2M48.112S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:03:00","message":"client fd 177 48080:54321 no changes last PT24H2M52.338S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:03:05","message":"Waited for query result for PT24H2M58.114S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:03:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7810.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:03:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:03:06","message":"{:event :metrics/report, :msec 0.0169, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:03:10","message":"client fd 177 48080:54321 no changes last PT24H3M2.34S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:03:15","message":"Waited for query result for PT24H3M8.115S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:03:20","message":"client fd 177 48080:54321 no changes last PT24H3M12.342S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:03:25","message":"Waited for query result for PT24H3M18.117S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:03:30","message":"client fd 177 48080:54321 no changes last PT24H3M22.344S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:03:35","message":"Waited for query result for PT24H3M28.119S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:03:40","message":"client fd 177 48080:54321 no changes last PT24H3M32.346S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:03:45","message":"Waited for query result for PT24H3M38.12S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:03:50","message":"client fd 177 48080:54321 no changes last PT24H3M42.348S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:03:55","message":"Waited for query result for PT24H3M48.122S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:04:00","message":"client fd 177 48080:54321 no changes last PT24H3M52.35S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:04:05","message":"Waited for query result for PT24H3M58.123S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:04:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7800.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:04:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:04:06","message":"{:event :metrics/report, :msec 0.0225, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:04:10","message":"client fd 177 48080:54321 no changes last PT24H4M2.351S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:04:15","message":"Waited for query result for PT24H4M8.124S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:04:20","message":"client fd 177 48080:54321 no changes last PT24H4M12.352S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:04:25","message":"Waited for query result for PT24H4M18.124S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:04:30","message":"client fd 177 48080:54321 no changes last PT24H4M22.353S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:04:35","message":"Waited for query result for PT24H4M28.126S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:04:40","message":"client fd 177 48080:54321 no changes last PT24H4M32.354S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:04:45","message":"Waited for query result for PT24H4M38.128S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:04:50","message":"client fd 177 48080:54321 no changes last PT24H4M42.355S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:04:55","message":"Waited for query result for PT24H4M48.139S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:05:00","message":"client fd 177 48080:54321 no changes last PT24H4M52.356S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:05:05","message":"Waited for query result for PT24H4M58.139S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:05:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:05:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:05:06","message":"{:event :metrics/report, :msec 0.0253, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:05:10","message":"client fd 177 48080:54321 no changes last PT24H5M2.357S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:05:15","message":"Waited for query result for PT24H5M8.141S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:05:20","message":"client fd 177 48080:54321 no changes last PT24H5M12.358S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:05:25","message":"Waited for query result for PT24H5M18.143S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:05:30","message":"client fd 177 48080:54321 no changes last PT24H5M22.36S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:05:35","message":"Waited for query result for PT24H5M28.144S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:05:40","message":"client fd 177 48080:54321 no changes last PT24H5M32.361S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:05:45","message":"Waited for query result for PT24H5M38.145S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:05:50","message":"client fd 177 48080:54321 no changes last PT24H5M42.363S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:05:55","message":"Waited for query result for PT24H5M48.147S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:06:00","message":"client fd 177 48080:54321 no changes last PT24H5M52.364S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:06:05","message":"Waited for query result for PT24H5M58.149S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:06:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:06:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:06:06","message":"{:event :metrics/report, :msec 0.0151, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:06:10","message":"client fd 177 48080:54321 no changes last PT24H6M2.366S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:06:15","message":"Waited for query result for PT24H6M8.151S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:06:20","message":"client fd 177 48080:54321 no changes last PT24H6M12.367S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:06:25","message":"Waited for query result for PT24H6M18.153S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:06:30","message":"client fd 177 48080:54321 no changes last PT24H6M22.369S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:06:35","message":"Waited for query result for PT24H6M28.155S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:06:40","message":"client fd 177 48080:54321 no changes last PT24H6M32.37S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:06:45","message":"Waited for query result for PT24H6M38.156S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:06:50","message":"client fd 177 48080:54321 no changes last PT24H6M42.371S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:06:55","message":"Waited for query result for PT24H6M48.157S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:07:00","message":"client fd 177 48080:54321 no changes last PT24H6M52.373S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:07:05","message":"Waited for query result for PT24H6M58.159S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:07:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7800.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:07:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:07:06","message":"{:event :metrics/report, :msec 0.0191, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:07:10","message":"client fd 177 48080:54321 no changes last PT24H7M2.375S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:07:15","message":"Waited for query result for PT24H7M8.16S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:07:20","message":"client fd 177 48080:54321 no changes last PT24H7M12.377S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:07:25","message":"Waited for query result for PT24H7M18.162S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:07:30","message":"client fd 177 48080:54321 no changes last PT24H7M22.379S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:07:35","message":"Waited for query result for PT24H7M28.172S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:07:40","message":"client fd 177 48080:54321 no changes last PT24H7M32.381S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:07:45","message":"Waited for query result for PT24H7M38.174S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:07:50","message":"client fd 177 48080:54321 no changes last PT24H7M42.383S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:07:55","message":"Waited for query result for PT24H7M48.176S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:08:00","message":"client fd 177 48080:54321 no changes last PT24H7M52.384S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:08:05","message":"Waited for query result for PT24H7M58.177S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:08:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:08:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:08:06","message":"{:event :metrics/report, :msec 0.0139, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:08:10","message":"client fd 177 48080:54321 no changes last PT24H8M2.386S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:08:15","message":"Waited for query result for PT24H8M8.178S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:08:20","message":"client fd 177 48080:54321 no changes last PT24H8M12.388S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:08:25","message":"Waited for query result for PT24H8M18.179S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:08:30","message":"client fd 177 48080:54321 no changes last PT24H8M22.39S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:08:35","message":"Waited for query result for PT24H8M28.181S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:08:40","message":"client fd 177 48080:54321 no changes last PT24H8M32.391S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:08:45","message":"Waited for query result for PT24H8M38.182S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:08:50","message":"client fd 177 48080:54321 no changes last PT24H8M42.392S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:08:55","message":"Waited for query result for PT24H8M48.183S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:09:00","message":"client fd 177 48080:54321 no changes last PT24H8M52.393S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:09:05","message":"Waited for query result for PT24H8M58.185S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:09:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7820.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:09:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:09:06","message":"{:event :metrics/report, :msec 0.0185, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:09:10","message":"client fd 177 48080:54321 no changes last PT24H9M2.394S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:09:15","message":"Waited for query result for PT24H9M8.186S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:09:20","message":"client fd 177 48080:54321 no changes last PT24H9M12.396S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:09:25","message":"Waited for query result for PT24H9M18.189S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:09:30","message":"client fd 177 48080:54321 no changes last PT24H9M22.398S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:09:35","message":"Waited for query result for PT24H9M28.19S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:09:40","message":"client fd 177 48080:54321 no changes last PT24H9M32.399S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:09:45","message":"Waited for query result for PT24H9M38.191S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:09:50","message":"client fd 177 48080:54321 no changes last PT24H9M42.4S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:09:55","message":"Waited for query result for PT24H9M48.193S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:10:00","message":"client fd 177 48080:54321 no changes last PT24H9M52.401S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:10:05","message":"Waited for query result for PT24H9M58.194S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:10:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:10:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:10:06","message":"{:event :metrics/report, :msec 0.02, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:10:10","message":"client fd 177 48080:54321 no changes last PT24H10M2.403S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:10:15","message":"Waited for query result for PT24H10M8.195S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:10:20","message":"client fd 177 48080:54321 no changes last PT24H10M12.404S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:10:25","message":"Waited for query result for PT24H10M18.197S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:10:30","message":"client fd 177 48080:54321 no changes last PT24H10M22.406S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:10:35","message":"Waited for query result for PT24H10M28.199S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:10:40","message":"client fd 177 48080:54321 no changes last PT24H10M32.407S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:10:45","message":"Waited for query result for PT24H10M38.201S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:10:50","message":"client fd 177 48080:54321 no changes last PT24H10M42.408S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:10:55","message":"Waited for query result for PT24H10M48.202S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:11:00","message":"client fd 177 48080:54321 no changes last PT24H10M52.409S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:11:05","message":"Waited for query result for PT24H10M58.204S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:11:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7890.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:11:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:11:06","message":"{:event :metrics/report, :msec 0.0176, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:11:10","message":"client fd 177 48080:54321 no changes last PT24H11M2.41S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:11:15","message":"Waited for query result for PT24H11M8.206S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:11:20","message":"client fd 177 48080:54321 no changes last PT24H11M12.411S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:11:25","message":"Waited for query result for PT24H11M18.207S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:11:30","message":"client fd 177 48080:54321 no changes last PT24H11M22.413S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:11:35","message":"Waited for query result for PT24H11M28.208S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:11:40","message":"client fd 177 48080:54321 no changes last PT24H11M32.415S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:11:45","message":"Waited for query result for PT24H11M38.21S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:11:50","message":"client fd 177 48080:54321 no changes last PT24H11M42.416S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:11:55","message":"Waited for query result for PT24H11M48.212S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:12:00","message":"client fd 177 48080:54321 no changes last PT24H11M52.418S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:12:05","message":"Waited for query result for PT24H11M58.213S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:12:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:12:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:12:06","message":"{:event :metrics/report, :msec 0.0195, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:12:10","message":"client fd 177 48080:54321 no changes last PT24H12M2.419S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:12:15","message":"Waited for query result for PT24H12M8.215S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:12:20","message":"client fd 177 48080:54321 no changes last PT24H12M12.42S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:12:25","message":"Waited for query result for PT24H12M18.216S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:12:30","message":"client fd 177 48080:54321 no changes last PT24H12M22.421S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:12:35","message":"Waited for query result for PT24H12M28.217S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:12:40","message":"client fd 177 48080:54321 no changes last PT24H12M32.422S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:12:45","message":"Waited for query result for PT24H12M38.219S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:12:50","message":"client fd 177 48080:54321 no changes last PT24H12M42.423S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:12:55","message":"Waited for query result for PT24H12M48.22S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:13:00","message":"client fd 177 48080:54321 no changes last PT24H12M52.424S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:13:05","message":"Waited for query result for PT24H12M58.221S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:13:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:13:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:13:06","message":"{:event :metrics/report, :msec 0.0113, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:13:10","message":"client fd 177 48080:54321 no changes last PT24H13M2.426S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:13:15","message":"Waited for query result for PT24H13M8.223S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:13:20","message":"client fd 177 48080:54321 no changes last PT24H13M12.428S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:13:25","message":"Waited for query result for PT24H13M18.224S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:13:30","message":"client fd 177 48080:54321 no changes last PT24H13M22.429S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:13:35","message":"Waited for query result for PT24H13M28.226S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:13:40","message":"client fd 177 48080:54321 no changes last PT24H13M32.431S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:13:45","message":"Waited for query result for PT24H13M38.228S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:13:50","message":"client fd 177 48080:54321 no changes last PT24H13M42.433S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:13:55","message":"Waited for query result for PT24H13M48.23S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:14:00","message":"client fd 177 48080:54321 no changes last PT24H13M52.435S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:14:05","message":"Waited for query result for PT24H13M58.231S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:14:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:14:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:14:06","message":"{:event :metrics/report, :msec 0.0222, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:14:10","message":"client fd 177 48080:54321 no changes last PT24H14M2.436S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:14:15","message":"Waited for query result for PT24H14M8.233S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:14:20","message":"client fd 177 48080:54321 no changes last PT24H14M12.437S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:14:25","message":"Waited for query result for PT24H14M18.235S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:14:30","message":"client fd 177 48080:54321 no changes last PT24H14M22.438S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:14:35","message":"Waited for query result for PT24H14M28.236S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:14:40","message":"client fd 177 48080:54321 no changes last PT24H14M32.44S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:14:45","message":"Waited for query result for PT24H14M38.238S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:14:50","message":"client fd 177 48080:54321 no changes last PT24H14M42.441S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:14:55","message":"Waited for query result for PT24H14M48.249S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:15:00","message":"client fd 177 48080:54321 no changes last PT24H14M52.443S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:15:05","message":"Waited for query result for PT24H14M58.251S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:15:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:15:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:15:06","message":"{:event :metrics/report, :msec 0.0154, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:15:10","message":"client fd 177 48080:54321 no changes last PT24H15M2.444S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:15:15","message":"Waited for query result for PT24H15M8.252S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:15:20","message":"client fd 177 48080:54321 no changes last PT24H15M12.446S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:15:25","message":"Waited for query result for PT24H15M18.254S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:15:30","message":"client fd 177 48080:54321 no changes last PT24H15M22.447S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:15:35","message":"Waited for query result for PT24H15M28.256S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:15:40","message":"client fd 177 48080:54321 no changes last PT24H15M32.448S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:15:45","message":"Waited for query result for PT24H15M38.258S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:15:50","message":"client fd 177 48080:54321 no changes last PT24H15M42.45S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:15:55","message":"Waited for query result for PT24H15M48.259S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:16:00","message":"client fd 177 48080:54321 no changes last PT24H15M52.452S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:16:05","message":"Waited for query result for PT24H15M58.261S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:16:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7790.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:16:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:16:06","message":"{:event :metrics/report, :msec 0.0154, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:16:10","message":"client fd 177 48080:54321 no changes last PT24H16M2.453S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:16:15","message":"Waited for query result for PT24H16M8.263S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:16:20","message":"client fd 177 48080:54321 no changes last PT24H16M12.454S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:16:25","message":"Waited for query result for PT24H16M18.265S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:16:30","message":"client fd 177 48080:54321 no changes last PT24H16M22.456S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:16:35","message":"Waited for query result for PT24H16M28.266S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:16:40","message":"client fd 177 48080:54321 no changes last PT24H16M32.458S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:16:45","message":"Waited for query result for PT24H16M38.268S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:16:50","message":"client fd 177 48080:54321 no changes last PT24H16M42.46S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:16:55","message":"Waited for query result for PT24H16M48.27S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:17:00","message":"client fd 177 48080:54321 no changes last PT24H16M52.461S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:17:05","message":"Waited for query result for PT24H16M58.271S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:17:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:17:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:17:06","message":"{:event :metrics/report, :msec 0.015, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:17:10","message":"client fd 177 48080:54321 no changes last PT24H17M2.463S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:17:15","message":"Waited for query result for PT24H17M8.273S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:17:20","message":"client fd 177 48080:54321 no changes last PT24H17M12.465S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:17:25","message":"Waited for query result for PT24H17M18.275S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:17:30","message":"client fd 177 48080:54321 no changes last PT24H17M22.466S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:17:35","message":"Waited for query result for PT24H17M28.276S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:17:40","message":"client fd 177 48080:54321 no changes last PT24H17M32.467S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:17:45","message":"Waited for query result for PT24H17M38.278S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:17:50","message":"client fd 177 48080:54321 no changes last PT24H17M42.468S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:17:55","message":"Waited for query result for PT24H17M48.28S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:18:00","message":"client fd 177 48080:54321 no changes last PT24H17M52.47S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:18:05","message":"Waited for query result for PT24H17M58.281S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:18:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:18:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:18:06","message":"{:event :metrics/report, :msec 0.017, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:18:10","message":"client fd 177 48080:54321 no changes last PT24H18M2.471S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:18:15","message":"Waited for query result for PT24H18M8.283S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:18:20","message":"client fd 177 48080:54321 no changes last PT24H18M12.472S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:18:25","message":"Waited for query result for PT24H18M18.284S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:18:30","message":"client fd 177 48080:54321 no changes last PT24H18M22.473S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:18:35","message":"Waited for query result for PT24H18M28.286S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:18:40","message":"client fd 177 48080:54321 no changes last PT24H18M32.474S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:18:45","message":"Waited for query result for PT24H18M38.288S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:18:50","message":"client fd 177 48080:54321 no changes last PT24H18M42.475S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:18:56","message":"Waited for query result for PT24H18M48.29S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:19:00","message":"client fd 177 48080:54321 no changes last PT24H18M52.477S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:19:06","message":"Waited for query result for PT24H18M58.292S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:19:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7850.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:19:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:19:06","message":"{:event :metrics/report, :msec 0.0167, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:19:10","message":"client fd 177 48080:54321 no changes last PT24H19M2.479S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:19:16","message":"Waited for query result for PT24H19M8.293S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:19:20","message":"client fd 177 48080:54321 no changes last PT24H19M12.481S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:19:26","message":"Waited for query result for PT24H19M18.294S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:19:30","message":"client fd 177 48080:54321 no changes last PT24H19M22.483S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:19:36","message":"Waited for query result for PT24H19M28.296S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:19:40","message":"client fd 177 48080:54321 no changes last PT24H19M32.484S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:19:46","message":"Waited for query result for PT24H19M38.298S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:19:50","message":"client fd 177 48080:54321 no changes last PT24H19M42.485S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:19:56","message":"Waited for query result for PT24H19M48.299S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:20:00","message":"client fd 177 48080:54321 no changes last PT24H19M52.486S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:20:06","message":"Waited for query result for PT24H19M58.3S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:20:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:20:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:20:06","message":"{:event :metrics/report, :msec 0.0199, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:20:10","message":"client fd 177 48080:54321 no changes last PT24H20M2.488S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:20:16","message":"Waited for query result for PT24H20M8.302S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:20:20","message":"client fd 177 48080:54321 no changes last PT24H20M12.489S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:20:26","message":"Waited for query result for PT24H20M18.304S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:20:30","message":"client fd 177 48080:54321 no changes last PT24H20M22.491S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:20:36","message":"Waited for query result for PT24H20M28.306S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:20:40","message":"client fd 177 48080:54321 no changes last PT24H20M32.493S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:20:46","message":"Waited for query result for PT24H20M38.308S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:20:50","message":"client fd 177 48080:54321 no changes last PT24H20M42.494S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:20:56","message":"Waited for query result for PT24H20M48.309S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:21:00","message":"client fd 177 48080:54321 no changes last PT24H20M52.496S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:21:06","message":"Waited for query result for PT24H20M58.311S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:21:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:21:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:21:06","message":"{:event :metrics/report, :msec 0.0148, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:21:10","message":"client fd 177 48080:54321 no changes last PT24H21M2.498S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:21:16","message":"Waited for query result for PT24H21M8.321S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:21:20","message":"client fd 177 48080:54321 no changes last PT24H21M12.5S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:21:26","message":"Waited for query result for PT24H21M18.323S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:21:30","message":"client fd 177 48080:54321 no changes last PT24H21M22.501S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:21:36","message":"Waited for query result for PT24H21M28.326S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:21:40","message":"client fd 177 48080:54321 no changes last PT24H21M32.503S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:21:46","message":"Waited for query result for PT24H21M38.327S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:21:50","message":"client fd 177 48080:54321 no changes last PT24H21M42.505S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:21:56","message":"Waited for query result for PT24H21M48.329S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:22:00","message":"client fd 177 48080:54321 no changes last PT24H21M52.506S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:22:06","message":"Waited for query result for PT24H21M58.331S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:22:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:22:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:22:06","message":"{:event :metrics/report, :msec 0.0201, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:22:10","message":"client fd 177 48080:54321 no changes last PT24H22M2.507S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:22:16","message":"Waited for query result for PT24H22M8.333S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:22:20","message":"client fd 177 48080:54321 no changes last PT24H22M12.509S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:22:26","message":"Waited for query result for PT24H22M18.334S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:22:30","message":"client fd 177 48080:54321 no changes last PT24H22M22.511S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:22:36","message":"Waited for query result for PT24H22M28.336S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:22:40","message":"client fd 177 48080:54321 no changes last PT24H22M32.513S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:22:46","message":"Waited for query result for PT24H22M38.337S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:22:50","message":"client fd 177 48080:54321 no changes last PT24H22M42.514S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:22:56","message":"Waited for query result for PT24H22M48.339S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:23:00","message":"client fd 177 48080:54321 no changes last PT24H22M52.515S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:23:06","message":"Waited for query result for PT24H22M58.341S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:23:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:23:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:23:06","message":"{:event :metrics/report, :msec 0.018, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:23:10","message":"client fd 177 48080:54321 no changes last PT24H23M2.516S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:23:16","message":"Waited for query result for PT24H23M8.345S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:23:20","message":"client fd 177 48080:54321 no changes last PT24H23M12.517S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:23:26","message":"Waited for query result for PT24H23M18.346S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:23:30","message":"client fd 177 48080:54321 no changes last PT24H23M22.518S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:23:36","message":"Waited for query result for PT24H23M28.348S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:23:40","message":"client fd 177 48080:54321 no changes last PT24H23M32.519S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:23:46","message":"Waited for query result for PT24H23M38.349S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:23:50","message":"client fd 177 48080:54321 no changes last PT24H23M42.52S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:23:56","message":"Waited for query result for PT24H23M48.351S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:24:00","message":"client fd 177 48080:54321 no changes last PT24H23M52.521S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:24:06","message":"Waited for query result for PT24H23M58.352S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:24:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:24:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:24:06","message":"{:event :metrics/report, :msec 0.0179, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:24:10","message":"client fd 177 48080:54321 no changes last PT24H24M2.522S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:24:16","message":"Waited for query result for PT24H24M8.354S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:24:20","message":"client fd 177 48080:54321 no changes last PT24H24M12.523S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:24:26","message":"Waited for query result for PT24H24M18.356S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:24:30","message":"client fd 177 48080:54321 no changes last PT24H24M22.524S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:24:36","message":"Waited for query result for PT24H24M28.357S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:24:40","message":"client fd 177 48080:54321 no changes last PT24H24M32.526S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:24:46","message":"Waited for query result for PT24H24M38.358S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:24:50","message":"client fd 177 48080:54321 no changes last PT24H24M42.527S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:24:56","message":"Waited for query result for PT24H24M48.36S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:25:00","message":"client fd 177 48080:54321 no changes last PT24H24M52.528S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:25:06","message":"Waited for query result for PT24H24M58.361S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:25:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:25:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:25:06","message":"{:event :metrics/report, :msec 0.0108, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:25:10","message":"client fd 177 48080:54321 no changes last PT24H25M2.529S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:25:16","message":"Waited for query result for PT24H25M8.362S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:25:20","message":"client fd 177 48080:54321 no changes last PT24H25M12.531S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:25:26","message":"Waited for query result for PT24H25M18.364S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:25:30","message":"client fd 177 48080:54321 no changes last PT24H25M22.532S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:25:36","message":"Waited for query result for PT24H25M28.365S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:25:40","message":"client fd 177 48080:54321 no changes last PT24H25M32.533S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:25:46","message":"Waited for query result for PT24H25M38.367S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:25:50","message":"client fd 177 48080:54321 no changes last PT24H25M42.534S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:25:56","message":"Waited for query result for PT24H25M48.369S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:26:00","message":"client fd 177 48080:54321 no changes last PT24H25M52.535S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:26:06","message":"Waited for query result for PT24H25M58.37S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:26:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:26:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:26:06","message":"{:event :metrics/report, :msec 0.0179, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:26:10","message":"client fd 177 48080:54321 no changes last PT24H26M2.536S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:26:16","message":"Waited for query result for PT24H26M8.372S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:26:20","message":"client fd 177 48080:54321 no changes last PT24H26M12.537S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:26:26","message":"Waited for query result for PT24H26M18.373S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:26:30","message":"client fd 177 48080:54321 no changes last PT24H26M22.538S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:26:36","message":"Waited for query result for PT24H26M28.375S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:26:40","message":"client fd 177 48080:54321 no changes last PT24H26M32.539S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:26:46","message":"Waited for query result for PT24H26M38.377S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:26:50","message":"client fd 177 48080:54321 no changes last PT24H26M42.541S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:26:56","message":"Waited for query result for PT24H26M48.378S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:27:00","message":"client fd 177 48080:54321 no changes last PT24H26M52.542S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:27:06","message":"Waited for query result for PT24H26M58.379S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:27:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7890.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:27:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:27:06","message":"{:event :metrics/report, :msec 0.02, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:27:10","message":"client fd 177 48080:54321 no changes last PT24H27M2.543S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:27:16","message":"Waited for query result for PT24H27M8.381S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:27:20","message":"client fd 177 48080:54321 no changes last PT24H27M12.544S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:27:26","message":"Waited for query result for PT24H27M18.383S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:27:30","message":"client fd 177 48080:54321 no changes last PT24H27M22.546S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:27:36","message":"Waited for query result for PT24H27M28.385S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:27:40","message":"client fd 177 48080:54321 no changes last PT24H27M32.547S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:27:46","message":"Waited for query result for PT24H27M38.387S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:27:50","message":"client fd 177 48080:54321 no changes last PT24H27M42.548S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:27:56","message":"Waited for query result for PT24H27M48.389S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:28:00","message":"client fd 177 48080:54321 no changes last PT24H27M52.549S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:28:06","message":"Waited for query result for PT24H27M58.39S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:28:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:28:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:28:06","message":"{:event :metrics/report, :msec 0.0185, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:28:10","message":"client fd 177 48080:54321 no changes last PT24H28M2.551S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:28:16","message":"Waited for query result for PT24H28M8.392S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:28:20","message":"client fd 177 48080:54321 no changes last PT24H28M12.553S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:28:26","message":"Waited for query result for PT24H28M18.394S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:28:30","message":"client fd 177 48080:54321 no changes last PT24H28M22.554S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:28:36","message":"Waited for query result for PT24H28M28.396S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:28:40","message":"client fd 177 48080:54321 no changes last PT24H28M32.555S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:28:46","message":"Waited for query result for PT24H28M38.398S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:28:50","message":"client fd 177 48080:54321 no changes last PT24H28M42.556S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:28:56","message":"Waited for query result for PT24H28M48.399S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:29:00","message":"client fd 177 48080:54321 no changes last PT24H28M52.558S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:29:06","message":"Waited for query result for PT24H28M58.401S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:29:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7790.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:29:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:29:06","message":"{:event :metrics/report, :msec 0.02, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:29:10","message":"client fd 177 48080:54321 no changes last PT24H29M2.559S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:29:16","message":"Waited for query result for PT24H29M8.402S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:29:20","message":"client fd 177 48080:54321 no changes last PT24H29M12.561S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:29:26","message":"Waited for query result for PT24H29M18.404S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:29:30","message":"client fd 177 48080:54321 no changes last PT24H29M22.562S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:29:36","message":"Waited for query result for PT24H29M28.406S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:29:40","message":"client fd 177 48080:54321 no changes last PT24H29M32.563S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:29:46","message":"Waited for query result for PT24H29M38.407S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:29:50","message":"client fd 177 48080:54321 no changes last PT24H29M42.564S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:29:56","message":"Waited for query result for PT24H29M48.409S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:30:00","message":"client fd 177 48080:54321 no changes last PT24H29M52.565S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:30:06","message":"Waited for query result for PT24H29M58.411S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:30:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7770.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:30:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:30:06","message":"{:event :metrics/report, :msec 0.013, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:30:10","message":"client fd 177 48080:54321 no changes last PT24H30M2.566S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:30:16","message":"Waited for query result for PT24H30M8.413S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:30:20","message":"client fd 177 48080:54321 no changes last PT24H30M12.567S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:30:26","message":"Waited for query result for PT24H30M18.414S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:30:30","message":"client fd 177 48080:54321 no changes last PT24H30M22.569S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:30:36","message":"Waited for query result for PT24H30M28.415S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:30:40","message":"client fd 177 48080:54321 no changes last PT24H30M32.57S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:30:46","message":"Waited for query result for PT24H30M38.417S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:30:50","message":"client fd 177 48080:54321 no changes last PT24H30M42.572S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:30:56","message":"Waited for query result for PT24H30M48.419S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:31:00","message":"client fd 177 48080:54321 no changes last PT24H30M52.573S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:31:06","message":"Waited for query result for PT24H30M58.42S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:31:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7800.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:31:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:31:06","message":"{:event :metrics/report, :msec 0.0174, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:31:10","message":"client fd 177 48080:54321 no changes last PT24H31M2.574S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:31:16","message":"Waited for query result for PT24H31M8.422S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:31:20","message":"client fd 177 48080:54321 no changes last PT24H31M12.575S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:31:26","message":"Waited for query result for PT24H31M18.424S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:31:30","message":"client fd 177 48080:54321 no changes last PT24H31M22.576S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:31:36","message":"Waited for query result for PT24H31M28.425S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:31:40","message":"client fd 177 48080:54321 no changes last PT24H31M32.578S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:31:46","message":"Waited for query result for PT24H31M38.427S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:31:50","message":"client fd 177 48080:54321 no changes last PT24H31M42.58S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:31:56","message":"Waited for query result for PT24H31M48.428S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:32:00","message":"client fd 177 48080:54321 no changes last PT24H31M52.581S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:32:06","message":"Waited for query result for PT24H31M58.43S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:32:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7820.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:32:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:32:06","message":"{:event :metrics/report, :msec 0.0145, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:32:10","message":"client fd 177 48080:54321 no changes last PT24H32M2.583S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:32:16","message":"Waited for query result for PT24H32M8.431S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:32:20","message":"client fd 177 48080:54321 no changes last PT24H32M12.584S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:32:26","message":"Waited for query result for PT24H32M18.432S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:32:30","message":"client fd 177 48080:54321 no changes last PT24H32M22.585S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:32:36","message":"Waited for query result for PT24H32M28.433S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:32:40","message":"client fd 177 48080:54321 no changes last PT24H32M32.587S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:32:46","message":"Waited for query result for PT24H32M38.435S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:32:50","message":"client fd 177 48080:54321 no changes last PT24H32M42.588S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:32:56","message":"Waited for query result for PT24H32M48.437S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:33:00","message":"client fd 177 48080:54321 no changes last PT24H32M52.589S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:33:06","message":"Waited for query result for PT24H32M58.439S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:33:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7780.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:33:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:33:06","message":"{:event :metrics/report, :msec 0.0152, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:33:10","message":"client fd 177 48080:54321 no changes last PT24H33M2.591S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:33:16","message":"Waited for query result for PT24H33M8.44S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:33:20","message":"client fd 177 48080:54321 no changes last PT24H33M12.592S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:33:26","message":"Waited for query result for PT24H33M18.442S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:33:30","message":"client fd 177 48080:54321 no changes last PT24H33M22.594S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:33:36","message":"Waited for query result for PT24H33M28.444S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:33:40","message":"client fd 177 48080:54321 no changes last PT24H33M32.596S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:33:46","message":"Waited for query result for PT24H33M38.445S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:33:50","message":"client fd 177 48080:54321 no changes last PT24H33M42.598S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:33:56","message":"Waited for query result for PT24H33M48.446S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:34:00","message":"client fd 177 48080:54321 no changes last PT24H33M52.599S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:34:06","message":"Waited for query result for PT24H33M58.448S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:34:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7770.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:34:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:34:06","message":"{:event :metrics/report, :msec 0.0283, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:34:10","message":"client fd 177 48080:54321 no changes last PT24H34M2.6S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:34:16","message":"Waited for query result for PT24H34M8.449S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:34:20","message":"client fd 177 48080:54321 no changes last PT24H34M12.601S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:34:26","message":"Waited for query result for PT24H34M18.451S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:34:30","message":"client fd 177 48080:54321 no changes last PT24H34M22.602S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:34:36","message":"Waited for query result for PT24H34M28.461S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:34:40","message":"client fd 177 48080:54321 no changes last PT24H34M32.604S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:34:46","message":"Waited for query result for PT24H34M38.462S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:34:50","message":"client fd 177 48080:54321 no changes last PT24H34M42.606S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:34:56","message":"Waited for query result for PT24H34M48.464S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:35:00","message":"client fd 177 48080:54321 no changes last PT24H34M52.608S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:35:06","message":"Waited for query result for PT24H34M58.466S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:35:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7770.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:35:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:35:06","message":"{:event :metrics/report, :msec 0.0158, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:35:10","message":"client fd 177 48080:54321 no changes last PT24H35M2.609S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:35:16","message":"Waited for query result for PT24H35M8.468S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:35:20","message":"client fd 177 48080:54321 no changes last PT24H35M12.61S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:35:26","message":"Waited for query result for PT24H35M18.469S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:35:30","message":"client fd 177 48080:54321 no changes last PT24H35M22.611S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:35:36","message":"Waited for query result for PT24H35M28.471S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:35:40","message":"client fd 177 48080:54321 no changes last PT24H35M32.612S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:35:46","message":"Waited for query result for PT24H35M38.472S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:35:50","message":"client fd 177 48080:54321 no changes last PT24H35M42.614S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:35:56","message":"Waited for query result for PT24H35M48.474S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:36:00","message":"client fd 177 48080:54321 no changes last PT24H35M52.621S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:36:06","message":"Waited for query result for PT24H35M58.476S"}
+{"level":"INFO","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:36:06","message":"{:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7770.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:36:06","message":"{:event :metrics/report, :phase :begin, :pid 159113, :tid 60}"}
+{"level":"DEBUG","logger":"datomic.process-monitor","thread":"Datomic Metrics Reporter","uptime":"24:36:06","message":"{:event :metrics/report, :msec 0.0203, :phase :end, :pid 159113, :tid 60}"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:36:10","message":"client fd 177 48080:54321 no changes last PT24H36M2.622S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:36:16","message":"Waited for query result for PT24H36M8.478S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:36:20","message":"client fd 177 48080:54321 no changes last PT24H36M12.623S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:36:26","message":"Waited for query result for PT24H36M18.479S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:36:30","message":"client fd 177 48080:54321 no changes last PT24H36M22.624S"}
+{"level":"INFO","logger":"com.github.ivarref.forever","thread":"main","uptime":"24:36:36","message":"Waited for query result for PT24H36M28.48S"}
+{"level":"INFO","logger":"com.github.ivarref.utils","thread":"client-socket-watcher","uptime":"24:36:40","message":"client fd 177 48080:54321 no changes last PT24H36M32.626S"}

@@ -21762,3 +21762,518 @@
 21762 24:02:06 [DEBUG] {:event :metrics/report, :msec 0.0148, :phase :end, :pid 159113, :tid 60}
 21763 24:02:10 [INFO] client fd 177 48080:54321 no changes last PT24H2M2.332S
 21764 24:02:15 [INFO] Waited for query result for PT24H2M8.106S
+21765 24:02:20 [INFO] client fd 177 48080:54321 no changes last PT24H2M12.333S
+21766 24:02:25 [INFO] Waited for query result for PT24H2M18.108S
+21767 24:02:30 [INFO] client fd 177 48080:54321 no changes last PT24H2M22.334S
+21768 24:02:35 [INFO] Waited for query result for PT24H2M28.109S
+21769 24:02:40 [INFO] client fd 177 48080:54321 no changes last PT24H2M32.335S
+21770 24:02:45 [INFO] Waited for query result for PT24H2M38.111S
+21771 24:02:50 [INFO] client fd 177 48080:54321 no changes last PT24H2M42.336S
+21772 24:02:55 [INFO] Waited for query result for PT24H2M48.112S
+21773 24:03:00 [INFO] client fd 177 48080:54321 no changes last PT24H2M52.338S
+21774 24:03:05 [INFO] Waited for query result for PT24H2M58.114S
+21775 24:03:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7810.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21776 24:03:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21777 24:03:06 [DEBUG] {:event :metrics/report, :msec 0.0169, :phase :end, :pid 159113, :tid 60}
+21778 24:03:10 [INFO] client fd 177 48080:54321 no changes last PT24H3M2.34S
+21779 24:03:15 [INFO] Waited for query result for PT24H3M8.115S
+21780 24:03:20 [INFO] client fd 177 48080:54321 no changes last PT24H3M12.342S
+21781 24:03:25 [INFO] Waited for query result for PT24H3M18.117S
+21782 24:03:30 [INFO] client fd 177 48080:54321 no changes last PT24H3M22.344S
+21783 24:03:35 [INFO] Waited for query result for PT24H3M28.119S
+21784 24:03:40 [INFO] client fd 177 48080:54321 no changes last PT24H3M32.346S
+21785 24:03:45 [INFO] Waited for query result for PT24H3M38.12S
+21786 24:03:50 [INFO] client fd 177 48080:54321 no changes last PT24H3M42.348S
+21787 24:03:55 [INFO] Waited for query result for PT24H3M48.122S
+21788 24:04:00 [INFO] client fd 177 48080:54321 no changes last PT24H3M52.35S
+21789 24:04:05 [INFO] Waited for query result for PT24H3M58.123S
+21790 24:04:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7800.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21791 24:04:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21792 24:04:06 [DEBUG] {:event :metrics/report, :msec 0.0225, :phase :end, :pid 159113, :tid 60}
+21793 24:04:10 [INFO] client fd 177 48080:54321 no changes last PT24H4M2.351S
+21794 24:04:15 [INFO] Waited for query result for PT24H4M8.124S
+21795 24:04:20 [INFO] client fd 177 48080:54321 no changes last PT24H4M12.352S
+21796 24:04:25 [INFO] Waited for query result for PT24H4M18.124S
+21797 24:04:30 [INFO] client fd 177 48080:54321 no changes last PT24H4M22.353S
+21798 24:04:35 [INFO] Waited for query result for PT24H4M28.126S
+21799 24:04:40 [INFO] client fd 177 48080:54321 no changes last PT24H4M32.354S
+21800 24:04:45 [INFO] Waited for query result for PT24H4M38.128S
+21801 24:04:50 [INFO] client fd 177 48080:54321 no changes last PT24H4M42.355S
+21802 24:04:55 [INFO] Waited for query result for PT24H4M48.139S
+21803 24:05:00 [INFO] client fd 177 48080:54321 no changes last PT24H4M52.356S
+21804 24:05:05 [INFO] Waited for query result for PT24H4M58.139S
+21805 24:05:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21806 24:05:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21807 24:05:06 [DEBUG] {:event :metrics/report, :msec 0.0253, :phase :end, :pid 159113, :tid 60}
+21808 24:05:10 [INFO] client fd 177 48080:54321 no changes last PT24H5M2.357S
+21809 24:05:15 [INFO] Waited for query result for PT24H5M8.141S
+21810 24:05:20 [INFO] client fd 177 48080:54321 no changes last PT24H5M12.358S
+21811 24:05:25 [INFO] Waited for query result for PT24H5M18.143S
+21812 24:05:30 [INFO] client fd 177 48080:54321 no changes last PT24H5M22.36S
+21813 24:05:35 [INFO] Waited for query result for PT24H5M28.144S
+21814 24:05:40 [INFO] client fd 177 48080:54321 no changes last PT24H5M32.361S
+21815 24:05:45 [INFO] Waited for query result for PT24H5M38.145S
+21816 24:05:50 [INFO] client fd 177 48080:54321 no changes last PT24H5M42.363S
+21817 24:05:55 [INFO] Waited for query result for PT24H5M48.147S
+21818 24:06:00 [INFO] client fd 177 48080:54321 no changes last PT24H5M52.364S
+21819 24:06:05 [INFO] Waited for query result for PT24H5M58.149S
+21820 24:06:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21821 24:06:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21822 24:06:06 [DEBUG] {:event :metrics/report, :msec 0.0151, :phase :end, :pid 159113, :tid 60}
+21823 24:06:10 [INFO] client fd 177 48080:54321 no changes last PT24H6M2.366S
+21824 24:06:15 [INFO] Waited for query result for PT24H6M8.151S
+21825 24:06:20 [INFO] client fd 177 48080:54321 no changes last PT24H6M12.367S
+21826 24:06:25 [INFO] Waited for query result for PT24H6M18.153S
+21827 24:06:30 [INFO] client fd 177 48080:54321 no changes last PT24H6M22.369S
+21828 24:06:35 [INFO] Waited for query result for PT24H6M28.155S
+21829 24:06:40 [INFO] client fd 177 48080:54321 no changes last PT24H6M32.37S
+21830 24:06:45 [INFO] Waited for query result for PT24H6M38.156S
+21831 24:06:50 [INFO] client fd 177 48080:54321 no changes last PT24H6M42.371S
+21832 24:06:55 [INFO] Waited for query result for PT24H6M48.157S
+21833 24:07:00 [INFO] client fd 177 48080:54321 no changes last PT24H6M52.373S
+21834 24:07:05 [INFO] Waited for query result for PT24H6M58.159S
+21835 24:07:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7800.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21836 24:07:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21837 24:07:06 [DEBUG] {:event :metrics/report, :msec 0.0191, :phase :end, :pid 159113, :tid 60}
+21838 24:07:10 [INFO] client fd 177 48080:54321 no changes last PT24H7M2.375S
+21839 24:07:15 [INFO] Waited for query result for PT24H7M8.16S
+21840 24:07:20 [INFO] client fd 177 48080:54321 no changes last PT24H7M12.377S
+21841 24:07:25 [INFO] Waited for query result for PT24H7M18.162S
+21842 24:07:30 [INFO] client fd 177 48080:54321 no changes last PT24H7M22.379S
+21843 24:07:35 [INFO] Waited for query result for PT24H7M28.172S
+21844 24:07:40 [INFO] client fd 177 48080:54321 no changes last PT24H7M32.381S
+21845 24:07:45 [INFO] Waited for query result for PT24H7M38.174S
+21846 24:07:50 [INFO] client fd 177 48080:54321 no changes last PT24H7M42.383S
+21847 24:07:55 [INFO] Waited for query result for PT24H7M48.176S
+21848 24:08:00 [INFO] client fd 177 48080:54321 no changes last PT24H7M52.384S
+21849 24:08:05 [INFO] Waited for query result for PT24H7M58.177S
+21850 24:08:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21851 24:08:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21852 24:08:06 [DEBUG] {:event :metrics/report, :msec 0.0139, :phase :end, :pid 159113, :tid 60}
+21853 24:08:10 [INFO] client fd 177 48080:54321 no changes last PT24H8M2.386S
+21854 24:08:15 [INFO] Waited for query result for PT24H8M8.178S
+21855 24:08:20 [INFO] client fd 177 48080:54321 no changes last PT24H8M12.388S
+21856 24:08:25 [INFO] Waited for query result for PT24H8M18.179S
+21857 24:08:30 [INFO] client fd 177 48080:54321 no changes last PT24H8M22.39S
+21858 24:08:35 [INFO] Waited for query result for PT24H8M28.181S
+21859 24:08:40 [INFO] client fd 177 48080:54321 no changes last PT24H8M32.391S
+21860 24:08:45 [INFO] Waited for query result for PT24H8M38.182S
+21861 24:08:50 [INFO] client fd 177 48080:54321 no changes last PT24H8M42.392S
+21862 24:08:55 [INFO] Waited for query result for PT24H8M48.183S
+21863 24:09:00 [INFO] client fd 177 48080:54321 no changes last PT24H8M52.393S
+21864 24:09:05 [INFO] Waited for query result for PT24H8M58.185S
+21865 24:09:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7820.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21866 24:09:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21867 24:09:06 [DEBUG] {:event :metrics/report, :msec 0.0185, :phase :end, :pid 159113, :tid 60}
+21868 24:09:10 [INFO] client fd 177 48080:54321 no changes last PT24H9M2.394S
+21869 24:09:15 [INFO] Waited for query result for PT24H9M8.186S
+21870 24:09:20 [INFO] client fd 177 48080:54321 no changes last PT24H9M12.396S
+21871 24:09:25 [INFO] Waited for query result for PT24H9M18.189S
+21872 24:09:30 [INFO] client fd 177 48080:54321 no changes last PT24H9M22.398S
+21873 24:09:35 [INFO] Waited for query result for PT24H9M28.19S
+21874 24:09:40 [INFO] client fd 177 48080:54321 no changes last PT24H9M32.399S
+21875 24:09:45 [INFO] Waited for query result for PT24H9M38.191S
+21876 24:09:50 [INFO] client fd 177 48080:54321 no changes last PT24H9M42.4S
+21877 24:09:55 [INFO] Waited for query result for PT24H9M48.193S
+21878 24:10:00 [INFO] client fd 177 48080:54321 no changes last PT24H9M52.401S
+21879 24:10:05 [INFO] Waited for query result for PT24H9M58.194S
+21880 24:10:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21881 24:10:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21882 24:10:06 [DEBUG] {:event :metrics/report, :msec 0.02, :phase :end, :pid 159113, :tid 60}
+21883 24:10:10 [INFO] client fd 177 48080:54321 no changes last PT24H10M2.403S
+21884 24:10:15 [INFO] Waited for query result for PT24H10M8.195S
+21885 24:10:20 [INFO] client fd 177 48080:54321 no changes last PT24H10M12.404S
+21886 24:10:25 [INFO] Waited for query result for PT24H10M18.197S
+21887 24:10:30 [INFO] client fd 177 48080:54321 no changes last PT24H10M22.406S
+21888 24:10:35 [INFO] Waited for query result for PT24H10M28.199S
+21889 24:10:40 [INFO] client fd 177 48080:54321 no changes last PT24H10M32.407S
+21890 24:10:45 [INFO] Waited for query result for PT24H10M38.201S
+21891 24:10:50 [INFO] client fd 177 48080:54321 no changes last PT24H10M42.408S
+21892 24:10:55 [INFO] Waited for query result for PT24H10M48.202S
+21893 24:11:00 [INFO] client fd 177 48080:54321 no changes last PT24H10M52.409S
+21894 24:11:05 [INFO] Waited for query result for PT24H10M58.204S
+21895 24:11:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7890.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21896 24:11:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21897 24:11:06 [DEBUG] {:event :metrics/report, :msec 0.0176, :phase :end, :pid 159113, :tid 60}
+21898 24:11:10 [INFO] client fd 177 48080:54321 no changes last PT24H11M2.41S
+21899 24:11:15 [INFO] Waited for query result for PT24H11M8.206S
+21900 24:11:20 [INFO] client fd 177 48080:54321 no changes last PT24H11M12.411S
+21901 24:11:25 [INFO] Waited for query result for PT24H11M18.207S
+21902 24:11:30 [INFO] client fd 177 48080:54321 no changes last PT24H11M22.413S
+21903 24:11:35 [INFO] Waited for query result for PT24H11M28.208S
+21904 24:11:40 [INFO] client fd 177 48080:54321 no changes last PT24H11M32.415S
+21905 24:11:45 [INFO] Waited for query result for PT24H11M38.21S
+21906 24:11:50 [INFO] client fd 177 48080:54321 no changes last PT24H11M42.416S
+21907 24:11:55 [INFO] Waited for query result for PT24H11M48.212S
+21908 24:12:00 [INFO] client fd 177 48080:54321 no changes last PT24H11M52.418S
+21909 24:12:05 [INFO] Waited for query result for PT24H11M58.213S
+21910 24:12:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21911 24:12:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21912 24:12:06 [DEBUG] {:event :metrics/report, :msec 0.0195, :phase :end, :pid 159113, :tid 60}
+21913 24:12:10 [INFO] client fd 177 48080:54321 no changes last PT24H12M2.419S
+21914 24:12:15 [INFO] Waited for query result for PT24H12M8.215S
+21915 24:12:20 [INFO] client fd 177 48080:54321 no changes last PT24H12M12.42S
+21916 24:12:25 [INFO] Waited for query result for PT24H12M18.216S
+21917 24:12:30 [INFO] client fd 177 48080:54321 no changes last PT24H12M22.421S
+21918 24:12:35 [INFO] Waited for query result for PT24H12M28.217S
+21919 24:12:40 [INFO] client fd 177 48080:54321 no changes last PT24H12M32.422S
+21920 24:12:45 [INFO] Waited for query result for PT24H12M38.219S
+21921 24:12:50 [INFO] client fd 177 48080:54321 no changes last PT24H12M42.423S
+21922 24:12:55 [INFO] Waited for query result for PT24H12M48.22S
+21923 24:13:00 [INFO] client fd 177 48080:54321 no changes last PT24H12M52.424S
+21924 24:13:05 [INFO] Waited for query result for PT24H12M58.221S
+21925 24:13:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21926 24:13:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21927 24:13:06 [DEBUG] {:event :metrics/report, :msec 0.0113, :phase :end, :pid 159113, :tid 60}
+21928 24:13:10 [INFO] client fd 177 48080:54321 no changes last PT24H13M2.426S
+21929 24:13:15 [INFO] Waited for query result for PT24H13M8.223S
+21930 24:13:20 [INFO] client fd 177 48080:54321 no changes last PT24H13M12.428S
+21931 24:13:25 [INFO] Waited for query result for PT24H13M18.224S
+21932 24:13:30 [INFO] client fd 177 48080:54321 no changes last PT24H13M22.429S
+21933 24:13:35 [INFO] Waited for query result for PT24H13M28.226S
+21934 24:13:40 [INFO] client fd 177 48080:54321 no changes last PT24H13M32.431S
+21935 24:13:45 [INFO] Waited for query result for PT24H13M38.228S
+21936 24:13:50 [INFO] client fd 177 48080:54321 no changes last PT24H13M42.433S
+21937 24:13:55 [INFO] Waited for query result for PT24H13M48.23S
+21938 24:14:00 [INFO] client fd 177 48080:54321 no changes last PT24H13M52.435S
+21939 24:14:05 [INFO] Waited for query result for PT24H13M58.231S
+21940 24:14:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21941 24:14:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21942 24:14:06 [DEBUG] {:event :metrics/report, :msec 0.0222, :phase :end, :pid 159113, :tid 60}
+21943 24:14:10 [INFO] client fd 177 48080:54321 no changes last PT24H14M2.436S
+21944 24:14:15 [INFO] Waited for query result for PT24H14M8.233S
+21945 24:14:20 [INFO] client fd 177 48080:54321 no changes last PT24H14M12.437S
+21946 24:14:25 [INFO] Waited for query result for PT24H14M18.235S
+21947 24:14:30 [INFO] client fd 177 48080:54321 no changes last PT24H14M22.438S
+21948 24:14:35 [INFO] Waited for query result for PT24H14M28.236S
+21949 24:14:40 [INFO] client fd 177 48080:54321 no changes last PT24H14M32.44S
+21950 24:14:45 [INFO] Waited for query result for PT24H14M38.238S
+21951 24:14:50 [INFO] client fd 177 48080:54321 no changes last PT24H14M42.441S
+21952 24:14:55 [INFO] Waited for query result for PT24H14M48.249S
+21953 24:15:00 [INFO] client fd 177 48080:54321 no changes last PT24H14M52.443S
+21954 24:15:05 [INFO] Waited for query result for PT24H14M58.251S
+21955 24:15:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7840.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21956 24:15:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21957 24:15:06 [DEBUG] {:event :metrics/report, :msec 0.0154, :phase :end, :pid 159113, :tid 60}
+21958 24:15:10 [INFO] client fd 177 48080:54321 no changes last PT24H15M2.444S
+21959 24:15:15 [INFO] Waited for query result for PT24H15M8.252S
+21960 24:15:20 [INFO] client fd 177 48080:54321 no changes last PT24H15M12.446S
+21961 24:15:25 [INFO] Waited for query result for PT24H15M18.254S
+21962 24:15:30 [INFO] client fd 177 48080:54321 no changes last PT24H15M22.447S
+21963 24:15:35 [INFO] Waited for query result for PT24H15M28.256S
+21964 24:15:40 [INFO] client fd 177 48080:54321 no changes last PT24H15M32.448S
+21965 24:15:45 [INFO] Waited for query result for PT24H15M38.258S
+21966 24:15:50 [INFO] client fd 177 48080:54321 no changes last PT24H15M42.45S
+21967 24:15:55 [INFO] Waited for query result for PT24H15M48.259S
+21968 24:16:00 [INFO] client fd 177 48080:54321 no changes last PT24H15M52.452S
+21969 24:16:05 [INFO] Waited for query result for PT24H15M58.261S
+21970 24:16:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7790.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21971 24:16:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21972 24:16:06 [DEBUG] {:event :metrics/report, :msec 0.0154, :phase :end, :pid 159113, :tid 60}
+21973 24:16:10 [INFO] client fd 177 48080:54321 no changes last PT24H16M2.453S
+21974 24:16:15 [INFO] Waited for query result for PT24H16M8.263S
+21975 24:16:20 [INFO] client fd 177 48080:54321 no changes last PT24H16M12.454S
+21976 24:16:25 [INFO] Waited for query result for PT24H16M18.265S
+21977 24:16:30 [INFO] client fd 177 48080:54321 no changes last PT24H16M22.456S
+21978 24:16:35 [INFO] Waited for query result for PT24H16M28.266S
+21979 24:16:40 [INFO] client fd 177 48080:54321 no changes last PT24H16M32.458S
+21980 24:16:45 [INFO] Waited for query result for PT24H16M38.268S
+21981 24:16:50 [INFO] client fd 177 48080:54321 no changes last PT24H16M42.46S
+21982 24:16:55 [INFO] Waited for query result for PT24H16M48.27S
+21983 24:17:00 [INFO] client fd 177 48080:54321 no changes last PT24H16M52.461S
+21984 24:17:05 [INFO] Waited for query result for PT24H16M58.271S
+21985 24:17:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+21986 24:17:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+21987 24:17:06 [DEBUG] {:event :metrics/report, :msec 0.015, :phase :end, :pid 159113, :tid 60}
+21988 24:17:10 [INFO] client fd 177 48080:54321 no changes last PT24H17M2.463S
+21989 24:17:15 [INFO] Waited for query result for PT24H17M8.273S
+21990 24:17:20 [INFO] client fd 177 48080:54321 no changes last PT24H17M12.465S
+21991 24:17:25 [INFO] Waited for query result for PT24H17M18.275S
+21992 24:17:30 [INFO] client fd 177 48080:54321 no changes last PT24H17M22.466S
+21993 24:17:35 [INFO] Waited for query result for PT24H17M28.276S
+21994 24:17:40 [INFO] client fd 177 48080:54321 no changes last PT24H17M32.467S
+21995 24:17:45 [INFO] Waited for query result for PT24H17M38.278S
+21996 24:17:50 [INFO] client fd 177 48080:54321 no changes last PT24H17M42.468S
+21997 24:17:55 [INFO] Waited for query result for PT24H17M48.28S
+21998 24:18:00 [INFO] client fd 177 48080:54321 no changes last PT24H17M52.47S
+21999 24:18:05 [INFO] Waited for query result for PT24H17M58.281S
+22000 24:18:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22001 24:18:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22002 24:18:06 [DEBUG] {:event :metrics/report, :msec 0.017, :phase :end, :pid 159113, :tid 60}
+22003 24:18:10 [INFO] client fd 177 48080:54321 no changes last PT24H18M2.471S
+22004 24:18:15 [INFO] Waited for query result for PT24H18M8.283S
+22005 24:18:20 [INFO] client fd 177 48080:54321 no changes last PT24H18M12.472S
+22006 24:18:25 [INFO] Waited for query result for PT24H18M18.284S
+22007 24:18:30 [INFO] client fd 177 48080:54321 no changes last PT24H18M22.473S
+22008 24:18:35 [INFO] Waited for query result for PT24H18M28.286S
+22009 24:18:40 [INFO] client fd 177 48080:54321 no changes last PT24H18M32.474S
+22010 24:18:45 [INFO] Waited for query result for PT24H18M38.288S
+22011 24:18:50 [INFO] client fd 177 48080:54321 no changes last PT24H18M42.475S
+22012 24:18:56 [INFO] Waited for query result for PT24H18M48.29S
+22013 24:19:00 [INFO] client fd 177 48080:54321 no changes last PT24H18M52.477S
+22014 24:19:06 [INFO] Waited for query result for PT24H18M58.292S
+22015 24:19:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7850.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22016 24:19:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22017 24:19:06 [DEBUG] {:event :metrics/report, :msec 0.0167, :phase :end, :pid 159113, :tid 60}
+22018 24:19:10 [INFO] client fd 177 48080:54321 no changes last PT24H19M2.479S
+22019 24:19:16 [INFO] Waited for query result for PT24H19M8.293S
+22020 24:19:20 [INFO] client fd 177 48080:54321 no changes last PT24H19M12.481S
+22021 24:19:26 [INFO] Waited for query result for PT24H19M18.294S
+22022 24:19:30 [INFO] client fd 177 48080:54321 no changes last PT24H19M22.483S
+22023 24:19:36 [INFO] Waited for query result for PT24H19M28.296S
+22024 24:19:40 [INFO] client fd 177 48080:54321 no changes last PT24H19M32.484S
+22025 24:19:46 [INFO] Waited for query result for PT24H19M38.298S
+22026 24:19:50 [INFO] client fd 177 48080:54321 no changes last PT24H19M42.485S
+22027 24:19:56 [INFO] Waited for query result for PT24H19M48.299S
+22028 24:20:00 [INFO] client fd 177 48080:54321 no changes last PT24H19M52.486S
+22029 24:20:06 [INFO] Waited for query result for PT24H19M58.3S
+22030 24:20:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22031 24:20:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22032 24:20:06 [DEBUG] {:event :metrics/report, :msec 0.0199, :phase :end, :pid 159113, :tid 60}
+22033 24:20:10 [INFO] client fd 177 48080:54321 no changes last PT24H20M2.488S
+22034 24:20:16 [INFO] Waited for query result for PT24H20M8.302S
+22035 24:20:20 [INFO] client fd 177 48080:54321 no changes last PT24H20M12.489S
+22036 24:20:26 [INFO] Waited for query result for PT24H20M18.304S
+22037 24:20:30 [INFO] client fd 177 48080:54321 no changes last PT24H20M22.491S
+22038 24:20:36 [INFO] Waited for query result for PT24H20M28.306S
+22039 24:20:40 [INFO] client fd 177 48080:54321 no changes last PT24H20M32.493S
+22040 24:20:46 [INFO] Waited for query result for PT24H20M38.308S
+22041 24:20:50 [INFO] client fd 177 48080:54321 no changes last PT24H20M42.494S
+22042 24:20:56 [INFO] Waited for query result for PT24H20M48.309S
+22043 24:21:00 [INFO] client fd 177 48080:54321 no changes last PT24H20M52.496S
+22044 24:21:06 [INFO] Waited for query result for PT24H20M58.311S
+22045 24:21:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22046 24:21:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22047 24:21:06 [DEBUG] {:event :metrics/report, :msec 0.0148, :phase :end, :pid 159113, :tid 60}
+22048 24:21:10 [INFO] client fd 177 48080:54321 no changes last PT24H21M2.498S
+22049 24:21:16 [INFO] Waited for query result for PT24H21M8.321S
+22050 24:21:20 [INFO] client fd 177 48080:54321 no changes last PT24H21M12.5S
+22051 24:21:26 [INFO] Waited for query result for PT24H21M18.323S
+22052 24:21:30 [INFO] client fd 177 48080:54321 no changes last PT24H21M22.501S
+22053 24:21:36 [INFO] Waited for query result for PT24H21M28.326S
+22054 24:21:40 [INFO] client fd 177 48080:54321 no changes last PT24H21M32.503S
+22055 24:21:46 [INFO] Waited for query result for PT24H21M38.327S
+22056 24:21:50 [INFO] client fd 177 48080:54321 no changes last PT24H21M42.505S
+22057 24:21:56 [INFO] Waited for query result for PT24H21M48.329S
+22058 24:22:00 [INFO] client fd 177 48080:54321 no changes last PT24H21M52.506S
+22059 24:22:06 [INFO] Waited for query result for PT24H21M58.331S
+22060 24:22:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22061 24:22:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22062 24:22:06 [DEBUG] {:event :metrics/report, :msec 0.0201, :phase :end, :pid 159113, :tid 60}
+22063 24:22:10 [INFO] client fd 177 48080:54321 no changes last PT24H22M2.507S
+22064 24:22:16 [INFO] Waited for query result for PT24H22M8.333S
+22065 24:22:20 [INFO] client fd 177 48080:54321 no changes last PT24H22M12.509S
+22066 24:22:26 [INFO] Waited for query result for PT24H22M18.334S
+22067 24:22:30 [INFO] client fd 177 48080:54321 no changes last PT24H22M22.511S
+22068 24:22:36 [INFO] Waited for query result for PT24H22M28.336S
+22069 24:22:40 [INFO] client fd 177 48080:54321 no changes last PT24H22M32.513S
+22070 24:22:46 [INFO] Waited for query result for PT24H22M38.337S
+22071 24:22:50 [INFO] client fd 177 48080:54321 no changes last PT24H22M42.514S
+22072 24:22:56 [INFO] Waited for query result for PT24H22M48.339S
+22073 24:23:00 [INFO] client fd 177 48080:54321 no changes last PT24H22M52.515S
+22074 24:23:06 [INFO] Waited for query result for PT24H22M58.341S
+22075 24:23:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7900.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22076 24:23:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22077 24:23:06 [DEBUG] {:event :metrics/report, :msec 0.018, :phase :end, :pid 159113, :tid 60}
+22078 24:23:10 [INFO] client fd 177 48080:54321 no changes last PT24H23M2.516S
+22079 24:23:16 [INFO] Waited for query result for PT24H23M8.345S
+22080 24:23:20 [INFO] client fd 177 48080:54321 no changes last PT24H23M12.517S
+22081 24:23:26 [INFO] Waited for query result for PT24H23M18.346S
+22082 24:23:30 [INFO] client fd 177 48080:54321 no changes last PT24H23M22.518S
+22083 24:23:36 [INFO] Waited for query result for PT24H23M28.348S
+22084 24:23:40 [INFO] client fd 177 48080:54321 no changes last PT24H23M32.519S
+22085 24:23:46 [INFO] Waited for query result for PT24H23M38.349S
+22086 24:23:50 [INFO] client fd 177 48080:54321 no changes last PT24H23M42.52S
+22087 24:23:56 [INFO] Waited for query result for PT24H23M48.351S
+22088 24:24:00 [INFO] client fd 177 48080:54321 no changes last PT24H23M52.521S
+22089 24:24:06 [INFO] Waited for query result for PT24H23M58.352S
+22090 24:24:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7870.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22091 24:24:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22092 24:24:06 [DEBUG] {:event :metrics/report, :msec 0.0179, :phase :end, :pid 159113, :tid 60}
+22093 24:24:10 [INFO] client fd 177 48080:54321 no changes last PT24H24M2.522S
+22094 24:24:16 [INFO] Waited for query result for PT24H24M8.354S
+22095 24:24:20 [INFO] client fd 177 48080:54321 no changes last PT24H24M12.523S
+22096 24:24:26 [INFO] Waited for query result for PT24H24M18.356S
+22097 24:24:30 [INFO] client fd 177 48080:54321 no changes last PT24H24M22.524S
+22098 24:24:36 [INFO] Waited for query result for PT24H24M28.357S
+22099 24:24:40 [INFO] client fd 177 48080:54321 no changes last PT24H24M32.526S
+22100 24:24:46 [INFO] Waited for query result for PT24H24M38.358S
+22101 24:24:50 [INFO] client fd 177 48080:54321 no changes last PT24H24M42.527S
+22102 24:24:56 [INFO] Waited for query result for PT24H24M48.36S
+22103 24:25:00 [INFO] client fd 177 48080:54321 no changes last PT24H24M52.528S
+22104 24:25:06 [INFO] Waited for query result for PT24H24M58.361S
+22105 24:25:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7860.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22106 24:25:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22107 24:25:06 [DEBUG] {:event :metrics/report, :msec 0.0108, :phase :end, :pid 159113, :tid 60}
+22108 24:25:10 [INFO] client fd 177 48080:54321 no changes last PT24H25M2.529S
+22109 24:25:16 [INFO] Waited for query result for PT24H25M8.362S
+22110 24:25:20 [INFO] client fd 177 48080:54321 no changes last PT24H25M12.531S
+22111 24:25:26 [INFO] Waited for query result for PT24H25M18.364S
+22112 24:25:30 [INFO] client fd 177 48080:54321 no changes last PT24H25M22.532S
+22113 24:25:36 [INFO] Waited for query result for PT24H25M28.365S
+22114 24:25:40 [INFO] client fd 177 48080:54321 no changes last PT24H25M32.533S
+22115 24:25:46 [INFO] Waited for query result for PT24H25M38.367S
+22116 24:25:50 [INFO] client fd 177 48080:54321 no changes last PT24H25M42.534S
+22117 24:25:56 [INFO] Waited for query result for PT24H25M48.369S
+22118 24:26:00 [INFO] client fd 177 48080:54321 no changes last PT24H25M52.535S
+22119 24:26:06 [INFO] Waited for query result for PT24H25M58.37S
+22120 24:26:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7830.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22121 24:26:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22122 24:26:06 [DEBUG] {:event :metrics/report, :msec 0.0179, :phase :end, :pid 159113, :tid 60}
+22123 24:26:10 [INFO] client fd 177 48080:54321 no changes last PT24H26M2.536S
+22124 24:26:16 [INFO] Waited for query result for PT24H26M8.372S
+22125 24:26:20 [INFO] client fd 177 48080:54321 no changes last PT24H26M12.537S
+22126 24:26:26 [INFO] Waited for query result for PT24H26M18.373S
+22127 24:26:30 [INFO] client fd 177 48080:54321 no changes last PT24H26M22.538S
+22128 24:26:36 [INFO] Waited for query result for PT24H26M28.375S
+22129 24:26:40 [INFO] client fd 177 48080:54321 no changes last PT24H26M32.539S
+22130 24:26:46 [INFO] Waited for query result for PT24H26M38.377S
+22131 24:26:50 [INFO] client fd 177 48080:54321 no changes last PT24H26M42.541S
+22132 24:26:56 [INFO] Waited for query result for PT24H26M48.378S
+22133 24:27:00 [INFO] client fd 177 48080:54321 no changes last PT24H26M52.542S
+22134 24:27:06 [INFO] Waited for query result for PT24H26M58.379S
+22135 24:27:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7890.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22136 24:27:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22137 24:27:06 [DEBUG] {:event :metrics/report, :msec 0.02, :phase :end, :pid 159113, :tid 60}
+22138 24:27:10 [INFO] client fd 177 48080:54321 no changes last PT24H27M2.543S
+22139 24:27:16 [INFO] Waited for query result for PT24H27M8.381S
+22140 24:27:20 [INFO] client fd 177 48080:54321 no changes last PT24H27M12.544S
+22141 24:27:26 [INFO] Waited for query result for PT24H27M18.383S
+22142 24:27:30 [INFO] client fd 177 48080:54321 no changes last PT24H27M22.546S
+22143 24:27:36 [INFO] Waited for query result for PT24H27M28.385S
+22144 24:27:40 [INFO] client fd 177 48080:54321 no changes last PT24H27M32.547S
+22145 24:27:46 [INFO] Waited for query result for PT24H27M38.387S
+22146 24:27:50 [INFO] client fd 177 48080:54321 no changes last PT24H27M42.548S
+22147 24:27:56 [INFO] Waited for query result for PT24H27M48.389S
+22148 24:28:00 [INFO] client fd 177 48080:54321 no changes last PT24H27M52.549S
+22149 24:28:06 [INFO] Waited for query result for PT24H27M58.39S
+22150 24:28:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7880.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22151 24:28:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22152 24:28:06 [DEBUG] {:event :metrics/report, :msec 0.0185, :phase :end, :pid 159113, :tid 60}
+22153 24:28:10 [INFO] client fd 177 48080:54321 no changes last PT24H28M2.551S
+22154 24:28:16 [INFO] Waited for query result for PT24H28M8.392S
+22155 24:28:20 [INFO] client fd 177 48080:54321 no changes last PT24H28M12.553S
+22156 24:28:26 [INFO] Waited for query result for PT24H28M18.394S
+22157 24:28:30 [INFO] client fd 177 48080:54321 no changes last PT24H28M22.554S
+22158 24:28:36 [INFO] Waited for query result for PT24H28M28.396S
+22159 24:28:40 [INFO] client fd 177 48080:54321 no changes last PT24H28M32.555S
+22160 24:28:46 [INFO] Waited for query result for PT24H28M38.398S
+22161 24:28:50 [INFO] client fd 177 48080:54321 no changes last PT24H28M42.556S
+22162 24:28:56 [INFO] Waited for query result for PT24H28M48.399S
+22163 24:29:00 [INFO] client fd 177 48080:54321 no changes last PT24H28M52.558S
+22164 24:29:06 [INFO] Waited for query result for PT24H28M58.401S
+22165 24:29:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7790.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22166 24:29:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22167 24:29:06 [DEBUG] {:event :metrics/report, :msec 0.02, :phase :end, :pid 159113, :tid 60}
+22168 24:29:10 [INFO] client fd 177 48080:54321 no changes last PT24H29M2.559S
+22169 24:29:16 [INFO] Waited for query result for PT24H29M8.402S
+22170 24:29:20 [INFO] client fd 177 48080:54321 no changes last PT24H29M12.561S
+22171 24:29:26 [INFO] Waited for query result for PT24H29M18.404S
+22172 24:29:30 [INFO] client fd 177 48080:54321 no changes last PT24H29M22.562S
+22173 24:29:36 [INFO] Waited for query result for PT24H29M28.406S
+22174 24:29:40 [INFO] client fd 177 48080:54321 no changes last PT24H29M32.563S
+22175 24:29:46 [INFO] Waited for query result for PT24H29M38.407S
+22176 24:29:50 [INFO] client fd 177 48080:54321 no changes last PT24H29M42.564S
+22177 24:29:56 [INFO] Waited for query result for PT24H29M48.409S
+22178 24:30:00 [INFO] client fd 177 48080:54321 no changes last PT24H29M52.565S
+22179 24:30:06 [INFO] Waited for query result for PT24H29M58.411S
+22180 24:30:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7770.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22181 24:30:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22182 24:30:06 [DEBUG] {:event :metrics/report, :msec 0.013, :phase :end, :pid 159113, :tid 60}
+22183 24:30:10 [INFO] client fd 177 48080:54321 no changes last PT24H30M2.566S
+22184 24:30:16 [INFO] Waited for query result for PT24H30M8.413S
+22185 24:30:20 [INFO] client fd 177 48080:54321 no changes last PT24H30M12.567S
+22186 24:30:26 [INFO] Waited for query result for PT24H30M18.414S
+22187 24:30:30 [INFO] client fd 177 48080:54321 no changes last PT24H30M22.569S
+22188 24:30:36 [INFO] Waited for query result for PT24H30M28.415S
+22189 24:30:40 [INFO] client fd 177 48080:54321 no changes last PT24H30M32.57S
+22190 24:30:46 [INFO] Waited for query result for PT24H30M38.417S
+22191 24:30:50 [INFO] client fd 177 48080:54321 no changes last PT24H30M42.572S
+22192 24:30:56 [INFO] Waited for query result for PT24H30M48.419S
+22193 24:31:00 [INFO] client fd 177 48080:54321 no changes last PT24H30M52.573S
+22194 24:31:06 [INFO] Waited for query result for PT24H30M58.42S
+22195 24:31:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7800.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22196 24:31:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22197 24:31:06 [DEBUG] {:event :metrics/report, :msec 0.0174, :phase :end, :pid 159113, :tid 60}
+22198 24:31:10 [INFO] client fd 177 48080:54321 no changes last PT24H31M2.574S
+22199 24:31:16 [INFO] Waited for query result for PT24H31M8.422S
+22200 24:31:20 [INFO] client fd 177 48080:54321 no changes last PT24H31M12.575S
+22201 24:31:26 [INFO] Waited for query result for PT24H31M18.424S
+22202 24:31:30 [INFO] client fd 177 48080:54321 no changes last PT24H31M22.576S
+22203 24:31:36 [INFO] Waited for query result for PT24H31M28.425S
+22204 24:31:40 [INFO] client fd 177 48080:54321 no changes last PT24H31M32.578S
+22205 24:31:46 [INFO] Waited for query result for PT24H31M38.427S
+22206 24:31:50 [INFO] client fd 177 48080:54321 no changes last PT24H31M42.58S
+22207 24:31:56 [INFO] Waited for query result for PT24H31M48.428S
+22208 24:32:00 [INFO] client fd 177 48080:54321 no changes last PT24H31M52.581S
+22209 24:32:06 [INFO] Waited for query result for PT24H31M58.43S
+22210 24:32:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7820.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22211 24:32:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22212 24:32:06 [DEBUG] {:event :metrics/report, :msec 0.0145, :phase :end, :pid 159113, :tid 60}
+22213 24:32:10 [INFO] client fd 177 48080:54321 no changes last PT24H32M2.583S
+22214 24:32:16 [INFO] Waited for query result for PT24H32M8.431S
+22215 24:32:20 [INFO] client fd 177 48080:54321 no changes last PT24H32M12.584S
+22216 24:32:26 [INFO] Waited for query result for PT24H32M18.432S
+22217 24:32:30 [INFO] client fd 177 48080:54321 no changes last PT24H32M22.585S
+22218 24:32:36 [INFO] Waited for query result for PT24H32M28.433S
+22219 24:32:40 [INFO] client fd 177 48080:54321 no changes last PT24H32M32.587S
+22220 24:32:46 [INFO] Waited for query result for PT24H32M38.435S
+22221 24:32:50 [INFO] client fd 177 48080:54321 no changes last PT24H32M42.588S
+22222 24:32:56 [INFO] Waited for query result for PT24H32M48.437S
+22223 24:33:00 [INFO] client fd 177 48080:54321 no changes last PT24H32M52.589S
+22224 24:33:06 [INFO] Waited for query result for PT24H32M58.439S
+22225 24:33:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7780.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22226 24:33:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22227 24:33:06 [DEBUG] {:event :metrics/report, :msec 0.0152, :phase :end, :pid 159113, :tid 60}
+22228 24:33:10 [INFO] client fd 177 48080:54321 no changes last PT24H33M2.591S
+22229 24:33:16 [INFO] Waited for query result for PT24H33M8.44S
+22230 24:33:20 [INFO] client fd 177 48080:54321 no changes last PT24H33M12.592S
+22231 24:33:26 [INFO] Waited for query result for PT24H33M18.442S
+22232 24:33:30 [INFO] client fd 177 48080:54321 no changes last PT24H33M22.594S
+22233 24:33:36 [INFO] Waited for query result for PT24H33M28.444S
+22234 24:33:40 [INFO] client fd 177 48080:54321 no changes last PT24H33M32.596S
+22235 24:33:46 [INFO] Waited for query result for PT24H33M38.445S
+22236 24:33:50 [INFO] client fd 177 48080:54321 no changes last PT24H33M42.598S
+22237 24:33:56 [INFO] Waited for query result for PT24H33M48.446S
+22238 24:34:00 [INFO] client fd 177 48080:54321 no changes last PT24H33M52.599S
+22239 24:34:06 [INFO] Waited for query result for PT24H33M58.448S
+22240 24:34:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7770.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22241 24:34:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22242 24:34:06 [DEBUG] {:event :metrics/report, :msec 0.0283, :phase :end, :pid 159113, :tid 60}
+22243 24:34:10 [INFO] client fd 177 48080:54321 no changes last PT24H34M2.6S
+22244 24:34:16 [INFO] Waited for query result for PT24H34M8.449S
+22245 24:34:20 [INFO] client fd 177 48080:54321 no changes last PT24H34M12.601S
+22246 24:34:26 [INFO] Waited for query result for PT24H34M18.451S
+22247 24:34:30 [INFO] client fd 177 48080:54321 no changes last PT24H34M22.602S
+22248 24:34:36 [INFO] Waited for query result for PT24H34M28.461S
+22249 24:34:40 [INFO] client fd 177 48080:54321 no changes last PT24H34M32.604S
+22250 24:34:46 [INFO] Waited for query result for PT24H34M38.462S
+22251 24:34:50 [INFO] client fd 177 48080:54321 no changes last PT24H34M42.606S
+22252 24:34:56 [INFO] Waited for query result for PT24H34M48.464S
+22253 24:35:00 [INFO] client fd 177 48080:54321 no changes last PT24H34M52.608S
+22254 24:35:06 [INFO] Waited for query result for PT24H34M58.466S
+22255 24:35:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7770.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22256 24:35:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22257 24:35:06 [DEBUG] {:event :metrics/report, :msec 0.0158, :phase :end, :pid 159113, :tid 60}
+22258 24:35:10 [INFO] client fd 177 48080:54321 no changes last PT24H35M2.609S
+22259 24:35:16 [INFO] Waited for query result for PT24H35M8.468S
+22260 24:35:20 [INFO] client fd 177 48080:54321 no changes last PT24H35M12.61S
+22261 24:35:26 [INFO] Waited for query result for PT24H35M18.469S
+22262 24:35:30 [INFO] client fd 177 48080:54321 no changes last PT24H35M22.611S
+22263 24:35:36 [INFO] Waited for query result for PT24H35M28.471S
+22264 24:35:40 [INFO] client fd 177 48080:54321 no changes last PT24H35M32.612S
+22265 24:35:46 [INFO] Waited for query result for PT24H35M38.472S
+22266 24:35:50 [INFO] client fd 177 48080:54321 no changes last PT24H35M42.614S
+22267 24:35:56 [INFO] Waited for query result for PT24H35M48.474S
+22268 24:36:00 [INFO] client fd 177 48080:54321 no changes last PT24H35M52.621S
+22269 24:36:06 [INFO] Waited for query result for PT24H35M58.476S
+22270 24:36:06 [INFO] {:MetricsReport {:lo 1, :hi 1, :sum 1, :count 1}, :AvailableMB 7770.0, :ObjectCacheCount 20, :event :metrics, :pid 159113, :tid 60}
+22271 24:36:06 [DEBUG] {:event :metrics/report, :phase :begin, :pid 159113, :tid 60}
+22272 24:36:06 [DEBUG] {:event :metrics/report, :msec 0.0203, :phase :end, :pid 159113, :tid 60}
+22273 24:36:10 [INFO] client fd 177 48080:54321 no changes last PT24H36M2.622S
+22274 24:36:16 [INFO] Waited for query result for PT24H36M8.478S
+22275 24:36:20 [INFO] client fd 177 48080:54321 no changes last PT24H36M12.623S
+22276 24:36:26 [INFO] Waited for query result for PT24H36M18.479S
+22277 24:36:30 [INFO] client fd 177 48080:54321 no changes last PT24H36M22.624S
+22278 24:36:36 [INFO] Waited for query result for PT24H36M28.48S
+22279 24:36:40 [INFO] client fd 177 48080:54321 no changes last PT24H36M32.626S
