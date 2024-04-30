@@ -26,6 +26,14 @@ OpenJDK 64-Bit Server VM Temurin-22+36 (build 22+36, mixed mode, sharing)
 
 We will be using [nftables](http://nftables.org/projects/nftables/index.html) to simulate network errors.
 
+## Context
+
+In 2021 we switched from an on premise solution to the cloud, more specifically Azure Container Instances. From time to time we would experience network issues: connections would be dropped en masse.
+
+That this was happening was not obvious at the time. We had not experienced such problems on premise. For a long time I suspected conflicts between aleph and Datomic, both of which relied on different versions of netty. We also had a Datomic query that recently had started to OOM _sometimes_. aleph/dirigiste had known [OOM problems](https://github.com/clj-commons/aleph/issues/461). Dirigiste also [swallowed exceptions](https://github.com/clj-commons/dirigiste/issues/12).
+
+We would see requests freezing and then suddenly complete after ~16 minutes — in batch. It was chaotic. And it was all (or mostly) network issues. Hindsight is 20/20 as they say.
+
 ## Setup
 
 Read this section if you want to reproduce the output of the commands.
@@ -345,6 +353,22 @@ with very little risk added.
 
 Parts of the retry logic for Datomic up to and including `1.0.7075` is broken.
 Network problems are hard to spot, and are not well handled, nor reported, by Datomic. 
+
+## Response from Datomic support
+
+I've informed Datomic about my findings and shared a draft version of this post. The response from Datomic support thus far is that the findings here does not constitute an error on Datomic's part. Quote from Datomic support:
+
+> Datomic's retry is not "broken", but having no default timeout for the Postgres driver is a misconfiguration. It's certainly something we could address on the Datomic side, by providing a default timeout setting at configuration, but we have the expectation that users configure their storages and drivers correctly for their needs. This represents a conflation of timeouts and retries, the retries are fine, but the storage level timeouts are not. As stated, we could absolutely do better right now with Postgres timeouts, but as your blog post demonstrates this is solvable in user-space by configuring the drivers and storage with a default timeout.
+
+## Cloud epilogue
+
+The move to the cloud, Azure Container Instances (ACI), were a relative success. The network was — and is — a mess. ACI DNS is a mess. In fact it is such a mess that we wrote a service called `DNS-fixer`. It works ¯\\_(ツ)_/¯.
+
+We have since partly moved to Azure Container Apps. It's much better with respect to network issues.
+
+## Thanks
+
+Thanks to August Lilleaas, Christian Johansen, Magnar Sveen and Sigve Sjømæling Nordgaard for comments/feedback.
 
 ## Further reading
 * [When TCP sockets refuse to die](https://blog.cloudflare.com/when-tcp-sockets-refuse-to-die/)
