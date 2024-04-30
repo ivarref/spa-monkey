@@ -30,9 +30,9 @@ We will be using [nftables](http://nftables.org/projects/nftables/index.html) to
 
 In 2021 we switched from an on premise solution to the cloud, more specifically Azure Container Instances. From time to time we would experience network issues: connections would be dropped en masse.
 
-That this was happening was not obvious at the time. We had not experienced such problems on premise. For a long time I suspected conflicts between aleph and Datomic, both of which relied on different versions of netty. We also had a Datomic query that recently had started to OOM _sometimes_. aleph/dirigiste had known [OOM problems](https://github.com/clj-commons/aleph/issues/461). Dirigiste also [swallowed exceptions](https://github.com/clj-commons/dirigiste/issues/12).
+That it was this that was happening was not obvious at the time. We had not experienced such problems on premise. For a long time I suspected conflicts between aleph and Datomic, both of which relied on different versions of netty. We also had a Datomic query that had recently started to OOM _sometimes_. aleph/dirigiste had known [OOM problems](https://github.com/clj-commons/aleph/issues/461). Dirigiste also [swallowed exceptions](https://github.com/clj-commons/dirigiste/issues/12).
 
-We would see requests freezing and then suddenly complete after ~16 minutes — in batch. It was chaotic. And it was all (or mostly) network issues. Hindsight is 20/20 as they say.
+We would see requests freezing and then suddenly complete after ~16 minutes — in batch. It was chaotic. And it was all, or mostly, network issues. Hindsight is 20/20 as they say.
 
 ## Setup
 
@@ -364,7 +364,9 @@ I've informed Datomic about my findings and shared a draft version of this post.
 
 The move to the cloud, Azure Container Instances (ACI), were a relative success. The network was — and is — a mess. ACI DNS is a mess. In fact it is such a mess that we wrote a service called `DNS-fixer`. It works ¯\\_(ツ)_/¯.
 
-We have since partly moved to Azure Container Apps. It's much better with respect to network issues.
+All services using PostgreSQL added `socketTimeout` properties. We also discovered that the built-in JVM HttpClient does not support a [timeout for reading the body of a response](https://bugs.openjdk.org/browse/JDK-8258397) properly.
+
+We have since moved partly to Azure Container Apps. It's much better with respect to network issues.
 
 ## Thanks
 
