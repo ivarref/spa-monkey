@@ -2,6 +2,7 @@
 
 trap "kill 0" SIGINT
 
-(cd $HOME/code/quickstart && hugo server -D --disableFastRender &)
+(cd $HOME/code/blog && hugo server -D --disableFastRender &)
 
-printf network-failures.md | entr cp -fv ./network-failures.md ~/code/quickstart/content/posts/network-failures.md
+xdg-open "http://localhost:1313/posts/network-failures/"
+printf network-failures.md | entr cp -fv ./network-failures.md ~/code/blog/content/posts/network-failures.md
