@@ -32,7 +32,7 @@ In 2021 we switched from an on premise solution to the cloud, more specifically 
 
 That it was this that was happening was not obvious at the time. We had not experienced such problems on premise. For a long time I suspected conflicts between aleph and Datomic, both of which relied on different versions of netty. We also had a Datomic query that had recently started to OOM _sometimes_. aleph/dirigiste had known [OOM problems](https://github.com/clj-commons/aleph/issues/461). Dirigiste also [swallowed exceptions](https://github.com/clj-commons/dirigiste/issues/12).
 
-We would see requests freezing and then suddenly complete after ~16 minutes — in batch. It was chaotic. And it was all, or mostly, network issues. Hindsight is 20/20 as they say.
+We would see requests freeze and then suddenly complete after ~16 minutes — in batch. It was chaotic. And it was all, or mostly, network issues. Hindsight is 20/20 as they say.
 
 ## Setup
 
@@ -176,7 +176,7 @@ One was issued by `org.apache.tomcat.jdbc.pool.PooledConnection`.
 Its message reads:
 `Unable to clear Warnings, connection will be closed.`
 
-This is the by far the best indication we get
+This is by far the best indication we get
 that something went wrong.
 And this message is only included because the
 [jul to slf4j bridge](https://stackoverflow.com/questions/9117030/jul-to-slf4j-bridge) was installed,
@@ -354,11 +354,13 @@ with very little risk added.
 Parts of the retry logic for Datomic up to and including `1.0.7075` is broken.
 Network problems are hard to spot, and are not well handled, nor reported, by Datomic. 
 
-## Response from Datomic support
+## Response from Datomic
 
-I've informed Datomic about my findings and shared a draft version of this post. The response from Datomic support thus far is that the findings here does not constitute an error on Datomic's part. Quote from Datomic support:
+I've informed Datomic support about my findings and shared a draft version of this post. The response thus far is that the findings here does not constitute an error on Datomic's part. Quote from Datomic support:
 
-> Datomic's retry is not "broken", but having no default timeout for the Postgres driver is a misconfiguration. It's certainly something we could address on the Datomic side, by providing a default timeout setting at configuration, but we have the expectation that users configure their storages and drivers correctly for their needs. This represents a conflation of timeouts and retries, the retries are fine, but the storage level timeouts are not. As stated, we could absolutely do better right now with Postgres timeouts, but as your blog post demonstrates this is solvable in user-space by configuring the drivers and storage with a default timeout.
+> Datomic's retry is not "broken", but having no default timeout for the Postgres driver is a misconfiguration. It's certainly something we could address on the Datomic side, by providing a default timeout setting at configuration, but we have the expectation that users configure their storages and drivers correctly for their needs. This represents a conflation of timeouts and retries, the retries are fine, but the storage level timeouts are not. As stated, we could absolutely do better right now with Postgres timeouts, but as your blog post demonstrates this is solvable in user-space by configuring the drivers and storage with a default timeout.  
+…  
+At this time, Datomic does not enforce a timeout for jdbc backends as the config param is not uniform across different backends.
 
 ## Cloud epilogue
 
@@ -368,10 +370,10 @@ All services using PostgreSQL added `socketTimeout` properties. We also discover
 
 We have since moved partly to Azure Container Apps. It's much better with respect to network issues.
 
-## Thanks
+***
 
-Thanks to August Lilleaas, Christian Johansen, Magnar Sveen and Sigve Sjømæling Nordgaard for comments/feedback.
+_Thanks to August Lilleaas, Christian Johansen, Magnar Sveen and Sigve Sjømæling Nordgaard for comments/feedback._
 
-## Further reading
+### Further reading
 * [When TCP sockets refuse to die](https://blog.cloudflare.com/when-tcp-sockets-refuse-to-die/)
 * [HikariCP Rapid Recovery](https://github.com/brettwooldridge/HikariCP/wiki/Rapid-Recovery)
