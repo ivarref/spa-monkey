@@ -4,6 +4,9 @@ date: 2024-03-30T11:46:36+02:00
 draft: true
 ---
 
+[//]: # ([//]: # tydelige subjekter)
+[//]: # ([//]: # unngå passiv: meir tydelig kven som gjer kva)
+
 ## Introduction
 This post will examine how the [Datomic on-premise peer library](https://www.datomic.com/on-prem.html)
 handles and responds to network failures. The version tested is `1.0.7075`, released `2023-12-18`.
@@ -28,11 +31,11 @@ We will be using [nftables](http://nftables.org/projects/nftables/index.html) to
 
 ## Context
 
-In 2021 we switched from an on premise solution to the cloud, more specifically Azure Container Instances. From time to time we would experience network issues: connections would be dropped en masse.
+In 2021 we switched from an on premise solution to the cloud, more specifically Azure Container Instances. From time to time we would experience network issues: connections were dropped en masse.
 
-That it was this that was happening was not obvious at the time. We had not experienced such problems on premise. For a long time I suspected conflicts between aleph and Datomic, both of which relied on different versions of netty. We also had a Datomic query that had recently started to OOM _sometimes_. aleph/dirigiste had known [OOM problems](https://github.com/clj-commons/aleph/issues/461). Dirigiste also [swallowed exceptions](https://github.com/clj-commons/dirigiste/issues/12).
+At the time it was not obvious that the network was the problem. We had not experienced such problems on premise. For a long time I suspected conflicts between aleph and Datomic, both of which relied on different versions of netty. We also had a Datomic query that had recently started to OOM _sometimes_. aleph/dirigiste had known [OOM problems](https://github.com/clj-commons/aleph/issues/461). Dirigiste also [swallowed exceptions](https://github.com/clj-commons/dirigiste/issues/12).
 
-We would see requests freeze and then suddenly complete after ~16 minutes — in batch. It was chaotic. And it was all, or mostly, network issues. Hindsight is 20/20 as they say.
+We saw requests freeze and then suddenly complete after ~16 minutes — in batch. It was chaotic. And it was all network issues, with OOM as an extra ingredient. Hindsight is 20/20 as they say.
 
 ## Setup
 
@@ -40,15 +43,19 @@ Read this section if you want to reproduce the output of the commands.
 
 All commands require that `./db-up.sh` is running.
 Running `./db-up.sh` will start a Datomic and PostgreSQL instance locally.
-The following environment variables needs to be set:
+
+A single environment variable must be set:
 
 * `POSTGRES_PASSWORD`: Password to be used for PostgreSQL.
 
-You will also want to: 
+One of the following must be done: 
 * add `/usr/bin/nft` to sudoers for your user
-* or be prepared to enter your root password.
+* enter your root password when prompted.
 
-Running this code requires Linux and Java 22 or later as it uses [JEP 434: Foreign Function & Memory API](https://openjdk.org/jeps/434).
+Running this code requires:
+
+* Linux with nftables installed.
+* Java 22 or newer.
 
 ## Case 1: TCP retry saves the day
 
@@ -68,11 +75,13 @@ Running `./tcp-retry.sh` you will see:
 
 At line 5 we have initialized our system and are
 about to perform a query using `datomic.api/q`. 
-The query will trigger a database/storage read on a connection that will be
+The query will trigger a database/storage read.
+The underlying connection will be
 blocked.
 
-From line 7 we can see that we're starting to drop packets
-destined for PostgreSQL, which is running at port 5432.
+PostgreSQL is running at port 5432.
+At line 7 we're starting to drop packets
+destined for PostgreSQL.
 The format used in the logs is `local-port:remote-port`.
 
 We're starting to drop packets just before
@@ -82,7 +91,7 @@ We will see later why the emphasis on before is made.
 
 [//]: # (explain emphasis on before...)
 
-After this we simply wait and watch for `TCP_INFO.tcpi_backoff` socket changes:
+After this we wait and watch for `TCP_INFO.tcpi_backoff` socket changes:
 ```
 10 00:00:06 [INFO] client fd 166 46364:5432 initial state is {open? true,
  tcpi_rto 203333,
@@ -105,7 +114,7 @@ gives this definition of `isck_backoff`:
 actual re-transmission timeout value is icsk_rto <<
 icsk_backoff
 
-This field, `icsk_backoff`, is copied verbatim into `tcpi_backoff` in the [kernel](https://github.com/torvalds/linux/blob/5b7c4cabbb65f5c469464da6c5f614cbd7f730f2/net/ipv4/tcp.c#L3829).
+`icsk_backoff` is copied verbatim into `tcpi_backoff` in the [kernel](https://github.com/torvalds/linux/blob/5b7c4cabbb65f5c469464da6c5f614cbd7f730f2/net/ipv4/tcp.c#L3829).
 `<<` is bit shift left and thus an increment of the backoff field yields
 a doubling of the re-transmission timeout value.
 
@@ -360,7 +369,9 @@ I've informed Datomic support about my findings and shared a draft version of th
 
 > Datomic's retry is not "broken", but having no default timeout for the Postgres driver is a misconfiguration. It's certainly something we could address on the Datomic side, by providing a default timeout setting at configuration, but we have the expectation that users configure their storages and drivers correctly for their needs. This represents a conflation of timeouts and retries, the retries are fine, but the storage level timeouts are not. As stated, we could absolutely do better right now with Postgres timeouts, but as your blog post demonstrates this is solvable in user-space by configuring the drivers and storage with a default timeout.  
 …  
-At this time, Datomic does not enforce a timeout for jdbc backends as the config param is not uniform across different backends.
+At this time, Datomic does not enforce a timeout for jdbc backends as the config param is not uniform across different backends.  
+…  
+We would have to define "too long" which we can take a stab at, but might affect users who are relying on longer connections. Ultimately, we want users to address in config if they can for their needs.
 
 ## Cloud epilogue
 
@@ -373,6 +384,8 @@ We have since moved partly to Azure Container Apps. It's much better with respec
 ***
 
 _Thanks to August Lilleaas, Christian Johansen, Magnar Sveen and Sigve Sjømæling Nordgaard for comments/feedback._
+
+***
 
 ### Further reading
 * [When TCP sockets refuse to die](https://blog.cloudflare.com/when-tcp-sockets-refuse-to-die/)
