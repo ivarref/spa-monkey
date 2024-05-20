@@ -1,7 +1,6 @@
 ---
 title: "Datomic's handling of network failures"
-date: 2024-03-30T11:46:36+02:00
-draft: false
+date: 2024-05-19T11:46:36+02:00
 ---
 
 [//]: # ([//]: # tydelige subjekter)
